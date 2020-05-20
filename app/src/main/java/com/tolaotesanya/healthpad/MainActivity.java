@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.tolaotesanya.healthpad.profile.account.AccountActivity;
 import com.tolaotesanya.healthpad.profile.auth.AuthActivity;
 import com.tolaotesanya.healthpad.profile.auth.RegisterActivity;
 
@@ -86,15 +87,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onNavigationItemSelected: ");
         switch (item.getItemId()) {
             case R.id.nav_home:
+                //Fragment
                 break;
             case R.id.nav_search:
+                //Fragment
                 break;
             case R.id.nav_account:
+                Intent accountIntent = new Intent(this, AccountActivity.class);
+                startActivity(accountIntent);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 sendToStart();
             case R.id.nav_chat:
+                //Fragment
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
