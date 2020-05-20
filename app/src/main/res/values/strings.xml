@@ -9,4 +9,6 @@
     <string name="password">Password</string>
     <string name="create_message">Create a new Account</string>
     <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="log_message">Please log in</string>
 </resources>
