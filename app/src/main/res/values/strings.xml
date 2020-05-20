@@ -17,4 +17,7 @@
     <string name="save">Save</string>
     <string name="account_settings">Account Settings</string>
     <string name="empty" />
+    <string name="expert_tips">Expert Tips</string>
+    <string name="doctor_s_corner">Doctor\'s Corner</string>
+    <string name="welcome">Welcome to Health Pad</string>
 </resources>

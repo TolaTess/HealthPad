@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.tolaotesanya.healthpad.home.HomeFragment;
 import com.tolaotesanya.healthpad.profile.account.AccountActivity;
 import com.tolaotesanya.healthpad.profile.auth.AuthActivity;
 import com.tolaotesanya.healthpad.profile.auth.RegisterActivity;
@@ -32,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private FirebaseAuth mAuth;
 
+    HomeFragment homeFragment;
+    private FragmentTransaction fragmentTransaction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
 
         attachDrawerNav();
+        homeFragment = new HomeFragment();
+        setFragment(homeFragment);
 
     }
 
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_account);
+        navigationView.setCheckedItem(R.id.nav_home);
 
     }
 
@@ -87,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onNavigationItemSelected: ");
         switch (item.getItemId()) {
             case R.id.nav_home:
-                //Fragment
+                setFragment(homeFragment);
                 break;
             case R.id.nav_search:
                 //Fragment
@@ -111,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = new Intent(this, AuthActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void setFragment(Fragment fragment) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_cont, fragment);
+        fragmentTransaction.commit();
     }
 
 
