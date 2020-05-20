@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "61053059935",
+    "firebase_url": "https://healthpad-4f386.firebaseio.com",
+    "project_id": "healthpad-4f386",
+    "storage_bucket": "healthpad-4f386.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61053059935:android:35a8d7f11bfd535f77ecea",
+        "android_client_info": {
+          "package_name": "com.tolaotesanya.healthpad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61053059935-epf32o0eot47fil13hv0lmskmd0famc3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tolaotesanya.healthpad",
+            "certificate_hash": "32ae5644bdb68d91f9982adb66134c71adb73985"
+          }
+        },
+        {
+          "client_id": "61053059935-kedqed6n5eqv977j1q3g9vgphehgq9tf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCloyDSEA0WXg7wVSC33jVOEX5t8P7vTHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61053059935-kedqed6n5eqv977j1q3g9vgphehgq9tf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
