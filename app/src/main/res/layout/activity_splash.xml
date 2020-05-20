@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.tolaotesanya.healthpad.splash.SplashActivity">
+
+
+    <ImageView
+        android:id="@+id/splash_image"
+        android:layout_width="349dp"
+        android:layout_height="309dp"
+        android:layout_marginBottom="304dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="101dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/health_pad_image" />
+
+
+    <TextView
+        android:id="@+id/splash_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="59dp"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="@string/health_pad"
+        android:textAlignment="center"
+        android:textSize="50sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/splash_image"
+        tools:text="HEALTH PAD" />
+
+    <TextView
+        android:id="@+id/splash_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        android:fontFamily="@font/allerta"
+        android:text="@string/always_here_to_help"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:transitionName="transition_name"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/splash_title"
+        tools:text="Always here to help" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

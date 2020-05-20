@@ -2,4 +2,6 @@
     <string name="app_name">HealthPad</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="health_pad">Health Pad</string>
+    <string name="always_here_to_help">Always here to help...</string>
 </resources>
