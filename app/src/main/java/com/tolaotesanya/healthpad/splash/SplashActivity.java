@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.tolaotesanya.healthpad.MainActivity;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.profile.auth.AuthActivity;
 
 public class SplashActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN = 5000;
@@ -47,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, AuthActivity.class);
                 startActivity(intent);
                 finish();
             }
