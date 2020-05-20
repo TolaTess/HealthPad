@@ -8,6 +8,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,7 +28,10 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
 
+import java.util.HashMap;
+
 public class SettingsActivity extends AppCompatActivity {
+    private static final String TAG = "SettingsActivity";
 
     private static final int GALLERY_PICK = 1;
     private static final int MAX_LENGTH = 30;
@@ -36,8 +41,10 @@ public class SettingsActivity extends AppCompatActivity {
     //UI element
     private Button mChangeImage;
     private Button mAddPayment;
+    private Button mSaveChanges;
     private TextInputLayout mStatus;
     private TextInputLayout mName;
+    private ProgressDialog mRegProgress;
 
     //Firebase
     private FirebaseUser mCurrentUser;
@@ -69,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void attachUI() {
         mAddPayment = findViewById(R.id.payment);
         mChangeImage = findViewById(R.id.change_image);
+        mSaveChanges = findViewById(R.id.save_settings);
         mStatus = findViewById(R.id.settings_status_input);
         mName = findViewById(R.id.setting_display_name);
 
@@ -79,6 +87,52 @@ public class SettingsActivity extends AppCompatActivity {
 
         mStatus.getEditText().setHint(status_value);
         mName.getEditText().setHint(display_name_value);
+
+        mSaveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: ");
+                mRegProgress = new ProgressDialog(SettingsActivity.this);
+                mRegProgress.setTitle("Saving changes");
+                mRegProgress.setMessage("Please wait while we save the changes");
+                mRegProgress.setCanceledOnTouchOutside(false);
+                mRegProgress.show();
+
+                String status_v = mStatus.getEditText().getText().toString();
+                String name_v = mName.getEditText().getText().toString();
+
+                if(!TextUtils.isEmpty(status_v)){
+                myDatabaseRef.child("status").setValue(status_v).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "onComplete: Status update");
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "Status update: is Sucessfull");
+                            mRegProgress.dismiss();
+                        } else {
+                            Log.d(TAG, "Status update: is not sucessfull");
+                            mRegProgress.hide();
+                            Toast.makeText(SettingsActivity.this, "Error saving changes", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });}
+                if(!TextUtils.isEmpty(name_v)){
+                myDatabaseRef.child("name").setValue(name_v).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d(TAG, "onComplete: Display Name update");
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "Display Name update: is Sucessfull");
+                            mRegProgress.dismiss();
+                        } else {
+                            Log.d(TAG, "Display Name update: is not sucessfull");
+                            mRegProgress.hide();
+                            Toast.makeText(SettingsActivity.this, "Error saving changes", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }}
+        });
 
         mChangeImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +183,6 @@ public class SettingsActivity extends AppCompatActivity {
                 filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        //Toast.makeText(SettingsActivity.this, "Working", Toast.LENGTH_LONG).show();
                         filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
