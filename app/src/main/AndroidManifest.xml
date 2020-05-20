@@ -9,9 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".profile.auth.LoginActivity"></activity>
+        <activity android:name=".profile.account.SettingsActivity"
+            android:parentActivityName=".profile.account.AccountActivity"/>
+        <activity android:name=".profile.account.AccountActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".profile.auth.LoginActivity"
+            android:parentActivityName=".profile.auth.AuthActivity" />
         <activity android:name=".profile.auth.AuthActivity" />
-        <activity android:name=".profile.auth.RegisterActivity" />
+        <activity
+            android:name=".profile.auth.RegisterActivity"
+            android:parentActivityName=".profile.auth.AuthActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".splash.SplashActivity">
             <intent-filter>
