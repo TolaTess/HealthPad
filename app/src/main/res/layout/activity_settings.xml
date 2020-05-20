@@ -6,4 +6,109 @@
     android:layout_height="match_parent"
     tools:context=".profile.account.SettingsActivity">
 
+
+    <include layout="@layout/app_bar_layout" android:id="@+id/settings_toolbar"/>
+
+    <Button
+        android:id="@+id/change_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/colorAccent"
+        android:fontFamily="@font/allerta"
+        android:text="@string/change_image"
+        app:layout_constraintBottom_toTopOf="@+id/payment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/payment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="147dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorAccent"
+        android:fontFamily="@font/allerta"
+        android:text="@string/add_payment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_image" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="42dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="@string/account_settings"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/setting_display_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_toolbar" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/settings_status_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/empty"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_display_name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="43dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="307dp"
+        android:layout_marginTop="13dp"
+        android:background="@color/colorPrimaryDark"
+        android:fontFamily="@font/allerta"
+        android:text="@string/save"
+        app:layout_constraintBottom_toTopOf="@+id/change_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_status_input" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/setting_display_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/empty"
+        app:layout_constraintBottom_toTopOf="@+id/settings_status_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
