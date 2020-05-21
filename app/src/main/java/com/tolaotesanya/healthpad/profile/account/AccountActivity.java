@@ -6,12 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.profile.auth.doctor.DoctorsActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +46,7 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mName;
     private TextView mStatus;
     private Button mSettingsButton;
+    private CheckBox mDoctorCheckBox;
 
     //Firebase
     private FirebaseUser mCurrentUser;
@@ -89,6 +94,8 @@ public class AccountActivity extends AppCompatActivity {
         mName = findViewById(R.id.text_display_name);
         mStatus = findViewById(R.id.text_status);
         mSettingsButton = findViewById(R.id.change_settings);
+        mDoctorCheckBox = findViewById(R.id.doctor_check_box);
+        mDoctorCheckBox.setChecked(getSharedPreferences("HealthPad", Context.MODE_PRIVATE).getBoolean("checkBox", false));
 
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +107,15 @@ public class AccountActivity extends AppCompatActivity {
                 settingsIntent.putExtra("status_value", statusValue);
                 settingsIntent.putExtra("display_name_value", dNameValue);
                 startActivity(settingsIntent);
+            }
+        });
+
+        mDoctorCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    getSharedPreferences("HealthPad", Context.MODE_PRIVATE).edit().putBoolean("checkBox", isChecked).apply();
+                    Intent doctorIntent = new Intent(AccountActivity.this, DoctorsActivity.class);
+                    startActivity(doctorIntent);
             }
         });
     }

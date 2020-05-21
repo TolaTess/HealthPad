@@ -20,4 +20,16 @@
     <string name="expert_tips">Expert Tips</string>
     <string name="doctor_s_corner">Doctor\'s Corner</string>
     <string name="welcome">Welcome to Health Pad</string>
+    <string name="clinic_name">Clinic Name</string>
+    <string name="first_name">First Name</string>
+    <string name="city_town">City / Town</string>
+    <string name="last_name">Last Name</string>
+    <string name="fill_out">Please fill out the following to get you set up</string>
+    <string name="doctor_welcome_msg">How are you today, Doctor</string>
+    <string name="sample_post_comment">12 comments</string>
+    <string name="sample_post_view">121 views</string>
+    <string name="sample_post_msg">Health Pad is here for all your medical needs</string>
+    <string name="speciality">Speciality</string>
+    <string name="yes">yes</string>
+    <string name="doctor_check_title">I am a Doctor</string>
 </resources>
