@@ -21,8 +21,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,19 +48,11 @@ public class DoctorsActivity extends AppCompatActivity {
 
     private ProgressDialog mRegProgress;
 
-    //Firebase
-    private FirebaseUser mCurrentUser;
-    private DatabaseReference myDatabaseRef;
-    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctors);
-
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        myDatabaseRef = FirebaseDatabase.getInstance()
-                .getReference();
 
         setupToolbar();
         attachUI();
@@ -104,10 +99,11 @@ public class DoctorsActivity extends AppCompatActivity {
 
     private void registerDoctor(String firstName, String lastName,
                                 String speciality, String clinicName, String location){
-
-        FirebaseUser mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = mCurrentUser.getUid();
-        myDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Doctors").child(userId);
+        FirebaseUser currentUser = FirebaseAuth
+                .getInstance().getCurrentUser();
+        DatabaseReference doctorDatabase = FirebaseDatabase
+                .getInstance().getReference().child("Doctors")
+                .child(currentUser.getUid());
 
         //Information to pass to Doctors table
         HashMap<String, String> doctorMap = new HashMap<>();
@@ -117,14 +113,18 @@ public class DoctorsActivity extends AppCompatActivity {
         doctorMap.put("clinic_name", clinicName);
         doctorMap.put("location", location);
         doctorMap.put("image", "default");
+        doctorMap.put("thumb_image", "default");
 
         //send hashmap to database
-        myDatabaseRef.setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        doctorDatabase.setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     mRegProgress.dismiss();
                     sendToStart();
+                } else{
+                    Toast.makeText(DoctorsActivity.this, "Doctor Setup failed",
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -132,7 +132,6 @@ public class DoctorsActivity extends AppCompatActivity {
 
     private void sendToStart() {
         Intent accountIntent = new Intent(this, AccountActivity.class);
-        accountIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(accountIntent);
         finish();
     }

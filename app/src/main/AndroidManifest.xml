@@ -9,10 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".profile.account.SettingsActivity"
-            android:parentActivityName=".profile.account.AccountActivity"/>
-        <activity android:name=".profile.account.AccountActivity"
+        <activity android:name=".business.AllDoctorsActivity"
             android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".profile.auth.doctor.DoctorsActivity"/>
+        <activity
+            android:name=".profile.account.SettingsActivity"
+            android:parentActivityName=".profile.account.AccountActivity" />
+        <activity
+            android:name=".profile.account.AccountActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".profile.auth.LoginActivity"
             android:parentActivityName=".profile.auth.AuthActivity" />
@@ -21,8 +27,9 @@
             android:name=".profile.auth.RegisterActivity"
             android:parentActivityName=".profile.auth.AuthActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

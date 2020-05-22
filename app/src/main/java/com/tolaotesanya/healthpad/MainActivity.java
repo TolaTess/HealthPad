@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.tolaotesanya.healthpad.business.AllDoctorsActivity;
 import com.tolaotesanya.healthpad.home.HomeFragment;
 import com.tolaotesanya.healthpad.profile.account.AccountActivity;
 import com.tolaotesanya.healthpad.profile.auth.AuthActivity;
@@ -96,7 +97,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setFragment(homeFragment);
                 break;
             case R.id.nav_search:
-                //Fragment
+                Intent allDoctorsIntent = new Intent(this, AllDoctorsActivity.class);
+                startActivity(allDoctorsIntent);
                 break;
             case R.id.nav_account:
                 Intent accountIntent = new Intent(this, AccountActivity.class);
