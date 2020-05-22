@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".business.AllDoctorsActivity"
-            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".business.DoctorProfileActivity"
+            android:parentActivityName=".business.AllDoctorsActivity"/>
         <activity
-            android:name=".profile.auth.doctor.DoctorsActivity"/>
+            android:name=".business.AllDoctorsActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".profile.auth.doctor.DoctorRegisterActivity" />
         <activity
             android:name=".profile.account.SettingsActivity"
             android:parentActivityName=".profile.account.AccountActivity" />
