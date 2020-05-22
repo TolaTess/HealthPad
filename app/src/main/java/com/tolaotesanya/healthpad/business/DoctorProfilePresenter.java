@@ -18,6 +18,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.HashMap;
+
 import androidx.annotation.NonNull;
 
 public class DoctorProfilePresenter {
@@ -30,20 +34,22 @@ public class DoctorProfilePresenter {
     private DatabaseReference mDoctorDatabase;
     private DatabaseReference mReqConsulDatabase;
     private DatabaseReference mConsulationsDatabase;
+    private DatabaseReference mFollowsDatabase;
     private FirebaseUser mCurrentuser;
 
     private String mCurrent_state;
     private String mlastName;
     private DoctorProfileActivity view;
 
-    private final String user_id;
+    private final String doctor_id;
 
-    public DoctorProfilePresenter(DatabaseReference mDoctorDatabase, DatabaseReference mReqConsulDatabase, DatabaseReference mConsulationsDatabase, FirebaseUser mCurrentuser, String user_id, DoctorProfileActivity view) {
+    public DoctorProfilePresenter(DatabaseReference mDoctorDatabase, DatabaseReference mReqConsulDatabase, DatabaseReference mConsulationsDatabase, DatabaseReference mFollowsDatabase, FirebaseUser mCurrentuser, String doctor_id, DoctorProfileActivity view) {
         this.mDoctorDatabase = mDoctorDatabase;
         this.mReqConsulDatabase = mReqConsulDatabase;
         this.mConsulationsDatabase = mConsulationsDatabase;
+        this.mFollowsDatabase = mFollowsDatabase;
         this.mCurrentuser = mCurrentuser;
-        this.user_id = user_id;
+        this.doctor_id = doctor_id;
         this.view = view;
 
         attachUI();
@@ -89,8 +95,8 @@ public class DoctorProfilePresenter {
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.hasChild(user_id)) {
-                                    String req_type = dataSnapshot.child(user_id).child("request_type")
+                                if (dataSnapshot.hasChild(doctor_id)) {
+                                    String req_type = dataSnapshot.child(doctor_id).child("request_type")
                                             .getValue().toString();
                                     if (req_type.equals("received")) {
                                         mCurrent_state = "req_received";
@@ -105,9 +111,9 @@ public class DoctorProfilePresenter {
                                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    if (dataSnapshot.hasChild(user_id)) {
+                                                    if (dataSnapshot.hasChild(doctor_id)) {
                                                         mCurrent_state = "consul";
-                                                        mBtnReqConsultation.setText("UnFollow " + mlastName);
+                                                        mBtnReqConsultation.setText("UnFollow Dr " + mlastName);
                                                         progressDialog.dismiss();
                                                     }
                                                 }
@@ -142,13 +148,13 @@ public class DoctorProfilePresenter {
                 //friends request section
                 if (mCurrent_state.equals("not_consul")) {
                     //current user sends a request to the user of interest using his user id
-                    mReqConsulDatabase.child(mCurrentuser.getUid()).child(user_id)
+                    mReqConsulDatabase.child(mCurrentuser.getUid()).child(doctor_id)
                             .child("request_type").setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 //Add senders details under receiver
-                                mReqConsulDatabase.child(user_id).child(mCurrentuser.getUid())
+                                mReqConsulDatabase.child(doctor_id).child(mCurrentuser.getUid())
                                         .child("request_type").setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -167,23 +173,85 @@ public class DoctorProfilePresenter {
                     });
                 }
                 cancelConsultation();
+                acceptConsulation();
 
             }
         });
 
 
+    }
 
+    private void acceptConsulation() {
+        //Accept Request
+        if (mCurrent_state.equals("req_received")) {
+
+            String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+            HashMap<String, String> userMap = new HashMap<>();
+            userMap.put("name", currentDate);
+            userMap.put("user_type", "User");
+
+            final HashMap<String, String> doctorMap = new HashMap<>();
+            doctorMap.put("name", currentDate);
+            doctorMap.put("user_type", "Doctor");
+
+            mConsulationsDatabase.child(mCurrentuser.getUid()).child(doctor_id).setValue(userMap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                mConsulationsDatabase.child(doctor_id).child(mCurrentuser.getUid())
+                                        .setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            mFollowsDatabase.child(mCurrentuser.getUid())
+                                                    .child(doctor_id).child("follow_type").setValue("following").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()){
+                                                        mReqConsulDatabase.child(mCurrentuser.getUid()).child(doctor_id)
+                                                                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    mReqConsulDatabase.child(doctor_id).child(mCurrentuser.getUid())
+                                                                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if(task.isSuccessful()) {
+                                                                                mBtnReqConsultation.setEnabled(true); //grey out button
+                                                                                mCurrent_state = "friends";
+                                                                                mBtnReqConsultation.setText("Unfollow Dr " + mlastName);
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(view, "Consultation Could not be Accepted",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+        }
     }
 
     private void cancelConsultation() {
         // Cancel Requests
         if (mCurrent_state.equals("req_sent")) {
-            mReqConsulDatabase.child(mCurrentuser.getUid()).child(user_id)
+            mReqConsulDatabase.child(mCurrentuser.getUid()).child(doctor_id)
                     .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful()){
-                        mReqConsulDatabase.child(user_id).child(mCurrentuser.getUid())
+                    if (task.isSuccessful()) {
+                        mReqConsulDatabase.child(doctor_id).child(mCurrentuser.getUid())
                                 .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

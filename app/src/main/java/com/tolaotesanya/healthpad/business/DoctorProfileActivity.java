@@ -15,6 +15,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
       private DatabaseReference mDoctorDatabase;
     private DatabaseReference mReqConsulDatabase;
     private DatabaseReference mConsulationsDatabase;
+    private DatabaseReference mFollowDatabase;
     private FirebaseUser mCurrentuser;
 
     private DoctorProfileActivity mView = DoctorProfileActivity.this;
@@ -25,14 +26,15 @@ public class DoctorProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
 
-        final String user_id = getIntent().getStringExtra("user_id");
+        final String doctor_id = getIntent().getStringExtra("doctor_id");
 
-        mDoctorDatabase = FirebaseDatabase.getInstance().getReference().child("Doctors").child(user_id);
+        mDoctorDatabase = FirebaseDatabase.getInstance().getReference().child("Doctors").child(doctor_id);
         mReqConsulDatabase = FirebaseDatabase.getInstance().getReference().child("Consultation_Req");
         mConsulationsDatabase = FirebaseDatabase.getInstance().getReference().child("Consultations");
+        mFollowDatabase = FirebaseDatabase.getInstance().getReference().child("Follows");
         mCurrentuser = FirebaseAuth.getInstance().getCurrentUser();
 
-        doctorPresenter = new DoctorProfilePresenter(mDoctorDatabase, mReqConsulDatabase, mConsulationsDatabase, mCurrentuser, user_id, mView);
+        doctorPresenter = new DoctorProfilePresenter(mDoctorDatabase, mReqConsulDatabase, mConsulationsDatabase, mFollowDatabase, mCurrentuser, doctor_id, mView);
         doctorPresenter.reqConsultation();
 
     }

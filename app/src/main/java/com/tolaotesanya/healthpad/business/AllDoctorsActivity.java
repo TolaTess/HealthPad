@@ -75,13 +75,13 @@ public class AllDoctorsActivity extends AppCompatActivity {
                 holder.setDetails(model.getSpeciality(), model.getLocation());
                 holder.setImage(model.getThumb_image());
 
-                final String userid = getRef(position).getKey();
+                final String doctorid = getRef(position).getKey();
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent profileIntent = new Intent(AllDoctorsActivity.this, DoctorProfileActivity.class);
-                        profileIntent.putExtra("user_id", userid); // send user id to use it to get all other info in db
+                        profileIntent.putExtra("doctor_id", doctorid); // send user id to use it to get all other info in db
                         startActivity(profileIntent);
                     }
                 });
