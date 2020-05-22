@@ -12,20 +12,21 @@
         android:id="@+id/all_doctors_recycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
+        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:layout_constraintTop_toBottomOf="@+id/search_box_doctors"
         app:layout_constraintVertical_bias="0.0" />
 
     <SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/search_box_doctors"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
+        android:layoutDirection="rtl"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/all_doctors_toolbar" />

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -73,6 +74,17 @@ public class AllDoctorsActivity extends AppCompatActivity {
                 holder.setFullName(model.getFirst_name(), model.getLast_name());
                 holder.setDetails(model.getSpeciality(), model.getLocation());
                 holder.setImage(model.getThumb_image());
+
+                final String userid = getRef(position).getKey();
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent profileIntent = new Intent(AllDoctorsActivity.this, DoctorProfileActivity.class);
+                        profileIntent.putExtra("user_id", userid); // send user id to use it to get all other info in db
+                        startActivity(profileIntent);
+                    }
+                });
             }
         };
         mDoctorList.setAdapter(adapter);

@@ -29,7 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.profile.auth.doctor.DoctorsActivity;
+import com.tolaotesanya.healthpad.profile.auth.doctor.DoctorRegisterActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -171,7 +171,7 @@ public class SettingsActivity extends AppCompatActivity {
         mDoctorCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent doctorIntent = new Intent(SettingsActivity.this, DoctorsActivity.class);
+                Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
                 startActivity(doctorIntent);
             }
         });
