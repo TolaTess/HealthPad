@@ -33,4 +33,8 @@
     <string name="yes">yes</string>
     <string name="doctor_check_title">I am a Doctor</string>
     <string name="cancel_consul">Cancel Consultation</string>
+    <string name="req_consul">Request Consultation</string>
+    <string name="reviews">Reviews</string>
+    <string name="doctor_details">Doctor Details</string>
+    <string name="full_name">Full Name</string>
 </resources>
