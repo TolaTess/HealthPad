@@ -166,7 +166,7 @@ public class DoctorProfilePresenter {
                         }
                     });
                 }
-              
+                cancelConsultation();
 
             }
         });
@@ -175,5 +175,30 @@ public class DoctorProfilePresenter {
 
     }
 
+    private void cancelConsultation() {
+        // Cancel Requests
+        if (mCurrent_state.equals("req_sent")) {
+            mReqConsulDatabase.child(mCurrentuser.getUid()).child(user_id)
+                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        mReqConsulDatabase.child(user_id).child(mCurrentuser.getUid())
+                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mBtnReqConsultation.setEnabled(true);
+                                mCurrent_state = "not_friends";
+                                mBtnReqConsultation.setText(R.string.req_consul);
+                            }
+                        });
+                    } else {
+                        Toast.makeText(view, "Cancellation Failed",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
 
 }
