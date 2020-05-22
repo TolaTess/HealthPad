@@ -23,10 +23,11 @@ import java.util.Date;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DoctorProfilePresenter {
 
-    private ImageView mProfileImage;
+    private CircleImageView mProfileImage;
     private TextView mProfileName, mProfileDetails, mReviews;
     private Button mBtnReqConsultation;
     private ProgressDialog progressDialog;
@@ -55,8 +56,8 @@ public class DoctorProfilePresenter {
         attachUI();
 
         progressDialog = new ProgressDialog(view);
-        progressDialog.setTitle("Loading User Data");
-        progressDialog.setMessage("Please wait while we load the user data. ");
+        progressDialog.setTitle("Loading Doctor's Profile");
+        progressDialog.setMessage("Please wait while we load the doctor's data. ");
         progressDialog.setCanceledOnTouchOutside(false);
 
         mCurrent_state = "not_consul";
@@ -106,23 +107,6 @@ public class DoctorProfilePresenter {
                                         mBtnReqConsultation.setText("Cancel Consultation Request");
                                     }
                                     progressDialog.dismiss();
-                                } else {
-                                    mReqConsulDatabase.child(mCurrentuser.getUid())
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    if (dataSnapshot.hasChild(doctor_id)) {
-                                                        mCurrent_state = "consul";
-                                                        mBtnReqConsultation.setText("UnFollow Dr " + mlastName);
-                                                        progressDialog.dismiss();
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                    progressDialog.dismiss();
-                                                }
-                                            });
                                 }
 
                             }
@@ -132,7 +116,23 @@ public class DoctorProfilePresenter {
 
                             }
                         });
-            }
+                    mFollowsDatabase.child(mCurrentuser.getUid())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChild(doctor_id)) {
+                                        mCurrent_state = "follow";
+                                        mBtnReqConsultation.setText("UnFollow Dr " + mlastName);
+                                        progressDialog.dismiss();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    progressDialog.dismiss();
+                                }
+                            });
+                }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -174,6 +174,7 @@ public class DoctorProfilePresenter {
                 }
                 cancelConsultation();
                 acceptConsulation();
+                unFollowDoctors();
 
             }
         });
@@ -220,7 +221,7 @@ public class DoctorProfilePresenter {
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if(task.isSuccessful()) {
                                                                                 mBtnReqConsultation.setEnabled(true); //grey out button
-                                                                                mCurrent_state = "friends";
+                                                                                mCurrent_state = "follow";
                                                                                 mBtnReqConsultation.setText("Unfollow Dr " + mlastName);
                                                                             }
                                                                         }
@@ -252,16 +253,44 @@ public class DoctorProfilePresenter {
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
                         mReqConsulDatabase.child(doctor_id).child(mCurrentuser.getUid())
-                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                mBtnReqConsultation.setEnabled(true);
-                                mCurrent_state = "not_friends";
-                                mBtnReqConsultation.setText(R.string.req_consul);
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    mBtnReqConsultation.setEnabled(true);
+                                    mCurrent_state = "not_consul";
+                                    mBtnReqConsultation.setText(R.string.req_consul);
+                                }
                             }
                         });
                     } else {
                         Toast.makeText(view, "Cancellation Failed",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void unFollowDoctors(){
+        // Unfollow  section
+        if (mCurrent_state.equals("follow")) {
+            mFollowsDatabase.child(mCurrentuser.getUid()).child(doctor_id)
+                    .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        mFollowsDatabase.child(doctor_id).child(mCurrentuser.getUid())
+                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mBtnReqConsultation.setEnabled(true); //grey out button
+                                mCurrent_state = "not_consul";
+                                mBtnReqConsultation.setText(R.string.req_consul);
+                            }
+                        });
+                    } else {
+                        Toast.makeText(view, "Unfollow Failed",
                                 Toast.LENGTH_LONG).show();
                     }
                 }
