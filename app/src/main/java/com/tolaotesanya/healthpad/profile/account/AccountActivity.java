@@ -46,7 +46,6 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mName;
     private TextView mStatus;
     private Button mSettingsButton;
-    private CheckBox mDoctorCheckBox;
 
     //Firebase
     private FirebaseUser mCurrentUser;
@@ -94,8 +93,6 @@ public class AccountActivity extends AppCompatActivity {
         mName = findViewById(R.id.text_display_name);
         mStatus = findViewById(R.id.text_status);
         mSettingsButton = findViewById(R.id.change_settings);
-        mDoctorCheckBox = findViewById(R.id.doctor_check_box);
-        mDoctorCheckBox.setChecked(getSharedPreferences("HealthPad", Context.MODE_PRIVATE).getBoolean("checkBox", false));
 
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,14 +107,6 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
 
-        mDoctorCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    getSharedPreferences("HealthPad", Context.MODE_PRIVATE).edit().putBoolean("checkBox", isChecked).apply();
-                    Intent doctorIntent = new Intent(AccountActivity.this, DoctorsActivity.class);
-                    startActivity(doctorIntent);
-            }
-        });
     }
 
     private void setupToolbar() {

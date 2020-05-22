@@ -50,9 +50,9 @@
         android:text="@string/slogan"
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/doctor_check_msg"
+        app:layout_constraintBottom_toTopOf="@+id/change_settings"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_display_name" />
 
@@ -68,40 +68,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doctor_check_msg"
-        app:layout_constraintVertical_bias="0.764" />
-
-    <CheckBox
-        android:id="@+id/doctor_check_box"
-        android:layout_width="0dp"
-        android:layout_height="29dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:checked="false"
-        android:fontFamily="@font/allerta_stencil"
-        android:text="@string/yes"
-        android:textColor="@color/colorBlack"
-        app:layout_constraintBottom_toTopOf="@+id/change_settings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/doctor_check_msg"
-        app:layout_constraintTop_toBottomOf="@+id/text_status" />
-
-    <TextView
-        android:id="@+id/doctor_check_msg"
-        android:layout_width="0dp"
-        android:layout_height="28dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/allerta_stencil"
-        android:text="@string/doctor_check_title"
-        android:textAlignment="textEnd"
-        android:textColor="@color/colorBlack"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/change_settings"
-        app:layout_constraintEnd_toStartOf="@+id/doctor_check_box"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_status" />
 

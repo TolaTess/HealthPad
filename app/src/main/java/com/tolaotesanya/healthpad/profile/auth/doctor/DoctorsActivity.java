@@ -133,7 +133,6 @@ public class DoctorsActivity extends AppCompatActivity {
     private void sendToStart() {
         Intent accountIntent = new Intent(this, AccountActivity.class);
         startActivity(accountIntent);
-        finish();
     }
 
 
