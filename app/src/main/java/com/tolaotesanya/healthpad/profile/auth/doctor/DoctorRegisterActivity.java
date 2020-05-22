@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,27 +14,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.profile.account.AccountActivity;
-import com.tolaotesanya.healthpad.profile.account.SettingsActivity;
 
 import java.util.HashMap;
 
-public class DoctorsActivity extends AppCompatActivity {
+public class DoctorRegisterActivity extends AppCompatActivity {
     private static final String TAG = "DoctorsActivity";
 
     //UI elements
@@ -77,7 +67,7 @@ public class DoctorsActivity extends AppCompatActivity {
 
                 if(!TextUtils.isEmpty(firstName) || !TextUtils.isEmpty(lastName)
                         || !TextUtils.isEmpty(speciality) || !TextUtils.isEmpty(location)){
-                    mRegProgress = new ProgressDialog(DoctorsActivity.this);
+                    mRegProgress = new ProgressDialog(DoctorRegisterActivity.this);
                     mRegProgress.setTitle("Registering Doctor");
                     mRegProgress.setMessage("Please wait while we create your Doctor account");
                     mRegProgress.setCanceledOnTouchOutside(false);
@@ -123,7 +113,7 @@ public class DoctorsActivity extends AppCompatActivity {
                     mRegProgress.dismiss();
                     sendToStart();
                 } else{
-                    Toast.makeText(DoctorsActivity.this, "Doctor Setup failed",
+                    Toast.makeText(DoctorRegisterActivity.this, "Doctor Setup failed",
                             Toast.LENGTH_LONG).show();
                 }
             }
