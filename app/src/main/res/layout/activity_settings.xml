@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="15dp"
         android:background="@color/colorAccent"
         android:fontFamily="@font/allerta"
         android:text="@string/change_image"
@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_settings" />
+        app:layout_constraintTop_toBottomOf="@+id/doctor_check_btn" />
 
     <Button
         android:id="@+id/payment"
@@ -79,14 +79,14 @@
         android:id="@+id/save_settings"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="43dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="307dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="17dp"
         android:background="@color/colorPrimaryDark"
         android:fontFamily="@font/allerta"
         android:text="@string/save"
-        app:layout_constraintBottom_toTopOf="@+id/change_image"
+        app:layout_constraintBottom_toTopOf="@+id/doctor_check_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -111,6 +111,20 @@
             android:layout_height="wrap_content"
             android:textSize="14sp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/doctor_check_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="71dp"
+        android:background="@color/colorTransparent"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="Are you a doctor?"
+        app:layout_constraintBottom_toTopOf="@+id/change_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_status_input" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
