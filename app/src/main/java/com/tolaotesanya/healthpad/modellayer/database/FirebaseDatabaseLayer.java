@@ -113,16 +113,4 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return setupMap;
     }
 
-    public void loadDatabase(final Context context, String muser_id, State mapType){
-        Map friendMap = setupDatabaseMap(muser_id, mapType);
-        getmRootRef().updateChildren(friendMap, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Toast.makeText(context, "There was an error",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
 }
