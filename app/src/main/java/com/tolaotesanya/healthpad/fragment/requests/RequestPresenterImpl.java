@@ -5,20 +5,22 @@ import android.content.Context;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 public class RequestPresenterImpl implements RequestPresenter {
 
-    private FirebaseAuth mAuth;
     private DatabaseReference mConsultReqDatabase;
     private DatabaseReference mUserDatabase;
 
+
     public RequestPresenterImpl(Context context) {
-        mAuth = FirebaseAuth.getInstance();
-        mConsultReqDatabase = FirebaseDatabase.getInstance().getReference()
+        FirebasePresenter presenter = new FirebaseDatabaseLayer();
+        mConsultReqDatabase = presenter.getmRootRef()
                 .child("Consultation_Req")
-                .child(mAuth.getCurrentUser().getUid());
+                .child(presenter.getMcurrent_user_id());
         //mFriendsReqDatabase.keepSynced(true);
-        mUserDatabase = FirebaseDatabase.getInstance().getReference()
+        mUserDatabase = presenter.getmRootRef()
                 .child("Users");
         //mUserDatabase.keepSynced(true);
 
