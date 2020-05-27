@@ -1,10 +1,9 @@
-package com.tolaotesanya.healthpad.business;
+package com.tolaotesanya.healthpad.activities.business;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,14 +14,12 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.model.Doctors;
-import com.tolaotesanya.healthpad.model.Users;
-import com.tolaotesanya.healthpad.utils.DoctorsViewHolder;
+import com.tolaotesanya.healthpad.activities.profile.DoctorProfileActivity;
+import com.tolaotesanya.healthpad.modellayer.model.Doctors;
+import com.tolaotesanya.healthpad.helper.DoctorsViewHolder;
 
 public class AllDoctorsActivity extends AppCompatActivity {
     private static final String TAG = "AllDoctorsActivity";

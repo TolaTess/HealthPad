@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.splash;
+package com.tolaotesanya.healthpad.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,9 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tolaotesanya.healthpad.MainActivity;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.profile.auth.AuthActivity;
 
 public class SplashActivity extends AppCompatActivity {
     private static int SPLASH_SCREEN = 5000;

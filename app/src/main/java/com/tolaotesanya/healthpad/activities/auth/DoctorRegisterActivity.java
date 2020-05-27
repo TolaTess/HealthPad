@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.profile.auth.doctor;
+package com.tolaotesanya.healthpad.activities.auth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.profile.account.AccountActivity;
+import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 
 import java.util.HashMap;
 

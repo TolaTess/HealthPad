@@ -1,9 +1,8 @@
-package com.tolaotesanya.healthpad.business;
+package com.tolaotesanya.healthpad.activities.profile;
 
 import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,10 +100,10 @@ public class DoctorProfilePresenter {
                                             .getValue().toString();
                                     if (req_type.equals("received")) {
                                         mCurrent_state = "req_received";
-                                        mBtnReqConsultation.setText("Accept Consultation");
+                                        mBtnReqConsultation.setText(R.string.accept_consul);
                                     } else if (req_type.equals("sent")) {
                                         mCurrent_state = "req_sent";
-                                        mBtnReqConsultation.setText("Cancel Consultation Request");
+                                        mBtnReqConsultation.setText(R.string.cancel_consul);
                                     }
                                     progressDialog.dismiss();
                                 }
@@ -122,7 +121,7 @@ public class DoctorProfilePresenter {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.hasChild(doctor_id)) {
                                         mCurrent_state = "follow";
-                                        mBtnReqConsultation.setText("UnFollow Dr " + mlastName);
+                                        mBtnReqConsultation.setText("Unfollow Dr " + mlastName);
                                         progressDialog.dismiss();
                                     }
                                 }

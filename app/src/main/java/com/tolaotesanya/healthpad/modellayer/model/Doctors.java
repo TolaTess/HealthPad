@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.model;
+package com.tolaotesanya.healthpad.modellayer.model;
 
 public class Doctors {
     private String first_name;

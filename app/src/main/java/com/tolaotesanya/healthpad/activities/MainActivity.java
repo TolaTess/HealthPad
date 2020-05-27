@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad;
+package com.tolaotesanya.healthpad.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,22 +9,21 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.tolaotesanya.healthpad.business.AllDoctorsActivity;
-import com.tolaotesanya.healthpad.home.HomeFragment;
-import com.tolaotesanya.healthpad.profile.account.AccountActivity;
-import com.tolaotesanya.healthpad.profile.auth.AuthActivity;
-import com.tolaotesanya.healthpad.profile.auth.RegisterActivity;
+import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
+import com.tolaotesanya.healthpad.activities.business.AllDoctorsActivity;
+import com.tolaotesanya.healthpad.fragment.HomeFragment;
+import com.tolaotesanya.healthpad.activities.auth.AuthActivity;
+import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
+import com.tolaotesanya.healthpad.fragment.requests.RequestPresenter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -35,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebaseAuth mAuth;
 
     HomeFragment homeFragment;
+    RequestFragment requestFragment;
     private FragmentTransaction fragmentTransaction;
 
     @Override
@@ -45,8 +45,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAuth = FirebaseAuth.getInstance();
 
         attachDrawerNav();
+        requestFragment = new RequestFragment();
         homeFragment = new HomeFragment();
-        setFragment(homeFragment);
+        setFragment(requestFragment);
 
     }
 
@@ -54,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onStart() {
         super.onStart();
         //Ensure user is logged in before proceeding to main activity
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
+        final FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+        if (mCurrentUser == null) {
             sendToStart();
         }
     }
@@ -94,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Log.d(TAG, "onNavigationItemSelected: ");
         switch (item.getItemId()) {
             case R.id.nav_home:
-                setFragment(homeFragment);
+                //setFragment(homeFragment);
+                setFragment(requestFragment);
                 break;
             case R.id.nav_search:
                 Intent allDoctorsIntent = new Intent(this, AllDoctorsActivity.class);

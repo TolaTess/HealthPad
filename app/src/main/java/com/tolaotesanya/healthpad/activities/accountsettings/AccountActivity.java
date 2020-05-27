@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.profile.account;
+package com.tolaotesanya.healthpad.activities.accountsettings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

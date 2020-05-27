@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.utils;
+package com.tolaotesanya.healthpad.helper;
 
 import android.view.View;
 import android.widget.TextView;

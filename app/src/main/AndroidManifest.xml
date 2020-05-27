@@ -9,30 +9,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".business.DoctorProfileActivity"
-            android:parentActivityName=".business.AllDoctorsActivity"/>
+        <activity android:name=".activities.profile.DoctorProfileActivity"
+            android:parentActivityName=".activities.business.AllDoctorsActivity"/>
         <activity
-            android:name=".business.AllDoctorsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".profile.auth.doctor.DoctorRegisterActivity" />
+            android:name=".activities.business.AllDoctorsActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity android:name=".activities.auth.DoctorRegisterActivity" />
         <activity
-            android:name=".profile.account.SettingsActivity"
-            android:parentActivityName=".profile.account.AccountActivity" />
+            android:name=".activities.accountsettings.SettingsActivity"
+            android:parentActivityName=".activities.accountsettings.AccountActivity" />
         <activity
-            android:name=".profile.account.AccountActivity"
-            android:parentActivityName=".MainActivity" />
+            android:name=".activities.accountsettings.AccountActivity"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".profile.auth.LoginActivity"
-            android:parentActivityName=".profile.auth.AuthActivity" />
-        <activity android:name=".profile.auth.AuthActivity" />
+            android:name=".activities.auth.LoginActivity"
+            android:parentActivityName=".activities.auth.AuthActivity" />
+        <activity android:name=".activities.auth.AuthActivity" />
         <activity
-            android:name=".profile.auth.RegisterActivity"
-            android:parentActivityName=".profile.auth.AuthActivity" />
-        <activity android:name=".MainActivity" />
+            android:name=".activities.auth.RegisterActivity"
+            android:parentActivityName=".activities.auth.AuthActivity" />
+        <activity android:name=".activities.MainActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".splash.SplashActivity">
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

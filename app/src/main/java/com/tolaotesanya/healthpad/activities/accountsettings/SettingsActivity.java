@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.profile.account;
+package com.tolaotesanya.healthpad.activities.accountsettings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.profile.auth.doctor.DoctorRegisterActivity;
+import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

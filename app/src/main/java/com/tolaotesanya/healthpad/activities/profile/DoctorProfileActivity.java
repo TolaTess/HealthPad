@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.business;
+package com.tolaotesanya.healthpad.activities.profile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
