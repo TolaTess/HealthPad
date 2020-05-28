@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.tolaotesanya.healthpad.helper.State;
 
 import java.text.DateFormat;
@@ -23,10 +25,12 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
     private DatabaseReference mUserDatabase;
     private FirebaseAuthLayer helper;
     private String mcurrent_user_id;
+    private StorageReference mStorageRef;
 
     public FirebaseDatabaseLayer() {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         helper = new FirebaseAuthLayer();
         helper.setupFirebase();
@@ -37,6 +41,10 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
 
     public FirebaseAuthLayer getHelper() {
         return helper;
+    }
+
+    public StorageReference getmStorageRef() {
+        return mStorageRef;
     }
 
     public String getMcurrent_user_id() {
@@ -65,6 +73,7 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
 
     public Map setupDatabaseMap(String doctor_id, State mapType) {
         Map setupMap = new HashMap();
+        String currentDate = DateFormat.getDateTimeInstance().format(new Date());
 
         switch (mapType) {
             case not_consul:
@@ -87,15 +96,16 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
                 break;
             case request_received:
                 //accept req
-                String currentDate = DateFormat.getDateTimeInstance().format(new Date());
 
                 HashMap<String, String> userMap = new HashMap<>();
-                userMap.put("name", currentDate);
-                userMap.put("user_type", "User");
+                userMap.put("name", "user's name");
+                userMap.put("date", currentDate);
+                userMap.put("user_type", "user");
 
                 final HashMap<String, String> doctorMap = new HashMap<>();
-                doctorMap.put("name", currentDate);
-                doctorMap.put("user_type", "Doctor");
+                userMap.put("name", "user's name");
+                doctorMap.put("date", currentDate);
+                doctorMap.put("user_type", "doctor");
 
                 setupMap.put("Consultations/" + mcurrent_user_id + "/" + doctor_id + "/", userMap);
                 setupMap.put("Consultations/" + doctor_id + "/" + mcurrent_user_id + "/", doctorMap);
