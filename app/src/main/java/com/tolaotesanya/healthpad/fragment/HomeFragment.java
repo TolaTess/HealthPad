@@ -21,6 +21,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.activities.MainActivity;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 import com.tolaotesanya.healthpad.helper.PostsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
@@ -50,10 +51,11 @@ public class HomeFragment extends Fragment {
         presenter = new FirebaseDatabaseLayer();
 
         mPostRecycler = mMainView.findViewById(R.id.home_feed_list);
-        mPostRecycler.setLayoutManager(new LinearLayoutManager(mMainView.getContext()));
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(mMainView.getContext());
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+        mPostRecycler.setLayoutManager(mLayoutManager);
         fetch();
-
-
 
         return mMainView;
     }
@@ -124,7 +126,6 @@ public class HomeFragment extends Fragment {
                                             .child(post_key).child("likes").setValue(newlikes);
                                 }
                             });
-
                         }
 
                     @Override
