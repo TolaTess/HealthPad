@@ -13,9 +13,9 @@
             android:icon="@drawable/search"
             android:title="Doctors" />
         <item
-            android:id="@+id/nav_help"
-            android:icon="@drawable/circle_plus"
-            android:title="Help" />
+            android:id="@+id/nav_request"
+            android:icon="@drawable/chat"
+            android:title="Consultations" />
     </group>
 
     <item android:title="Profile">
@@ -23,17 +23,17 @@
         <menu>
             <group android:checkableBehavior="single" />
             <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/close"
-                android:title="Logout" />
+                android:id="@+id/nav_chat"
+                android:icon="@drawable/chat"
+                android:title="Chat" />
             <item
                 android:id="@+id/nav_account"
                 android:icon="@drawable/user"
                 android:title="Account" />
             <item
-                android:id="@+id/nav_chat"
-                android:icon="@drawable/chat"
-                android:title="Chat" />
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/close"
+                android:title="Logout" />
         </menu>
 
     </item>
@@ -44,6 +44,10 @@
                 android:id="@+id/nav_share"
                 android:icon="@drawable/share"
                 android:title="Share" />
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/circle_plus"
+                android:title="Help" />
         </menu>
     </item>
 </menu>

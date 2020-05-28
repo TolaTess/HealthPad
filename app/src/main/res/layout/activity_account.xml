@@ -32,7 +32,7 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/allerta_stencil"
         android:text="@string/display_name"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorBlack"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/text_status"
         app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,7 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/allerta"
         android:text="@string/slogan"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/colorBlack"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/change_settings"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,16 +58,16 @@
 
     <Button
         android:id="@+id/change_settings"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="96dp"
-        android:background="@color/colorTransparent"
+        android:background="@drawable/button_background"
         android:fontFamily="@font/allerta_stencil"
         android:text="@string/settings"
         android:textColor="@color/colorBlack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_status" />
 
