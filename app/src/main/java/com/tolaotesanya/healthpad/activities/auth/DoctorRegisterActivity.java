@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
+import com.tolaotesanya.healthpad.helper.DisplayScreen;
 
 import java.util.HashMap;
 
@@ -89,11 +90,15 @@ public class DoctorRegisterActivity extends AppCompatActivity {
 
     private void registerDoctor(String firstName, String lastName,
                                 String speciality, String clinicName, String location){
-        FirebaseUser currentUser = FirebaseAuth
+        final FirebaseUser currentUser = FirebaseAuth
                 .getInstance().getCurrentUser();
         DatabaseReference doctorDatabase = FirebaseDatabase
                 .getInstance().getReference().child("Doctors")
                 .child(currentUser.getUid());
+        final DatabaseReference userDatabase = FirebaseDatabase
+                .getInstance().getReference().child("Users")
+                .child(currentUser.getUid());
+
 
         //Information to pass to Doctors table
         HashMap<String, String> doctorMap = new HashMap<>();
@@ -110,11 +115,19 @@ public class DoctorRegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    mRegProgress.dismiss();
-                    sendToStart();
-                } else{
-                    Toast.makeText(DoctorRegisterActivity.this, "Doctor Setup failed",
-                            Toast.LENGTH_LONG).show();
+                    //set user-type in user's table to doctor
+                    userDatabase.child("user_type").setValue("doctor").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                mRegProgress.dismiss();
+                                sendToStart();
+                            } else{
+                                Toast.makeText(DoctorRegisterActivity.this, "Doctor Setup failed",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 }
             }
         });

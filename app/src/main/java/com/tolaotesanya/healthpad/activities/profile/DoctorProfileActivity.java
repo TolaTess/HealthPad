@@ -199,38 +199,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
 
                 }
 
-              /*  if (mCurrent_state.equals("not_consul")) {
-                    //current user sends a request to the user of interest using his user id
-                    presenter.getmReqConsulDatabase().child(mCurrent_user_id).child(doctor_id)
-                            .child("request_type").setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                //Add senders details under receiver
-                                presenter.getmReqConsulDatabase().child(doctor_id).child(mCurrent_user_id)
-                                        .child("request_type").setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        mBtnReqConsultation.setEnabled(true); //grey out button
-                                        mCurrent_state = State.request_sent;
-                                        mBtnReqConsultation.setText(R.string.cancel_consul); //change the text of button
-                                        Toast.makeText(DoctorProfileActivity.this, "Request Sent",
-                                                Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(DoctorProfileActivity.this, "Failed Sending Request",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-
-
-            }
-        });*/
-
-
             }
         });
     }

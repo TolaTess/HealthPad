@@ -106,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userMap.put("status", "Need your expert opinion");
                     userMap.put("image", "default");
                     userMap.put("thumb_image", "default");
+                    userMap.put("user_type", "user");
 
                     //send hashmap to database
                     mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
