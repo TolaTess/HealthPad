@@ -18,6 +18,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.profile.DoctorProfileActivity;
+import com.tolaotesanya.healthpad.helper.DisplayScreen;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.model.Doctors;
 import com.tolaotesanya.healthpad.helper.DoctorsViewHolder;
 
@@ -26,12 +29,17 @@ public class AllDoctorsActivity extends AppCompatActivity {
     
     private RecyclerView mDoctorList;
     private DatabaseReference databaseReference;
+    private FirebasePresenter presenter;
     private FirebaseRecyclerAdapter adapter;
+
+    private String mCurrentUser_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_doctors);
+        presenter = new FirebaseDatabaseLayer();
+        mCurrentUser_id = presenter.getMcurrent_user_id();
 
         setupToolbar();
 
@@ -68,6 +76,7 @@ public class AllDoctorsActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(DoctorsViewHolder holder, int position, Doctors model) {
                 Log.d(TAG, "onBindViewHolder: ");
+
                 holder.setFullName(model.getFirst_name(), model.getLast_name());
                 holder.setDetails(model.getSpeciality(), model.getLocation());
                 holder.setImage(model.getThumb_image());
