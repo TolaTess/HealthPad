@@ -22,8 +22,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -87,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
 
      private void attachUI() {
         mAddPayment = findViewById(R.id.payment);
-        mChangeImage = findViewById(R.id.change_image);
+        mChangeImage = findViewById(R.id.setting_change_image);
         mSaveChanges = findViewById(R.id.save_settings);
         mDoctorCheck = findViewById(R.id.doctor_check_btn);
         mStatus = findViewById(R.id.settings_status_input);
@@ -141,7 +144,8 @@ public class SettingsActivity extends AppCompatActivity {
                             } else {
                                 Log.d(TAG, "Display Name update: is not sucessfull");
                                 mRegProgress.hide();
-                                Toast.makeText(SettingsActivity.this, "Error saving changes", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SettingsActivity.this,
+                                        "Error saving changes", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -168,11 +172,65 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+        final DatabaseReference updateUserType = mUserDatabase.child("user_type");
+
+        updateUserType.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
-                startActivity(doctorIntent);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                final String user_type = dataSnapshot.getValue().toString();
+                Log.d(TAG, "onDataChange: " );
+                if(user_type.equals("doctor")){
+                    mDoctorCheck.setText("Disable Doctor Account");
+                    mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            updateUserType.setValue("user");
+                            Toast.makeText(SettingsActivity.this,
+                                    "Doctor Account now Disabled", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else if(user_type.equals("user")) {
+                    DatabaseReference doctorCheckDB = FirebaseDatabase.getInstance().getReference()
+                            .child("Doctors");
+                    doctorCheckDB.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot doctors: dataSnapshot.getChildren()){
+                                final String doctor_id = doctors.getKey();
+                                Log.d(TAG, "onDataChange: doctor keys" + doctor_id);
+                                if (mCurrentUser.getUid().equals(doctor_id)) {
+                                    mDoctorCheck.setText("Enable Doctor Account");
+                                    mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Log.d(TAG, "onDataChange: doctor key" + doctor_id);
+                                            updateUserType.setValue("doctor");
+                                        }
+                                    });
+                                } else {
+                                    mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
+                                            startActivity(doctorIntent);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
