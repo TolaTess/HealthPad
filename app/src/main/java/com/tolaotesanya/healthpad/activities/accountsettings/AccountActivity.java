@@ -41,10 +41,21 @@ public class AccountActivity extends AppCompatActivity {
         setupToolbar();
         attachUI();
 
+        String poster_id = getIntent().getStringExtra("user_id");
+
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = mCurrentUser.getUid();
-        myDatabaseRef = FirebaseDatabase.getInstance()
-                .getReference().child("Users").child(userId);
+        if(poster_id != null){
+            myDatabaseRef = FirebaseDatabase.getInstance()
+                    .getReference().child("Users").child(poster_id);
+            mSettingsButton.setEnabled(false);
+            mSettingsButton.setVisibility(View.INVISIBLE);
+        } else {
+            myDatabaseRef = FirebaseDatabase.getInstance()
+                    .getReference().child("Users").child(userId);
+            mSettingsButton.setEnabled(true);
+            mSettingsButton.setVisibility(View.VISIBLE);
+        }
 
         //Value Event Listener to get the data from database
         myDatabaseRef.addValueEventListener(new ValueEventListener() {
