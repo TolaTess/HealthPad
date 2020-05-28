@@ -8,15 +8,25 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 import com.tolaotesanya.healthpad.activities.business.AllDoctorsActivity;
@@ -24,6 +34,9 @@ import com.tolaotesanya.healthpad.fragment.HomeFragment;
 import com.tolaotesanya.healthpad.activities.auth.AuthActivity;
 import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
 import com.tolaotesanya.healthpad.fragment.requests.RequestPresenter;
+import com.tolaotesanya.healthpad.helper.DisplayScreen;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -32,10 +45,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
 
     private FirebaseAuth mAuth;
+    //private String user_type;
 
     HomeFragment homeFragment;
-    RequestFragment requestFragment;
     private FragmentTransaction fragmentTransaction;
+    private FirebasePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +57,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-
+        presenter = new FirebaseDatabaseLayer();
         attachDrawerNav();
-        requestFragment = new RequestFragment();
         homeFragment = new HomeFragment();
-        setFragment(requestFragment);
+        setFragment(homeFragment);
+        userDisplay();
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //Ensure user is logged in before proceeding to main activity
-        final FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+    private void userDisplay() {
+        FirebaseUser mCurrentUser = mAuth.getCurrentUser();
         if (mCurrentUser == null) {
             sendToStart();
+        } else {
+            final Menu menu = navigationView.getMenu();
+            DatabaseReference userCheck = presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                    .child("user_type");
+            userCheck.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    //Log.d(TAG, "onDataChange: " + dataSnapshot.getValue().toString());
+                    String user_type = dataSnapshot.getValue().toString();
+                    if (user_type.equals("doctor")) {
+                        menu.findItem(R.id.nav_request).setVisible(true);
+                        menu.findItem(R.id.nav_search).setVisible(false);
+                    } else {
+                        menu.findItem(R.id.nav_request).setVisible(false);
+                        menu.findItem(R.id.nav_search).setVisible(true);
+                    }
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -76,6 +111,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
+        View navView = navigationView.getHeaderView(0);
+        final CircleImageView header_image = navView.findViewById(R.id.header_image);
+        presenter.getmUserDatabase().child(presenter.getMcurrent_user_id()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String image = dataSnapshot.child("thumb_image").getValue().toString();
+                Log.d(TAG, "onDataChange: image" + image);
+                Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(header_image);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -96,7 +146,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.nav_home:
                 //setFragment(homeFragment);
-                setFragment(requestFragment);
+                setFragment(homeFragment);
+
                 break;
             case R.id.nav_search:
                 Intent allDoctorsIntent = new Intent(this, AllDoctorsActivity.class);
@@ -109,7 +160,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 sendToStart();
+                break;
             case R.id.nav_chat:
+                Intent postIntent = new Intent(this, PostsActivity.class);
+                startActivity(postIntent);
+                break;
+            case R.id.nav_request:
+                RequestFragment requestFragment = new RequestFragment();
+                setFragment(requestFragment);
                 //Fragment
                 break;
         }
