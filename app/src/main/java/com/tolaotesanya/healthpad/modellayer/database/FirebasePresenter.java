@@ -17,5 +17,6 @@ public interface FirebasePresenter {
     Map registerUser(String display_name);
     Map setupDatabaseMap(String muser_id, State mapType);
     StorageReference getmStorageRef();
+    Map setupMessageChatDB(String doctor_id, String message, State mapType);
 
 }
