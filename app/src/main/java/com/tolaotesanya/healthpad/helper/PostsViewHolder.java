@@ -8,6 +8,8 @@ import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.modellayer.model.Posts;
 
+import org.w3c.dom.Text;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,10 +28,14 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
         Name.setText(display_name);
     }
 
-    public void setCaption(String posts) {
+    public void setCaption(String caption) {
         TextView details = mView.findViewById(R.id.feed_caption);
-        //String detailsString =  posts.getCaption();
-        details.setText(posts);
+        details.setText(caption);
+    }
+
+    public void setTime(String time){
+        TextView timeView = mView.findViewById(R.id.time_posted);
+        timeView.setText(time);
     }
 
     public void setPostImage(String postImage) {

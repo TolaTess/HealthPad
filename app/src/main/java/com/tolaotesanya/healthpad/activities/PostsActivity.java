@@ -97,7 +97,6 @@ public class PostsActivity extends AppCompatActivity {
 
             Uri imageUri = data.getData();
             CropImage.activity(imageUri)
-                    .setAspectRatio(1, 1)
                     .start(this);
 
         }

@@ -24,18 +24,16 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="300dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <ImageView
                     android:id="@+id/feed_image"
-                    android:layout_width="361dp"
-                    android:layout_height="152dp"
-                    android:layout_alignParentStart="true"
+                    android:layout_width="300dp"
+                    android:layout_height="200dp"
                     android:layout_below="@id/feed_display_name"
-                    android:layout_marginStart="11dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_centerInParent="true"
                     android:src="@drawable/health_pad_logo" />
 
                 <ImageView
@@ -57,10 +55,10 @@
                     android:layout_alignParentTop="false"
                     android:layout_below="@id/feed_caption"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginStart="42dp"
-                    android:layout_marginTop="-25dp"
+                    android:layout_marginStart="38dp"
+                    android:layout_marginTop="9dp"
                     android:fontFamily="@font/allerta"
-                    android:text="@string/sample_post_view" />
+                    android:text="views" />
 
                 <TextView
                     android:id="@+id/feed_display_name"
@@ -77,13 +75,14 @@
 
                 <TextView
                     android:id="@+id/feed_caption"
-                    android:layout_width="179dp"
-                    android:layout_height="38dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:layout_below="@id/feed_image"
                     android:layout_centerInParent="true"
-                    android:layout_marginStart="129dp"
-                    android:layout_marginTop="203dp"
+                    android:layout_marginStart="42dp"
+                    android:layout_marginTop="235dp"
                     android:fontFamily="@font/allerta_stencil"
                     android:text="@string/sample_post_msg"
                     android:textAlignment="center"
@@ -96,6 +95,17 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
                     app:srcCompat="@drawable/heart" />
+
+                <TextView
+                    android:id="@+id/time_posted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginEnd="37dp"
+                    android:text="hours"
+                    android:textSize="12sp" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

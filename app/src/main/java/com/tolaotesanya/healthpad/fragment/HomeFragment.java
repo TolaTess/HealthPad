@@ -23,6 +23,7 @@ import com.google.firebase.storage.StorageReference;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.MainActivity;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
+import com.tolaotesanya.healthpad.helper.GetTimeAgo;
 import com.tolaotesanya.healthpad.helper.PostsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
@@ -90,6 +91,10 @@ public class HomeFragment extends Fragment {
             @Override
             protected void onBindViewHolder(final PostsViewHolder holder, final int position, final Posts model) {
                 Log.d(TAG, "onBindViewHolder: ");
+                long timeofPost = model.getTimestamp();
+                GetTimeAgo getTimeAgo = new GetTimeAgo();
+                String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
+                holder.setTime(timePosted);
 
                 holder.setCaption(model.getCaption());
                 holder.setPostImage(model.getPost_image());
