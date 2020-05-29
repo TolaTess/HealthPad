@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.tolaotesanya.healthpad.R;
 
 public class SplashActivity extends AppCompatActivity {
-    private static int SPLASH_SCREEN = 5000;
+    private static int SPLASH_SCREEN = 4000;
 
     //Variables
     private Animation topAnimation;

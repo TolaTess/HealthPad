@@ -1,6 +1,5 @@
 package com.tolaotesanya.healthpad.fragment.requests;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -26,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.Requests;
 
 public class RequestFragment extends Fragment {
@@ -114,7 +114,7 @@ public class RequestFragment extends Fragment {
                                                 @Override
                                                 public void onClick(View v) {
                                                     DialogFragmentHelper dialogFragmentHelper =
-                                                            new DialogFragmentHelper(requestPresenter, list_user_id, userName);
+                                                            new DialogFragmentHelper(requestPresenter, null, list_user_id, userName, ClassName.Request);
                                                     Log.d(TAG, "onClick dialog: " + requestPresenter.getMdoctor_id() + " list user id" + list_user_id);
                                                     dialogFragmentHelper.setCancelable(false);
                                                     dialogFragmentHelper.show(getFragmentManager(), "DIALOG_FRAGMENT");
