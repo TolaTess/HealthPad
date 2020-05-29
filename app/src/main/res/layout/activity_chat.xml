@@ -31,8 +31,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="20dp"
-            android:textColor="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
+            android:textColor="@color/colorBlack"
             android:textSize="14sp" />
 
         <ImageView

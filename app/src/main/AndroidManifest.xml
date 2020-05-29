@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.chat.ChatActivity"></activity>
-        <activity android:name=".activities.PostsActivity" />
+        <activity
+            android:name=".activities.chat.ChatActivity"/>
+        <activity android:name=".activities.posts.PostsActivity" />
         <activity
             android:name=".activities.profile.DoctorProfileActivity"
             android:parentActivityName=".activities.business.AllDoctorsActivity" />
