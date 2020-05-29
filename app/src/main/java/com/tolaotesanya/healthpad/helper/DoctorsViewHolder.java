@@ -1,6 +1,7 @@
 package com.tolaotesanya.healthpad.helper;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -19,20 +20,36 @@ public class DoctorsViewHolder extends RecyclerView.ViewHolder {
         mView = itemView;
     }
 
-    public void setFullName(String fName){
+    public void setFullName(String fName) {
         TextView fullName = mView.findViewById(R.id.doctors_name);
-        fullName.setText(fName);}
+        fullName.setText(fName);
+    }
 
-    public void setDetails(String speciality, String location){
+    public void setDetails(String speciality, String location) {
         TextView details = mView.findViewById(R.id.doctors_details);
-        String detailsString = "I am a " + speciality +
-                "\n" + "based in " + location;
+        String detailsString = speciality + " based in " + location;
         details.setText(detailsString);
     }
 
-    public void setImage(String thumb_image){
+    public void setImage(String thumb_image) {
         CircleImageView mThumbImage = mView.findViewById(R.id.doctors_image);
-            //placeholder holds a picture on file before the getting database
-            Picasso.get().load(thumb_image).placeholder(R.drawable.ic_launcher_foreground).into(mThumbImage);
+        Picasso.get().load(thumb_image).placeholder(R.drawable.ic_launcher_foreground).into(mThumbImage);
+    }
+
+    public void setUserOnline(String online) {
+        ImageView mOnlineView = mView.findViewById(R.id.all_user_online_icon);
+        TextView mLastSeen = mView.findViewById(R.id.all_user_lastseen);
+        if(online.equals("true")){
+            mOnlineView.setVisibility(View.VISIBLE);
+
+        } else{
+            mOnlineView.setVisibility(View.INVISIBLE);
+            GetTimeAgo getTimeAgo = new GetTimeAgo();
+            long lastTime = Long.parseLong(online);
+
+            String lastSeenTime = getTimeAgo.getTimeAgo(lastTime, mView.getContext());
+            String lastseenText = "Avaliable " + lastSeenTime;
+            mLastSeen.setText(lastseenText);
+        }
     }
 }

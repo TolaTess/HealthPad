@@ -1,5 +1,29 @@
 package com.tolaotesanya.healthpad.activities;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.fragment.HomeFragment;
+import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
+import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,38 +33,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
-import com.tolaotesanya.healthpad.activities.business.AllDoctorsActivity;
-import com.tolaotesanya.healthpad.activities.chat.ChatActivity;
-import com.tolaotesanya.healthpad.fragment.HomeFragment;
-import com.tolaotesanya.healthpad.activities.auth.AuthActivity;
-import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
-import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
-import com.tolaotesanya.healthpad.fragment.requests.RequestPresenter;
-import com.tolaotesanya.healthpad.helper.DisplayScreen;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
-import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
-import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
@@ -67,7 +59,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         homeFragment = new HomeFragment();
         setFragment(homeFragment);
         userDisplay();
+        onlineCheck();
 
+    }
+    private void onlineCheck() {
+        if(presenter.getMcurrent_user_id() != null){
+            presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                    .child("online").setValue("true");
+        }
     }
 
     private void userDisplay() {
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             userCheck.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    //Log.d(TAG, "onDataChange: " + dataSnapshot.getValue().toString());
                     String user_type = dataSnapshot.getValue().toString();
                     if (user_type.equals("doctor")) {
                         menu.findItem(R.id.nav_request).setVisible(true);
@@ -162,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 sendToStart();
+                presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                        .child("online").setValue(ServerValue.TIMESTAMP);
                 break;
             case R.id.nav_chat:
                 ChatFragment chatFragment = new ChatFragment();

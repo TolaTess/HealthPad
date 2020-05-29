@@ -2,25 +2,19 @@ package com.tolaotesanya.healthpad.modellayer.database;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
-import com.tolaotesanya.healthpad.fragment.HomeFragment;
 import com.tolaotesanya.healthpad.helper.State;
 
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public class FirebaseDatabaseLayer implements FirebasePresenter {
     private static final String TAG = "FirebaseDatabaseLayer";
@@ -188,6 +182,7 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         userMap.put("name", displayName);
         userMap.put("status", "Need your expert opinion");
         userMap.put("image", "default");
+        userMap.put("online", "true");
         userMap.put("thumb_image", "default");
         userMap.put("user_type", "user");
 
