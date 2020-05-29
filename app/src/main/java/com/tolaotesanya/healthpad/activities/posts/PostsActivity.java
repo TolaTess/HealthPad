@@ -1,9 +1,8 @@
-package com.tolaotesanya.healthpad.activities;
+package com.tolaotesanya.healthpad.activities.posts;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import id.zelory.compressor.Compressor;
 
 import android.app.ProgressDialog;
@@ -13,7 +12,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,25 +22,18 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.activities.accountsettings.SettingsActivity;
-import com.tolaotesanya.healthpad.fragment.HomeFragment;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 public class PostsActivity extends AppCompatActivity {

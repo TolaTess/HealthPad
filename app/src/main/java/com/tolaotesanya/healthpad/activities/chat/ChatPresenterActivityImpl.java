@@ -3,7 +3,9 @@ package com.tolaotesanya.healthpad.activities.chat;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -11,7 +13,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
@@ -23,7 +24,6 @@ import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.model.ReceivedMessage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatPresenterImpl implements ChatPresenter {
+public class ChatPresenterActivityImpl implements ChatActivityPresenter {
+    private static final String TAG = "ChatPresentActImpl";
 
     private FirebasePresenter presenter;
     private DatabaseReference messageRef;
@@ -53,22 +54,35 @@ public class ChatPresenterImpl implements ChatPresenter {
     private Context mContext;
     private String mChatReceiverUser;
     private final List<ReceivedMessage> messagesList = new ArrayList<>();
+    private ChatActivity mView;
+    TextView mNameView;
+    ImageView mChatSendBtn;
 
-    public ChatPresenterImpl(Context mContext, ChatActivity mView, String doctor_id) {
+    public ChatPresenterActivityImpl(Context mContext, ChatActivity mView, String user_id, String userName) {
         this.mContext = mContext;
-        this.mChatReceiverUser = doctor_id;
+        this.mChatReceiverUser = user_id;
+        this.mView = mView;
         presenter = new FirebaseDatabaseLayer(mContext);
+        attachUI();
+        mNameView.setText(userName);
         mAdapter = new MessageAdapter(messagesList);
-        mChatMessageView = mView.findViewById(R.id.chat_message_input);
-        mLastSeen = mView.findViewById(R.id.last_seen);
-        mProfileImage = mView.findViewById(R.id.custom_bar_image);
-        mMessageRecyclerView = mView.findViewById(R.id.messages_list);
-        mRefreshLayout = mView.findViewById(R.id.swipe_message_layout);
         mLinearLayout = new LinearLayoutManager(mContext);
         mMessageRecyclerView.setLayoutManager(mLinearLayout);
         mMessageRecyclerView.setAdapter(mAdapter);
         messageRef = presenter.getmRootRef().child("Messages")
                         .child(presenter.getMcurrent_user_id()).child(mChatReceiverUser);
+
+        checkLastSeenOnline();
+
+        mChatSendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessages();
+            }
+        });
+
+        loadMessages();
+
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -78,6 +92,16 @@ public class ChatPresenterImpl implements ChatPresenter {
             }
         });
 
+    }
+
+    public void attachUI() {
+        mNameView = mView.findViewById(R.id.custom_bar_name);
+        mChatSendBtn = mView.findViewById(R.id.chat_msg_send);
+        mChatMessageView = mView.findViewById(R.id.chat_message_input);
+        mLastSeen = mView.findViewById(R.id.last_seen);
+        mProfileImage = mView.findViewById(R.id.custom_bar_image);
+        mMessageRecyclerView = mView.findViewById(R.id.messages_list);
+        mRefreshLayout = mView.findViewById(R.id.swipe_message_layout);
     }
 
     @Override
@@ -111,15 +135,19 @@ public class ChatPresenterImpl implements ChatPresenter {
 
     @Override
     public void checkLastSeenOnline() {
-        presenter.getmRootRef().child("Users").child(mChatReceiverUser).addValueEventListener(new ValueEventListener() {
+        Log.d(TAG, "checkLastSeenOnline: " + mChatReceiverUser + " userid " + presenter.getMcurrent_user_id());
+        presenter.getmUserDatabase()
+                .child(mChatReceiverUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String online = dataSnapshot.child("online").getValue().toString();
+                //String online = dataSnapshot.child("online").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
+                Log.d(TAG, "onDataChange: datasnapshot " + dataSnapshot.getKey());
+                Log.d(TAG, "onDataChange: " + " image link " + image);
 
                 Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(mProfileImage);
 
-                if(online.equals("true")){
+               /* if(online.equals("true")){
 
                     mLastSeen.setText("online");
 
@@ -130,7 +158,7 @@ public class ChatPresenterImpl implements ChatPresenter {
 
                     String lastSeenTime = getTimeAgo.getTimeAgo(lastTime, mContext);
                     mLastSeen.setText(lastSeenTime);
-                }
+                }*/
             }
 
             @Override
