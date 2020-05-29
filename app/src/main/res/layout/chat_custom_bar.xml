@@ -48,7 +48,7 @@
                 android:layout_below="@+id/custom_bar_name"
                 android:layout_marginTop="10dp"
                 android:layout_weight="4"
-                android:text="@string/last_seen"
+                android:text="lastSeen"
                 android:textColor="@color/colorBlack" />
 
             />
