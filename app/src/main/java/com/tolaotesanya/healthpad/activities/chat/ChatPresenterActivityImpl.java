@@ -135,19 +135,18 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
 
     @Override
     public void checkLastSeenOnline() {
-        Log.d(TAG, "checkLastSeenOnline: " + mChatReceiverUser + " userid " + presenter.getMcurrent_user_id());
         presenter.getmUserDatabase()
                 .child(mChatReceiverUser).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //String online = dataSnapshot.child("online").getValue().toString();
+                String online = dataSnapshot.child("online").getValue().toString();
                 String image = dataSnapshot.child("image").getValue().toString();
                 Log.d(TAG, "onDataChange: datasnapshot " + dataSnapshot.getKey());
                 Log.d(TAG, "onDataChange: " + " image link " + image);
 
                 Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(mProfileImage);
 
-               /* if(online.equals("true")){
+                if(online.equals("true")){
 
                     mLastSeen.setText("online");
 
@@ -158,7 +157,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
 
                     String lastSeenTime = getTimeAgo.getTimeAgo(lastTime, mContext);
                     mLastSeen.setText(lastSeenTime);
-                }*/
+                }
             }
 
             @Override

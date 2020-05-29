@@ -1,7 +1,5 @@
 package com.tolaotesanya.healthpad.activities.chat;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 public interface ChatActivityPresenter {
 
     void createChatDatabase();

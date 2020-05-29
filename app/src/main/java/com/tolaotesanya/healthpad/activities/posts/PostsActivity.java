@@ -1,10 +1,5 @@
 package com.tolaotesanya.healthpad.activities.posts;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import id.zelory.compressor.Compressor;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +30,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import id.zelory.compressor.Compressor;
 
 public class PostsActivity extends AppCompatActivity {
     private static final String TAG = "PostsActivity";

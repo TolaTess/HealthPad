@@ -1,10 +1,5 @@
 package com.tolaotesanya.healthpad.activities.business;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,20 +9,28 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
+import com.tolaotesanya.healthpad.helper.DoctorsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.Doctors;
-import com.tolaotesanya.healthpad.helper.DoctorsViewHolder;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class AllDoctorsActivity extends AppCompatActivity {
     private static final String TAG = "AllDoctorsActivity";
     
     private RecyclerView mDoctorList;
-    private DatabaseReference databaseReference;
     private FirebasePresenter presenter;
     private FirebaseRecyclerAdapter adapter;
     private Context mContext = AllDoctorsActivity.this;
@@ -53,11 +56,15 @@ public class AllDoctorsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void checkLastSeenOnline(String doctor_id) {
+
+    }
+
     private void fetch() {
-        databaseReference = presenter.getmRootRef()
+        DatabaseReference databaseReference = presenter.getmRootRef()
                 .child("Doctors");
 
-        FirebaseRecyclerOptions<Doctors> options =
+        final FirebaseRecyclerOptions<Doctors> options =
                 new FirebaseRecyclerOptions.Builder<Doctors>()
                         .setQuery(databaseReference, Doctors.class)
                         .build();
@@ -71,14 +78,30 @@ public class AllDoctorsActivity extends AppCompatActivity {
                 return new DoctorsViewHolder(view);
             }
             @Override
-            protected void onBindViewHolder(DoctorsViewHolder holder, final int position, final Doctors model) {
+            protected void onBindViewHolder(final DoctorsViewHolder holder, final int position, final Doctors model) {
                 Log.d(TAG, "onBindViewHolder: ");
-                final String fullName = "Dr" + model.getFirst_name() + " " + model.getLast_name();
+                final String fullName = "Dr " + model.getFirst_name() + " " + model.getLast_name();
                 holder.setFullName(fullName);
                 holder.setDetails(model.getSpeciality(), model.getLocation());
                 holder.setImage(model.getThumb_image());
 
                 final String doctorid = getRef(position).getKey();
+                presenter.getmUserDatabase()
+                        .child(doctorid).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild("online")) {
+
+                            String userOnline = dataSnapshot.child("online").getValue().toString();
+                            holder.setUserOnline(userOnline);
+                        }
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -1,14 +1,14 @@
 package com.tolaotesanya.healthpad.activities.chat;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.tolaotesanya.healthpad.R;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
