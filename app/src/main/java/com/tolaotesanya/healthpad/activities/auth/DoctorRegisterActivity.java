@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -23,8 +24,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 import com.tolaotesanya.healthpad.helper.DisplayScreen;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class DoctorRegisterActivity extends AppCompatActivity {
     private static final String TAG = "DoctorsActivity";
@@ -37,6 +42,9 @@ public class DoctorRegisterActivity extends AppCompatActivity {
     private TextInputLayout mLocation;
     private Button mSaveButton;
 
+    private FirebasePresenter presenter;
+    private Context mContext = DoctorRegisterActivity.this;
+
     private ProgressDialog mRegProgress;
 
 
@@ -44,6 +52,7 @@ public class DoctorRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctors);
+        presenter = new FirebaseDatabaseLayer(mContext);
 
         setupToolbar();
         attachUI();
@@ -90,25 +99,12 @@ public class DoctorRegisterActivity extends AppCompatActivity {
 
     private void registerDoctor(String firstName, String lastName,
                                 String speciality, String clinicName, String location){
-        final FirebaseUser currentUser = FirebaseAuth
-                .getInstance().getCurrentUser();
-        DatabaseReference doctorDatabase = FirebaseDatabase
-                .getInstance().getReference().child("Doctors")
-                .child(currentUser.getUid());
-        final DatabaseReference userDatabase = FirebaseDatabase
-                .getInstance().getReference().child("Users")
-                .child(currentUser.getUid());
+        DatabaseReference doctorDatabase = presenter.getmRootRef().child("Doctors")
+                .child(presenter.getMcurrent_user_id());
+        final DatabaseReference userDatabase = presenter.getmUserDatabase()
+                .child(presenter.getMcurrent_user_id());
 
-
-        //Information to pass to Doctors table
-        HashMap<String, String> doctorMap = new HashMap<>();
-        doctorMap.put("first_name", firstName);
-        doctorMap.put("last_name", lastName);
-        doctorMap.put("speciality", speciality);
-        doctorMap.put("clinic_name", clinicName);
-        doctorMap.put("location", location);
-        doctorMap.put("image", "default");
-        doctorMap.put("thumb_image", "default");
+        Map doctorMap = presenter.registerDoctor(firstName, lastName, speciality, clinicName, location);
 
         //send hashmap to database
         doctorDatabase.setValue(doctorMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -134,8 +130,7 @@ public class DoctorRegisterActivity extends AppCompatActivity {
     }
 
     private void sendToStart() {
-        Intent accountIntent = new Intent(this, AccountActivity.class);
-        startActivity(accountIntent);
+        presenter.getIntentPresenter().presentIntent(ClassName.Account, presenter.getMcurrent_user_id(), null);
     }
 
 

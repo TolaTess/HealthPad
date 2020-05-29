@@ -19,10 +19,9 @@ public class DoctorsViewHolder extends RecyclerView.ViewHolder {
         mView = itemView;
     }
 
-    public void setFullName(String fname, String lName){
+    public void setFullName(String fName){
         TextView fullName = mView.findViewById(R.id.doctors_name);
-        String nameString = "Dr " + fname + " " + lName;
-        fullName.setText(nameString);}
+        fullName.setText(fName);}
 
     public void setDetails(String speciality, String location){
         TextView details = mView.findViewById(R.id.doctors_details);

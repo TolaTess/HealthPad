@@ -57,7 +57,7 @@ public class ChatPresenterImpl implements ChatPresenter {
     public ChatPresenterImpl(Context mContext, ChatActivity mView, String doctor_id) {
         this.mContext = mContext;
         this.mChatReceiverUser = doctor_id;
-        presenter = new FirebaseDatabaseLayer();
+        presenter = new FirebaseDatabaseLayer(mContext);
         mAdapter = new MessageAdapter(messagesList);
         mChatMessageView = mView.findViewById(R.id.chat_message_input);
         mLastSeen = mView.findViewById(R.id.last_seen);
@@ -79,18 +79,6 @@ public class ChatPresenterImpl implements ChatPresenter {
         });
 
     }
-
-    /*public SwipeRefreshLayout getmRefreshLayout() {
-        return mRefreshLayout;
-    }
-
-    public int getmCurrentPage() {
-        return mCurrentPage;
-    }
-
-    public int getItemPos() {
-        return itemPos;
-    }*/
 
     @Override
     public void createChatDatabase() {

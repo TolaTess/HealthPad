@@ -20,12 +20,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.MainActivity;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseAuthLayer;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
     //Firebase
-    private FirebaseAuth mAuth;
+    private FirebaseAuthLayer mAuth;
 
     //UI Element
     private Button mCreateButton;
@@ -39,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = new FirebaseAuthLayer();
         mRegProgress = new ProgressDialog(this);
 
         setupToolbar();
@@ -78,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login_user(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.getmAuth().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

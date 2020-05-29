@@ -109,12 +109,12 @@ public class RequestFragment extends Fragment {
                                             holder.setImage(userThumb);
                                             holder.setStatus(type);
 
-                                            /*holder.mView.setOnClickListener(new View.OnClickListener() {
+                                            holder.mView.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
 
                                                 }
-                                            });*/
+                                            });
                                         }
 
                                         @Override

@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.chat.ChatActivity;
 import com.tolaotesanya.healthpad.helper.GetTimeAgo;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.ChatConversation;
 
 
@@ -146,10 +147,7 @@ public class ChatFragment extends Fragment {
                                 holder.mView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                                        chatIntent.putExtra("user_id", list_user_id);
-                                        chatIntent.putExtra("username", userName);// send user id to use it to get all other info in db
-                                        startActivity(chatIntent);
+                                        chatPresenter.getIntentPresenter().presentIntent(ClassName.Chats, list_user_id, userName);
                                     }
                                 });
                             }

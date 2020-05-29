@@ -10,6 +10,7 @@ public class FirebaseAuthLayer {
 
     public FirebaseAuthLayer() {
         mAuth = FirebaseAuth.getInstance();
+        mcurrent_user = mAuth.getCurrentUser();
     }
 
     public FirebaseAuth getmAuth() {
@@ -20,9 +21,9 @@ public class FirebaseAuthLayer {
         return mcurrent_user;
     }
 
-    public void setupFirebase(){
+    /*public void setupFirebase(){
         mAuth = FirebaseAuth.getInstance();
         mcurrent_user = mAuth.getCurrentUser();
-    }
+    }*/
 
 }

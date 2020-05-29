@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,8 +25,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.MainActivity;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseAuthLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -36,12 +41,13 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout mEmail;
     private TextInputLayout mPassword;
     private Button mCreateButton;
-
     private ProgressDialog mRegProgress;
 
+    private Context mContext = RegisterActivity.this;
+
     //Firebase
-    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseAuthLayer mAuth;
+    private FirebasePresenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +55,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mRegProgress = new ProgressDialog(this);
-        mAuth = FirebaseAuth.getInstance();
+        mAuth = new FirebaseAuthLayer();
+        presenter = new FirebaseDatabaseLayer(mContext);
 
         setupToolbar();
         attachUI();
@@ -91,25 +98,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void register_user(final String display_name, String email, String password){
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.getmAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
 
-                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                    String userId = currentUser.getUid();
-                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
-
+                    String currentUserid = mAuth.getMcurrent_user().getUid();
                     //Information to pass to Users table in database
-                    HashMap<String, String> userMap = new HashMap<>();
-                    userMap.put("name", display_name);
-                    userMap.put("status", "Need your expert opinion");
-                    userMap.put("image", "default");
-                    userMap.put("thumb_image", "default");
-                    userMap.put("user_type", "user");
+                    Map userMap = presenter.setupUserMap(display_name);
 
                     //send hashmap to database
-                    mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    presenter.getmUserDatabase().child(currentUserid).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){

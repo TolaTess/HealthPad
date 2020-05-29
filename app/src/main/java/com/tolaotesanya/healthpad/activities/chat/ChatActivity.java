@@ -30,7 +30,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        String mChatReceiverUser = getIntent().getStringExtra("user_id");
+        String mChatReceiverUser = getIntent().getStringExtra("doctor_id");
         String userName = getIntent().getStringExtra("username");
 
         chatPresenter = new ChatPresenterImpl(mContext, mMainView, mChatReceiverUser);

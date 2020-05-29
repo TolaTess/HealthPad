@@ -15,7 +15,7 @@ public class RequestPresenterImpl implements RequestPresenter {
 
 
     public RequestPresenterImpl(Context context) {
-        FirebasePresenter presenter = new FirebaseDatabaseLayer();
+        FirebasePresenter presenter = new FirebaseDatabaseLayer(context);
         mConsultReqDatabase = presenter.getmRootRef()
                 .child("Consultation_Req")
                 .child(presenter.getMcurrent_user_id());

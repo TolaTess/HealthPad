@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import id.zelory.compressor.Compressor;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -54,6 +55,7 @@ public class PostsActivity extends AppCompatActivity {
     private ImageView mImageView;
     private ProgressDialog mProgressbar;
     private String mCurrentUserId;
+    private Context mContext = PostsActivity.this;
 
     private FirebasePresenter presenter;
 
@@ -61,7 +63,7 @@ public class PostsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
-        presenter = new FirebaseDatabaseLayer();
+        presenter = new FirebaseDatabaseLayer(mContext);
         mCurrentUserId = presenter.getMcurrent_user_id();
         attachUI();
     }
@@ -163,26 +165,8 @@ public class PostsActivity extends AppCompatActivity {
                                         final String thumb_download_uri = uri.toString();
                                         String caption = mCaption.getText().toString();
                                         if (!TextUtils.isEmpty(caption)) {
-                                            String current_user_ref = "Posts/";
-                                            DatabaseReference user_post_push = presenter.getmRootRef().child("Posts")
-                                                    .push();
-
-                                            String push_id = user_post_push.getKey();
-
-                                            Map postMap = new HashMap();
-                                            postMap.put("timestamp", ServerValue.TIMESTAMP);
-                                            postMap.put("caption", caption);
-                                            postMap.put("likes", "3");
-                                            postMap.put("post_type", "tips");
-                                            postMap.put("user_id", mCurrentUserId);
-                                            postMap.put("post_image", download_uri);
-                                            postMap.put("thumb_image", thumb_download_uri);
-
+                                            Map setupMap = presenter.setupPostMap(caption, download_uri, thumb_download_uri);
                                             mCaption.setText("");
-                                            //use updateChildren instead of setValue
-                                            Map setupMap = new HashMap();
-                                            setupMap.put(current_user_ref + "/" + push_id, postMap);
-
                                             presenter.getmRootRef().updateChildren(setupMap).addOnCompleteListener(new OnCompleteListener() {
                                                 @Override
                                                 public void onComplete(@NonNull Task task) {

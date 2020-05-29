@@ -10,6 +10,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.fragment.HomeFragment;
 import com.tolaotesanya.healthpad.helper.State;
 
 import java.text.DateFormat;
@@ -27,14 +29,15 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
     private FirebaseAuthLayer helper;
     private String mcurrent_user_id;
     private StorageReference mStorageRef;
+    private IntentPresenter intentPresenter;
 
-    public FirebaseDatabaseLayer() {
+    public FirebaseDatabaseLayer(Context context) {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mStorageRef = FirebaseStorage.getInstance().getReference();
+        intentPresenter = new IntentPresenter(context);
 
         helper = new FirebaseAuthLayer();
-        helper.setupFirebase();
         if (helper.getmAuth().getCurrentUser() != null) {
             mcurrent_user_id = helper.getmAuth().getCurrentUser().getUid();
         }
@@ -107,6 +110,11 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return userMap;
     }
 
+    @Override
+    public IntentPresenter getIntentPresenter() {
+        return intentPresenter;
+    }
+
     public Map setupDatabaseMap(String doctor_id, State mapType) {
         Map setupMap = new HashMap();
         String currentDate = DateFormat.getDateTimeInstance().format(new Date());
@@ -159,5 +167,52 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return setupMap;
     }
 
+    public Map registerDoctor(String firstName, String lastName,
+                              String speciality, String clinicName, String location){
+        //Information to pass to Doctors table
+        HashMap<String, String> doctorMap = new HashMap<>();
+        doctorMap.put("first_name", firstName);
+        doctorMap.put("last_name", lastName);
+        doctorMap.put("speciality", speciality);
+        doctorMap.put("clinic_name", clinicName);
+        doctorMap.put("location", location);
+        doctorMap.put("image", "default");
+        doctorMap.put("thumb_image", "default");
+
+        return doctorMap;
+    }
+
+    public Map setupUserMap(String displayName){
+        //Information to pass to Users table in database
+        HashMap<String, String> userMap = new HashMap<>();
+        userMap.put("name", displayName);
+        userMap.put("status", "Need your expert opinion");
+        userMap.put("image", "default");
+        userMap.put("thumb_image", "default");
+        userMap.put("user_type", "user");
+
+        return userMap;
+    }
+
+    public Map setupPostMap(String caption, String download_uri, String thumb_download_uri){
+        DatabaseReference user_post_push = mRootRef.child("Posts")
+                .push();
+
+        String post_push_id = user_post_push.getKey();
+
+        Map postMap = new HashMap();
+        postMap.put("timestamp", ServerValue.TIMESTAMP);
+        postMap.put("caption", caption);
+        postMap.put("likes", "3");
+        postMap.put("post_type", "tips");
+        postMap.put("user_id", mcurrent_user_id);
+        postMap.put("post_image", download_uri);
+        postMap.put("thumb_image", thumb_download_uri);
+
+        //use updateChildren instead of setValue
+        Map setupMap = new HashMap();
+        setupMap.put("Posts/" + post_push_id, postMap);
+        return setupMap;
+    }
 
 }

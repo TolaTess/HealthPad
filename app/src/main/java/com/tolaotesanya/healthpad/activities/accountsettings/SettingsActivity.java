@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import id.zelory.compressor.Compressor;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -33,6 +34,9 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -57,11 +61,10 @@ public class SettingsActivity extends AppCompatActivity {
     private TextInputLayout mName;
     private ProgressDialog mRegProgress;
 
+    private Context mContext = SettingsActivity.this;
+
     //Firebase
-    private FirebaseUser mCurrentUser;
-    private DatabaseReference mUserDatabase;
-    private DatabaseReference mDoctorDatabase;
-    private StorageReference mStorageRef;
+    private FirebasePresenter presenter;
 
 
     @Override
@@ -69,14 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = mCurrentUser.getUid();
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        mUserDatabase = FirebaseDatabase.getInstance()
-                .getReference().child("Users").child(userId);
-        mDoctorDatabase = FirebaseDatabase.getInstance()
-                .getReference().child("Doctors").child(userId);
-
+        presenter = new FirebaseDatabaseLayer(mContext);
         setupToolbar();
         attachUI();
     }
@@ -118,7 +114,8 @@ public class SettingsActivity extends AppCompatActivity {
                 String name_v = mName.getEditText().getText().toString();
 
                 if (!TextUtils.isEmpty(status_v)) {
-                    mUserDatabase.child("status").setValue(status_v).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                            .child("status").setValue(status_v).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Log.d(TAG, "onComplete: Status update");
@@ -134,7 +131,8 @@ public class SettingsActivity extends AppCompatActivity {
                     });
                 }
                 if (!TextUtils.isEmpty(name_v)) {
-                    mUserDatabase.child("name").setValue(name_v).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                            .child("name").setValue(name_v).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             Log.d(TAG, "onComplete: Display Name update");
@@ -172,7 +170,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        final DatabaseReference updateUserType = mUserDatabase.child("user_type");
+        final DatabaseReference updateUserType = presenter.getmUserDatabase()
+                .child(presenter.getMcurrent_user_id()).child("user_type");
 
         updateUserType.addValueEventListener(new ValueEventListener() {
             @Override
@@ -198,7 +197,7 @@ public class SettingsActivity extends AppCompatActivity {
                             for(DataSnapshot doctors: dataSnapshot.getChildren()){
                                 final String doctor_id = doctors.getKey();
                                 Log.d(TAG, "onDataChange: doctor keys" + doctor_id);
-                                if (mCurrentUser.getUid().equals(doctor_id)) {
+                                if (presenter.getMcurrent_user_id().equals(doctor_id)) {
                                     mDoctorCheck.setText("Enable Doctor Account");
                                     mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -213,6 +212,7 @@ public class SettingsActivity extends AppCompatActivity {
                                         public void onClick(View v) {
                                             Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
                                             startActivity(doctorIntent);
+                                            presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, doctor_id, null);
                                         }
                                     });
                                 }
@@ -257,7 +257,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 Uri resultUri = result.getUri();
                 File thumb_file = new File(resultUri.getPath());
-                String userUid = mCurrentUser.getUid();
+                String userUid = presenter.getMcurrent_user_id();
                 Bitmap thumb_bitmap = null;
                 try {
                     thumb_bitmap = new Compressor(this)
@@ -272,8 +272,8 @@ public class SettingsActivity extends AppCompatActivity {
                 byte [] thumb_byte = baos.toByteArray();
 
 
-                final StorageReference filepath = mStorageRef.child("profile_images").child(userUid + ".jpg");
-                StorageReference thumb_filepath = mStorageRef.child("profile_images").child("thumbs").child(userUid + ".jpg");
+                final StorageReference filepath = presenter.getmStorageRef().child("profile_images").child(userUid + ".jpg");
+                StorageReference thumb_filepath = presenter.getmStorageRef().child("profile_images").child("thumbs").child(userUid + ".jpg");
 
                 uploadImage(resultUri, filepath, thumb_filepath, thumb_byte);
 
@@ -305,11 +305,13 @@ public class SettingsActivity extends AppCompatActivity {
                                         update_hashMap.put("image", download_uri);
                                         update_hashMap.put("thumb_image", thumb_download_uri);
                                         //use updateChildren instead of setValue
-                                        mUserDatabase.updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                                                .updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()){
-                                                    mDoctorDatabase.updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                                    presenter.getmRootRef().child("Doctors").child(presenter.getMcurrent_user_id())
+                                                            .updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener() {
                                                         @Override
                                                         public void onComplete(@NonNull Task task) {
                                                             if(task.isSuccessful()){

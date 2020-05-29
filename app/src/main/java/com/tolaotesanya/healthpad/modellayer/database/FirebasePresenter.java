@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.helper.State;
 
 import java.util.Map;
@@ -15,8 +16,13 @@ public interface FirebasePresenter {
     DatabaseReference getmRootRef();
     DatabaseReference getmUserDatabase();
     Map registerUser(String display_name);
+    IntentPresenter getIntentPresenter();
     Map setupDatabaseMap(String muser_id, State mapType);
     StorageReference getmStorageRef();
     Map setupMessageChatDB(String doctor_id, String message, State mapType);
+    Map registerDoctor(String firstName, String lastName,
+                       String speciality, String clinicName, String location);
+    Map setupUserMap(String displayName);
+    Map setupPostMap(String caption, String download_uri, String thumb_download_uri);
 
 }

@@ -49,7 +49,7 @@ public class HomeFragment extends Fragment {
         Log.d(TAG, "onCreateView: HomeFragment");
         View mMainView = inflater.inflate(R.layout.fragment_home2, container, false);
 
-        presenter = new FirebaseDatabaseLayer();
+        presenter = new FirebaseDatabaseLayer(getContext());
 
         mPostRecycler = mMainView.findViewById(R.id.home_feed_list);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mMainView.getContext());
