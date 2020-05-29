@@ -27,6 +27,7 @@ import com.tolaotesanya.healthpad.helper.GetTimeAgo;
 import com.tolaotesanya.healthpad.helper.PostsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.Posts;
 
 
@@ -93,7 +94,7 @@ public class HomeFragment extends Fragment {
                 Log.d(TAG, "onBindViewHolder: ");
                 long timeofPost = model.getTimestamp();
                 GetTimeAgo getTimeAgo = new GetTimeAgo();
-                String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
+                final String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
                 holder.setTime(timePosted);
 
                 holder.setCaption(model.getCaption());
@@ -113,9 +114,7 @@ public class HomeFragment extends Fragment {
                             holder.itemView.findViewById(R.id.feed_image).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent profileIntent = new Intent(getContext(), AccountActivity.class);
-                                    profileIntent.putExtra("user_id", poster_id); // send user id to use it to get all other info in db
-                                    startActivity(profileIntent);
+                                    presenter.getIntentPresenter().presentIntent(ClassName.Account, poster_id, timePosted);
                                 }
                             });
                             holder.itemView.findViewById(R.id.feed_like_icon).setOnClickListener(new View.OnClickListener() {

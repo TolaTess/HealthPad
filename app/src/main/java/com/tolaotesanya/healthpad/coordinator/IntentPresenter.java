@@ -42,7 +42,8 @@ public class IntentPresenter {
                 break;
             case Account:
                 Intent accountIntent = new Intent(mContext, AccountActivity.class);
-                accountIntent.putExtra("user_id", userid);// send user id to use it to get all other info in db
+                accountIntent.putExtra("user_id", userid);
+                accountIntent.putExtra("lastSeen", extra);// send user id to use it to get all other info in db
                 mContext.startActivity(accountIntent);
                 break;
             case AllDoctors:

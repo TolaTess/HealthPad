@@ -2,70 +2,42 @@ package com.tolaotesanya.healthpad.activities.chat;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.helper.MessageAdapter;
 
 public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "ChatActivity";
 
     private Context mContext = ChatActivity.this;
     private ChatActivity mMainView = ChatActivity.this;
-    private ChatPresenter chatPresenter;
+    private ChatActivityPresenter chatPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        setupToolbar();
         String mChatReceiverUser = getIntent().getStringExtra("doctor_id");
         String userName = getIntent().getStringExtra("username");
 
-        chatPresenter = new ChatPresenterImpl(mContext, mMainView, mChatReceiverUser);
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View action_bar_view = inflater.inflate(R.layout.chat_custom_bar, null);
+        this.getSupportActionBar().setCustomView(action_bar_view);
 
-        setupToolbar();
-        attachUI(userName);
-
+        chatPresenter = new ChatPresenterActivityImpl
+                (mContext, mMainView, mChatReceiverUser, userName);
 
     }
-
     private void setupToolbar() {
         Toolbar mToolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(mToolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setDisplayShowCustomEnabled(true);
-    }
-
-    private void attachUI(String userName) {
-        TextView mNameView = findViewById(R.id.custom_bar_name);
-        ImageView mChatSendBtn = findViewById(R.id.chat_msg_send);
-
-        chatPresenter.loadMessages();
-
-        mNameView.setText(userName);
-
-        chatPresenter.checkLastSeenOnline();
-
-        chatPresenter.createChatDatabase();
-
-        mChatSendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chatPresenter.sendMessages();
-            }
-        });
-
     }
 }
