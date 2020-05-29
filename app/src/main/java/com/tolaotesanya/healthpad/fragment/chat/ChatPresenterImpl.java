@@ -3,6 +3,7 @@ package com.tolaotesanya.healthpad.fragment.chat;
 import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
@@ -11,9 +12,11 @@ public class ChatPresenterImpl implements ChatPresenter{
     private DatabaseReference mConvDatabase;
     private DatabaseReference mUserDatabase;
     private DatabaseReference mMessageDatabase;
+    private IntentPresenter intentPresenter;
 
     public ChatPresenterImpl(Context context) {
-        FirebasePresenter presenter = new FirebaseDatabaseLayer();
+        FirebasePresenter presenter = new FirebaseDatabaseLayer(context);
+        intentPresenter = new IntentPresenter(context);
         mConvDatabase = presenter.getmRootRef().child("Chat")
                 .child(presenter.getMcurrent_user_id());
         mConvDatabase.keepSynced(true);
@@ -40,4 +43,11 @@ public class ChatPresenterImpl implements ChatPresenter{
     public DatabaseReference getmMessageDatabase() {
         return mMessageDatabase;
     }
+
+    @Override
+    public IntentPresenter getIntentPresenter() {
+        return intentPresenter;
+    }
+
+
 }

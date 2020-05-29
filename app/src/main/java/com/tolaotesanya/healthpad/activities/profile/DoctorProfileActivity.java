@@ -2,6 +2,7 @@ package com.tolaotesanya.healthpad.activities.profile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.app.ProgressDialog;
@@ -18,17 +19,19 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 import com.tolaotesanya.healthpad.helper.State;
+import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
 public class DoctorProfileActivity extends AppCompatActivity {
 
     private CircleImageView mProfileImage;
     private TextView mProfileName, mProfileDetails, mReviews;
-    private Button mBtnReqConsultation, mDeclineButton;
+    private Button mBtnReqConsultation;
     private ProgressDialog progressDialog;
     private Context mContext = DoctorProfileActivity.this;
 
@@ -46,14 +49,22 @@ public class DoctorProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_doctor_profile);
 
         doctor_id = getIntent().getStringExtra("doctor_id");
-
+        setupToolbar();
         attachUI();
-        presenter = new DoctorProfilePresenterImpl(doctor_id);
+
+        presenter = new DoctorProfilePresenterImpl(mContext, doctor_id);
         mCurrent_user_id = presenter.getmCurrentuser_id();
 
         mCurrent_state = State.not_consul;
         reqConsultation();
 
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.profile_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Doctors");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void attachUI() {
@@ -63,7 +74,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
         mReviews = findViewById(R.id.profile_reviews);
         mProfileImage = findViewById(R.id.profile_image);
         mBtnReqConsultation = findViewById(R.id.profile_send_reg_btn);
-        mDeclineButton = findViewById(R.id.decline_button);
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Loading Doctor's Profile");
@@ -76,21 +86,21 @@ public class DoctorProfileActivity extends AppCompatActivity {
             case not_consul:
                 //Request Friends
                 presenter.loadDatabase(mContext, State.not_consul);
-                btnSettings();
+                mBtnReqConsultation.setEnabled(true);
                 mCurrent_state = State.request_sent;
                 mBtnReqConsultation.setText("Cancel Request");
                 break;
             case consul:
                 //remove Friend from Friend DB - UnFriend
                 presenter.loadDatabase(mContext, State.consul);
-                btnSettings();
+                mBtnReqConsultation.setEnabled(true);
                 mCurrent_state = State.not_consul;
                 mBtnReqConsultation.setText("Send Request");
                 break;
             case request_received:
                 //Accept Friend, Delete Friend Req data and data to Friends DB
                 presenter.loadDatabase(mContext, State.request_received);
-                btnSettings();
+                mBtnReqConsultation.setEnabled(true);
                 mCurrent_state = State.consul;
                 String unfollowString = "Unfollow" + " ";
                 mBtnReqConsultation.setText(unfollowString);
@@ -101,15 +111,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void btnSettings() {
-        mBtnReqConsultation.setEnabled(true);
-        mDeclineButton.setVisibility(View.INVISIBLE);
-        mDeclineButton.setEnabled(false);
-    }
-
     private void cancelFriendRequest() {
         presenter.loadDatabase(mContext, State.request_sent);
-        btnSettings();
+        mBtnReqConsultation.setEnabled(true);
         mCurrent_state = State.not_consul;
         mBtnReqConsultation.setText("Send Request");
     }
@@ -186,18 +190,17 @@ public class DoctorProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mBtnReqConsultation.setEnabled(false);
-
+                loadProfileDatabase();
                 //request section
-                if (mCurrent_user_id.equals(doctor_id)) {
+                //Not applicable as doctors do not have access to see this profile
+              /*  if (mCurrent_user_id.equals(doctor_id)) {
                     mBtnReqConsultation.setText("Accounts"); // bug
-                    Intent intent = new Intent(DoctorProfileActivity.this, AccountActivity.class);
+                    *//*Intent intent = new Intent(DoctorProfileActivity.this, AccountActivity.class);
                     intent.putExtra("user_id", doctor_id);
                     intent.putExtra("username", mlastName);
-                    startActivity(intent);
-                } else {
-                    loadProfileDatabase();
-
-                }
+                    startActivity(intent);*//*
+                    presenter.getIntentPresenter().presentIntent(ClassName.Account, doctor_id, mlastName);
+                } else {*/
 
             }
         });

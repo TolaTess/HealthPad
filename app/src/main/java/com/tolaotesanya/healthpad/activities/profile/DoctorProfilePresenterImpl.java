@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.helper.State;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
@@ -31,24 +32,22 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DoctorProfilePresenterImpl implements DoctorProfilePresenter{
 
-
-
     private DatabaseReference mDoctorDatabase;
     private DatabaseReference mReqConsulDatabase;
     private DatabaseReference mConsulationsDatabase;
-    private DatabaseReference mFollowsDatabase;
     private String mCurrentuser_id;
     private FirebasePresenter presenter;
+    private IntentPresenter intentPresenter;
     private final String doctor_id;
 
-    public DoctorProfilePresenterImpl(String doctor_id) {
-        presenter = new FirebaseDatabaseLayer();
+    public DoctorProfilePresenterImpl(Context context, String doctor_id) {
+        presenter = new FirebaseDatabaseLayer(context);
         this.doctor_id = doctor_id;
+        intentPresenter = presenter.getIntentPresenter();
+        mCurrentuser_id = presenter.getMcurrent_user_id();
         mDoctorDatabase = presenter.getmRootRef().child("Doctors").child(doctor_id);
         mReqConsulDatabase = presenter.getmRootRef().child("Consultation_Req");
         mConsulationsDatabase = presenter.getmRootRef().child("Consultations");
-        mFollowsDatabase = presenter.getmRootRef().child("Follows");
-        mCurrentuser_id = presenter.getMcurrent_user_id();
          }
 
     public DatabaseReference getmDoctorDatabase() {
@@ -63,12 +62,12 @@ public class DoctorProfilePresenterImpl implements DoctorProfilePresenter{
         return mConsulationsDatabase;
     }
 
-    public DatabaseReference getmFollowsDatabase() {
-        return mFollowsDatabase;
-    }
-
     public String getmCurrentuser_id() {
         return mCurrentuser_id;
+    }
+
+    public IntentPresenter getIntentPresenter() {
+        return intentPresenter;
     }
 
     public void loadDatabase(final Context context, State mapType){
