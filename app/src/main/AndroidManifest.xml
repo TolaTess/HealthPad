@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tolaotesanya.healthpad">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".HealthPad"
@@ -13,15 +10,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.posts.PostsGalleryActivity"
+            android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.chat.ChatActivity"
-            android:parentActivityName=".activities.MainActivity"/>
+            android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.posts.PostsActivity" />
         <activity
-            android:name=".activities.profile.DoctorProfileActivity"
-            android:parentActivityName=".activities.business.AllDoctorsActivity" />
+            android:name=".activities.doctorsprofile.DoctorProfileActivity"
+            android:parentActivityName=".activities.doctors.AllDoctorsActivity" />
         <activity
-            android:name=".activities.business.AllDoctorsActivity"
+            android:name=".activities.doctors.AllDoctorsActivity"
             android:parentActivityName=".activities.MainActivity" />
         <activity android:name=".activities.auth.DoctorRegisterActivity" />
         <activity
@@ -49,5 +48,9 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

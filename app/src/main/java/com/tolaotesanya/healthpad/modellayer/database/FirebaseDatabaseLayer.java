@@ -178,7 +178,7 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return userMap;
     }
 
-    public Map setupPostMap(String caption, String download_uri, String thumb_download_uri){
+    public Map setupPostMap(String title, String body, String download_uri, String thumb_download_uri){
         DatabaseReference user_post_push = mRootRef.child("Posts")
                 .push();
 
@@ -186,8 +186,9 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
 
         Map postMap = new HashMap();
         postMap.put("timestamp", ServerValue.TIMESTAMP);
-        postMap.put("caption", caption);
-        postMap.put("likes", "3");
+        postMap.put("title", title);
+        postMap.put("body", body);
+        postMap.put("likes", " ");
         postMap.put("post_type", "tips");
         postMap.put("user_id", mcurrent_user_id);
         postMap.put("post_image", download_uri);

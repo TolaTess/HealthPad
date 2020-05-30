@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    tools:context=".activities.posts.PostsGalleryActivity">
+
+    <include
+        android:id="@+id/post_profile_toolbar"
+        layout="@layout/app_bar_layout" />
+
+    <ImageView
+        android:id="@+id/post_profile_image"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:layout_below="@+id/post_profile_toolbar"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_title_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/post_profile_image"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/post_profile_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/allerta_stencil"
+                android:text="title"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/post_profile_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/post_profile_title"
+                android:layout_marginStart="20dp"
+                android:fontFamily="@font/allerta"
+                android:text="author"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/post_profile_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/post_profile_title"
+                android:layout_marginEnd="20dp"
+                android:alpha="0.5"
+                android:fontFamily="@font/allerta"
+                android:text="time"
+                android:textAlignment="center"
+                android:textColor="@color/colorBlack"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/card_title_block"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/post_profile_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/allerta"
+            android:text="@string/doctor_details"
+            android:textAlignment="textStart"
+            android:textColor="@color/colorBlack"
+            android:textSize="14sp" />
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
+</ScrollView>

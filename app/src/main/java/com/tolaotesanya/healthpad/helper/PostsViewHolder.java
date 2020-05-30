@@ -20,40 +20,35 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
         mView = itemView;
     }
 
-    public void setDisplayName(String display_name) {
-        TextView Name = mView.findViewById(R.id.feed_display_name);
-        Name.setText(display_name);
-    }
-
     public void setCaption(String caption) {
         TextView details = mView.findViewById(R.id.feed_caption);
         details.setText(caption);
     }
 
-    public void setTime(String time){
+    public void setTime(String time) {
         TextView timeView = mView.findViewById(R.id.time_posted);
         timeView.setText(time);
     }
 
     public void setPostImage(String postImage) {
-        ImageView PostImageView = mView.findViewById(R.id.feed_image);
-        Picasso.get().load(postImage).placeholder(R.drawable.ic_launcher_foreground).into(PostImageView);
+        ImageView postImageView = mView.findViewById(R.id.feed_image);
+        Picasso.get().load(postImage).placeholder(R.drawable.health_pad_logo).into(postImageView);
     }
 
     public void setThumbImage(String profile_image) {
         CircleImageView profileImageView = mView.findViewById(R.id.feed_profile_image);
-        Picasso.get().load(profile_image).placeholder(R.drawable.ic_launcher_foreground).into(profileImageView);
+        Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView);
     }
 
-    public void setLikeButton(){
+    public void setLikeButton() {
         ImageView likeImageView = mView.findViewById(R.id.feed_like_icon);
         Picasso.get().load(R.drawable.filled_heart).placeholder(R.drawable.heart).into(likeImageView);
     }
 
-    public void setLikes(String likes){
+    public void setLikes(String likes) {
         TextView likesView = mView.findViewById(R.id.feed_likes_text);
         String newLikes = likes + " likes";
-         likesView.setText(newLikes);
+        likesView.setText(newLikes);
     }
 
 }

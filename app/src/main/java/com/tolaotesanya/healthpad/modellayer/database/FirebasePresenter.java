@@ -20,6 +20,6 @@ public interface FirebasePresenter {
     Map registerDoctor(String firstName, String lastName,
                        String speciality, String clinicName, String location);
     Map setupUserMap(String displayName);
-    Map setupPostMap(String caption, String download_uri, String thumb_download_uri);
+    Map setupPostMap(String caption, String body, String download_uri, String thumb_download_uri);
 
 }
