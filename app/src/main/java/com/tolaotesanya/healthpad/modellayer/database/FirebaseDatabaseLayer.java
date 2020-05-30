@@ -27,7 +27,9 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
 
     public FirebaseDatabaseLayer(Context context) {
         mRootRef = FirebaseDatabase.getInstance().getReference();
+        //mRootRef.keepSynced(true);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        //mUserDatabase.keepSynced(true);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         intentPresenter = new IntentPresenter(context);
 
@@ -92,18 +94,6 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return setupMap;
     }
 
-    public Map registerUser(String display_name) {
-
-        HashMap<String, String> userMap = new HashMap<>();
-        userMap.put("name", display_name);
-        userMap.put("status", "Chatting with friends the right way");
-        userMap.put("image", "default");
-        userMap.put("online", "true");
-        userMap.put("thumb_image", "default");
-
-        return userMap;
-    }
-
     @Override
     public IntentPresenter getIntentPresenter() {
         return intentPresenter;
@@ -111,19 +101,18 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
 
     public Map setupDatabaseMap(String doctor_id, State mapType) {
         Map setupMap = new HashMap();
-        String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+
+        DatabaseReference newNotifRef = mRootRef.child("Notifications").child(doctor_id).push();
+        String newNotifId = newNotifRef.getKey();
+        HashMap<String, String> notifs = new HashMap<>();
+
+        notifs.put("from", mcurrent_user_id);
+        notifs.put("type", "request");
 
         switch (mapType) {
             case not_consul:
                 Log.d(TAG, "setupDatabaseMap:");
                 //req friend
-                DatabaseReference newNotifRef = mRootRef.child("Notifications").child(doctor_id).push();
-                String newNotifId = newNotifRef.getKey();
-
-                HashMap<String, String> notifs = new HashMap<>();
-                notifs.put("from", mcurrent_user_id);
-                notifs.put("type", "request");
-
                 setupMap.put("Consultation_Req/" + mcurrent_user_id + "/" + doctor_id + "/request_type", "sent");
                 setupMap.put("Consultation_Req/" + doctor_id + "/" + mcurrent_user_id + "/request_type", "received");
                 setupMap.put("Notifications/" + doctor_id + "/" + newNotifId, notifs);
@@ -134,15 +123,14 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
                 break;
             case request_received:
                 //accept req
-
-                HashMap<String, String> userMap = new HashMap<>();
-                userMap.put("name", "user's name");
-                userMap.put("date", currentDate);
+                Map userMap = new HashMap();
+                userMap.put("timestamp", ServerValue.TIMESTAMP);
+                userMap.put("seen", false);
                 userMap.put("user_type", "user");
 
-                final HashMap<String, String> doctorMap = new HashMap<>();
-                userMap.put("name", "user's name");
-                doctorMap.put("date", currentDate);
+                final Map doctorMap = new HashMap();
+                doctorMap.put("timestamp", ServerValue.TIMESTAMP);
+                userMap.put("seen", false);
                 doctorMap.put("user_type", "doctor");
 
                 setupMap.put("Consultations/" + mcurrent_user_id + "/" + doctor_id + "/", userMap);
@@ -153,9 +141,10 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
                 setupMap.put("Consultation_Req/" + doctor_id + "/" + mcurrent_user_id, null);
                 break;
             case request_sent:
-                //decline friend request
+                //decline request
                 setupMap.put("Consultation_Req/" + mcurrent_user_id + "/" + doctor_id, null);
                 setupMap.put("Consultation_Req/" + doctor_id + "/" + mcurrent_user_id, null);
+                setupMap.put("Notifications/" + doctor_id + "/" + newNotifId, notifs);
                 break;
         }
         return setupMap;

@@ -9,7 +9,7 @@ import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 public class ChatPresenterImpl implements ChatPresenter{
 
-    private DatabaseReference mConvDatabase;
+    private DatabaseReference mConsultDatabase;
     private DatabaseReference mUserDatabase;
     private DatabaseReference mMessageDatabase;
     private IntentPresenter intentPresenter;
@@ -17,21 +17,20 @@ public class ChatPresenterImpl implements ChatPresenter{
     public ChatPresenterImpl(Context context) {
         FirebasePresenter presenter = new FirebaseDatabaseLayer(context);
         intentPresenter = new IntentPresenter(context);
-        mConvDatabase = presenter.getmRootRef().child("Chat")
+        mConsultDatabase = presenter.getmRootRef().child("Consultations")
                 .child(presenter.getMcurrent_user_id());
-        mConvDatabase.keepSynced(true);
+        mConsultDatabase.keepSynced(true);
         mMessageDatabase = presenter.getmRootRef()
                 .child("Messages").child(presenter.getMcurrent_user_id());
         mMessageDatabase.keepSynced(true);
         mUserDatabase = presenter.getmRootRef()
                 .child("Users");
-        mUserDatabase.keepSynced(true);
     }
 
 
     @Override
-    public DatabaseReference getmConvDatabase() {
-        return mConvDatabase;
+    public DatabaseReference getmConsultDatabase() {
+        return mConsultDatabase;
     }
 
     @Override
