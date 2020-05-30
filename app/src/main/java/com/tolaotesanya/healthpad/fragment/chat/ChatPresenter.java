@@ -5,7 +5,7 @@ import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 
 public interface ChatPresenter {
 
-    DatabaseReference getmConvDatabase();
+    DatabaseReference getmConsultDatabase();
     DatabaseReference getmUserChatDatabase();
     DatabaseReference getmMessageDatabase();
     IntentPresenter getIntentPresenter();

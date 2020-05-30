@@ -2,7 +2,6 @@ package com.tolaotesanya.healthpad.activities;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.fragment.HomeFragment;
+import com.tolaotesanya.healthpad.activities.posts.PostsFragment;
 import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
 import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
@@ -40,11 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private FirebaseAuth mAuth;
-    //private String user_type;
-
-    private HomeFragment homeFragment;
-    private FragmentTransaction fragmentTransaction;
+    private PostsFragment homeFragment;
     private FirebasePresenter presenter;
     private Context mContext = MainActivity.this;
 
@@ -53,12 +48,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
         presenter = new FirebaseDatabaseLayer(mContext);
-        attachDrawerNav();
-        homeFragment = new HomeFragment();
-        setFragment(homeFragment);
         userDisplay();
+        homeFragment = new PostsFragment();
+        setFragment(homeFragment);
         onlineCheck();
 
     }
@@ -70,10 +63,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void userDisplay() {
-        FirebaseUser mCurrentUser = mAuth.getCurrentUser();
+        FirebaseUser mCurrentUser = presenter.getHelper().getMcurrent_user();
         if (mCurrentUser == null) {
             sendToStart();
         } else {
+            attachDrawerNav();
             final Menu menu = navigationView.getMenu();
             DatabaseReference userCheck = presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                     .child("user_type");
@@ -97,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         }
+
     }
 
     public void attachDrawerNav() {
@@ -116,11 +111,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(R.id.nav_home);
         View navView = navigationView.getHeaderView(0);
         final CircleImageView header_image = navView.findViewById(R.id.header_image);
-        presenter.getmUserDatabase().child(presenter.getMcurrent_user_id()).addValueEventListener(new ValueEventListener() {
+        String user_id = presenter.getHelper().getMcurrent_user().getUid();
+        presenter.getmUserDatabase().child(user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String image = dataSnapshot.child("thumb_image").getValue().toString();
-                Log.d(TAG, "onDataChange: image" + image);
                 Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(header_image);
             }
 
@@ -135,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed: ");
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -145,10 +139,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.d(TAG, "onNavigationItemSelected: ");
         switch (item.getItemId()) {
             case R.id.nav_home:
-                //setFragment(homeFragment);
                 setFragment(homeFragment);
                 break;
             case R.id.nav_search:
@@ -159,9 +151,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                sendToStart();
                 presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                         .child("online").setValue(ServerValue.TIMESTAMP);
+                sendToStart();
                 break;
             case R.id.nav_chat:
                 ChatFragment chatFragment = new ChatFragment();
@@ -185,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setFragment(Fragment fragment) {
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_cont, fragment);
         fragmentTransaction.commit();
     }

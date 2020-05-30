@@ -13,7 +13,6 @@ public interface FirebasePresenter {
     String getMcurrent_user_id();
     DatabaseReference getmRootRef();
     DatabaseReference getmUserDatabase();
-    Map registerUser(String display_name);
     IntentPresenter getIntentPresenter();
     Map setupDatabaseMap(String muser_id, State mapType);
     StorageReference getmStorageRef();

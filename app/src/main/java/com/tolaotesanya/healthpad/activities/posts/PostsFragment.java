@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.fragment;
+package com.tolaotesanya.healthpad.activities.posts;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -24,17 +24,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-public class HomeFragment extends Fragment {
+public class PostsFragment extends Fragment {
     private static final String TAG = "HomeFragment";
 
     private RecyclerView mPostRecycler;
-    private FirebasePresenter presenter;
 
+    //Firebase
+    private FirebasePresenter presenter;
     private FirebaseRecyclerAdapter<Posts, PostsViewHolder> mAdapter;
 
-    public HomeFragment() {
+    public PostsFragment() {
         // Required empty public constructor
     }
 
@@ -43,7 +45,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: HomeFragment");
-        View mMainView = inflater.inflate(R.layout.fragment_home2, container, false);
+        View mMainView = inflater.inflate(R.layout.fragment_posts, container, false);
 
         presenter = new FirebaseDatabaseLayer(getContext());
 

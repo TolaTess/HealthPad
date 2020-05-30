@@ -62,6 +62,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messages_list"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/chat_toolbar">

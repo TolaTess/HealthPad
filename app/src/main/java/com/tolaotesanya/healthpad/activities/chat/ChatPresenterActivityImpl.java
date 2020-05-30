@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.helper.GetTimeAgo;
@@ -38,7 +39,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     private static final String TAG = "ChatPresentActImpl";
 
     private FirebasePresenter presenter;
-    private DatabaseReference messageRef;
+    private DatabaseReference mMessageRef;
     private MessageAdapter mAdapter;
     private static final int TOTAL_ITEM_TO_LOAD = 5;
     private int mCurrentPage = 1;
@@ -55,22 +56,23 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     private String mChatReceiverUser;
     private final List<ReceivedMessage> messagesList = new ArrayList<>();
     private ChatActivity mView;
-    TextView mNameView;
-    ImageView mChatSendBtn;
+    private TextView mNameView;
+    private ImageView mChatSendBtn;
 
-    public ChatPresenterActivityImpl(Context mContext, ChatActivity mView, String user_id, String userName) {
+    ChatPresenterActivityImpl(Context mContext, ChatActivity mView, String user_id, String userName) {
         this.mContext = mContext;
         this.mChatReceiverUser = user_id;
         this.mView = mView;
         presenter = new FirebaseDatabaseLayer(mContext);
         attachUI();
         mNameView.setText(userName);
-        mAdapter = new MessageAdapter(messagesList);
+        mAdapter = new MessageAdapter(messagesList, mContext);
         mLinearLayout = new LinearLayoutManager(mContext);
         mMessageRecyclerView.setLayoutManager(mLinearLayout);
         mMessageRecyclerView.setAdapter(mAdapter);
-        messageRef = presenter.getmRootRef().child("Messages")
-                        .child(presenter.getMcurrent_user_id()).child(mChatReceiverUser);
+        mMessageRef = presenter.getmRootRef().child("Messages")
+                .child(presenter.getMcurrent_user_id()).child(mChatReceiverUser);
+        mMessageRef.keepSynced(true);
 
         checkLastSeenOnline();
 
@@ -108,29 +110,29 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     public void createChatDatabase() {
         presenter.getmRootRef().child("Chat").child(presenter.getMcurrent_user_id())
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.hasChild(mChatReceiverUser)){
-                    Map chatUserMap = presenter.setupMessageChatDB(mChatReceiverUser, null, State.chat);
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.hasChild(mChatReceiverUser)) {
+                            Map chatUserMap = presenter.setupMessageChatDB(mChatReceiverUser, null, State.chat);
 
-                    presenter.getmRootRef().updateChildren(chatUserMap,
-                            new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError databaseError,
-                                               @NonNull DatabaseReference databaseReference) {
-                            if(databaseError != null ){
-                                Log.d("CHAT_LOG", databaseError.getMessage());
-                            }
+                            presenter.getmRootRef().updateChildren(chatUserMap,
+                                    new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError databaseError,
+                                                               @NonNull DatabaseReference databaseReference) {
+                                            if (databaseError != null) {
+                                                Log.d("CHAT_LOG", databaseError.getMessage());
+                                            }
+                                        }
+                                    });
                         }
-                    });
-                }
-            }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
     @Override
@@ -146,11 +148,11 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
 
                 Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(mProfileImage);
 
-                if(online.equals("true")){
+                if (online.equals("true")) {
 
                     mLastSeen.setText("online");
 
-                } else{
+                } else {
 
                     GetTimeAgo getTimeAgo = new GetTimeAgo();
                     long lastTime = Long.parseLong(online);
@@ -170,7 +172,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     @Override
     public void loadMessages() {
         //limit to last
-        Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
+        Query messageQuery = mMessageRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -180,7 +182,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
 
                 itemPos++;
 
-                if(itemPos == 1){
+                if (itemPos == 1) {
                     String messageKey = dataSnapshot.getKey();
                     mLastKey = messageKey;
                     mPreKey = messageKey;
@@ -237,7 +239,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
 
     @Override
     public void loadMoreMessages() {
-        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(TOTAL_ITEM_TO_LOAD);
+        Query messageQuery = mMessageRef.orderByKey().endAt(mLastKey).limitToLast(TOTAL_ITEM_TO_LOAD);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
@@ -245,12 +247,12 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
                 ReceivedMessage message = dataSnapshot.getValue(ReceivedMessage.class);
                 String messageKey = dataSnapshot.getKey();
 
-                if(!mPreKey.equals(messageKey)){
+                if (!mPreKey.equals(messageKey)) {
                     messagesList.add(itemPos++, message);
-                } else{
+                } else {
                     mPreKey = mLastKey;
                 }
-                if(itemPos == 1){
+                if (itemPos == 1) {
 
                     mLastKey = messageKey;
 

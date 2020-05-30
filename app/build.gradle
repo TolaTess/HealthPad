@@ -41,12 +41,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     implementation 'com.firebaseui:firebase-ui-database:6.0.2'
+    implementation 'com.google.firebase:firebase-messaging:20.1.7'
 
     //Circle Image View
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //Image Loader
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
 
     //Image cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.+'

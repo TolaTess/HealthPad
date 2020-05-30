@@ -13,6 +13,5 @@ public interface DoctorProfilePresenter {
     DatabaseReference getmDoctorDatabase();
     void loadDatabase(final Context context, State mapType);
     String getmCurrentuser_id();
-    IntentPresenter getIntentPresenter();
 
 }

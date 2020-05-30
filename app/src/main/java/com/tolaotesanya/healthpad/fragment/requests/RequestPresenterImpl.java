@@ -33,10 +33,9 @@ public class RequestPresenterImpl implements RequestPresenter {
         mConsultReqDatabase = presenter.getmRootRef()
                 .child("Consultation_Req")
                 .child(presenter.getMcurrent_user_id());
-        //mFriendsReqDatabase.keepSynced(true);
+        mConsultReqDatabase.keepSynced(true);
         mUserDatabase = presenter.getmRootRef()
                 .child("Users");
-        //mUserDatabase.keepSynced(true);
 
     }
 

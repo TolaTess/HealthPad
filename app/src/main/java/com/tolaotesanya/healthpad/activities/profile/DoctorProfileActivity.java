@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
@@ -191,17 +192,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mBtnReqConsultation.setEnabled(false);
                 loadProfileDatabase();
-                //request section
-                //Not applicable as doctors do not have access to see this profile
-              /*  if (mCurrent_user_id.equals(doctor_id)) {
-                    mBtnReqConsultation.setText("Accounts"); // bug
-                    *//*Intent intent = new Intent(DoctorProfileActivity.this, AccountActivity.class);
-                    intent.putExtra("user_id", doctor_id);
-                    intent.putExtra("username", mlastName);
-                    startActivity(intent);*//*
-                    presenter.getIntentPresenter().presentIntent(ClassName.Account, doctor_id, mlastName);
-                } else {*/
-
             }
         });
     }

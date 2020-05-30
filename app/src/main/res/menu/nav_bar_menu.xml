@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_request"
             android:icon="@drawable/chat"
-            android:title="Consultations" />
+            android:title="Requests" />
     </group>
 
     <item android:title="Profile">
@@ -25,7 +25,7 @@
             <item
                 android:id="@+id/nav_chat"
                 android:icon="@drawable/chat"
-                android:title="Chat" />
+                android:title="Consultation" />
             <item
                 android:id="@+id/nav_account"
                 android:icon="@drawable/user"

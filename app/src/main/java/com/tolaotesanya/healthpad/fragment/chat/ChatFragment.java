@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.helper.GetTimeAgo;
@@ -69,7 +70,7 @@ public class ChatFragment extends Fragment {
         Log.d(TAG, "onStart: ");
         super.onStart();
 
-        Query convQuery = chatPresenter.getmConvDatabase().orderByChild("timestamp");
+        Query convQuery = chatPresenter.getmConsultDatabase().orderByChild("timestamp");
 
         FirebaseRecyclerOptions<ChatConversation> options =
                 new FirebaseRecyclerOptions.Builder<ChatConversation>()
@@ -101,10 +102,10 @@ public class ChatFragment extends Fragment {
                                 if(dataSnapshot.hasChild("message")) {
                                     String data = dataSnapshot.child("message").getValue().toString();
                                     holder.setMessage(data, model.isSeen());
-                                    long timeofPost = model.getTimestamp();
+                                    /*long timeofPost = model.getTimestamp();
                                     GetTimeAgo getTimeAgo = new GetTimeAgo();
                                     String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
-                                    holder.setTime(timePosted);
+                                    //holder.setTime(timePosted);*/
 
                                 }
                             }
@@ -192,10 +193,10 @@ public class ChatFragment extends Fragment {
                 userStatus.setTypeface(userStatus.getTypeface(), Typeface.NORMAL);
             }
         }
-        public void setTime(String time){
+        /*public void setTime(String time){
             TextView timeView = mView.findViewById(R.id.time_posted);
             timeView.setText(time);
-        }
+        }*/
 
         public void setUserOnline(String online_status) {
             ImageView userOnlineView = mView.findViewById(R.id.chat_online_icon);
@@ -209,7 +210,7 @@ public class ChatFragment extends Fragment {
 
         public void setUserImage(String thumb){
             CircleImageView userImageView = mView.findViewById(R.id.chat_users_image);
-            Picasso.get().load(thumb).placeholder(R.drawable.ic_launcher_foreground).into(userImageView);
+            Picasso.get().load(thumb).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.ic_launcher_foreground).into(userImageView);
         }
 
 

@@ -6,9 +6,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.modellayer.model.Posts;
-
-import org.w3c.dom.Text;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
