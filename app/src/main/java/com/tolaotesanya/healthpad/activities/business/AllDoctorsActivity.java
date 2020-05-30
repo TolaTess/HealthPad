@@ -34,6 +34,7 @@ public class AllDoctorsActivity extends AppCompatActivity {
     private FirebasePresenter presenter;
     private FirebaseRecyclerAdapter adapter;
     private Context mContext = AllDoctorsActivity.this;
+    private String userOnline;
 
 
     @Override
@@ -91,8 +92,7 @@ public class AllDoctorsActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild("online")) {
-
-                            String userOnline = dataSnapshot.child("online").getValue().toString();
+                            userOnline = dataSnapshot.child("online").getValue().toString();
                             holder.setUserOnline(userOnline);
                         }
 
@@ -108,7 +108,7 @@ public class AllDoctorsActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         //more options or add fragment dialog
                         DialogFragmentHelper dialogFragmentHelper =
-                                new DialogFragmentHelper(null, presenter, doctorid, model.getFirst_name(), ClassName.AllDoctors);
+                                new DialogFragmentHelper(null, presenter, doctorid, model.getFirst_name(), ClassName.AllDoctors, userOnline);
                         dialogFragmentHelper.setCancelable(false);
                         dialogFragmentHelper.show(getSupportFragmentManager(), "DIALOG_FRAGMENT");
                     }

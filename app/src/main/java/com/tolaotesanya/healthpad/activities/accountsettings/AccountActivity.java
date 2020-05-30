@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,10 +20,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 public class AccountActivity extends AppCompatActivity {
+    private static final String TAG = "AccountActivity";
 
     //UI element
     private CircleImageView mDisplayImage;
@@ -29,36 +35,33 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mStatus;
     private Button mSettingsButton;
 
+    private Context mContext = AccountActivity.this;
+
     //Firebase
-    private FirebaseUser mCurrentUser;
-    private DatabaseReference myDatabaseRef;
+    private FirebasePresenter presenter;
+    private DatabaseReference mUserDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-
+        presenter = new FirebaseDatabaseLayer(mContext);
         setupToolbar();
         attachUI();
 
         String poster_id = getIntent().getStringExtra("user_id");
-
-        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
-        String userId = mCurrentUser.getUid();
         if(poster_id != null){
-            myDatabaseRef = FirebaseDatabase.getInstance()
-                    .getReference().child("Users").child(poster_id);
+            mUserDatabase = presenter.getmUserDatabase().child(poster_id);
             mSettingsButton.setEnabled(false);
             mSettingsButton.setVisibility(View.INVISIBLE);
         } else {
-            myDatabaseRef = FirebaseDatabase.getInstance()
-                    .getReference().child("Users").child(userId);
+            mUserDatabase = presenter.getmUserDatabase().child(presenter.getMcurrent_user_id());
             mSettingsButton.setEnabled(true);
             mSettingsButton.setVisibility(View.VISIBLE);
         }
 
         //Value Event Listener to get the data from database
-        myDatabaseRef.addValueEventListener(new ValueEventListener() {
+        mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue().toString();

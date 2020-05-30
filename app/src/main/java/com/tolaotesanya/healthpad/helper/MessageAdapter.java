@@ -1,18 +1,21 @@
 package com.tolaotesanya.healthpad.helper;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.model.ReceivedMessage;
 
 import java.util.List;
@@ -26,17 +29,18 @@ public class MessageAdapter extends RecyclerView.Adapter{
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 2;
 
     private List<ReceivedMessage> mMessageList;
-    private FirebaseAuth mAuth;
+    private FirebasePresenter presenter;
     private DatabaseReference mUserDatabse;
 
-    public MessageAdapter(List<ReceivedMessage> mMessageList) {
+
+    public MessageAdapter(List<ReceivedMessage> mMessageList, Context mContext) {
         this.mMessageList = mMessageList;
+        presenter = new FirebaseDatabaseLayer(mContext);
     }
 
     @Override
     public int getItemViewType(int position) {
-        mAuth = FirebaseAuth.getInstance();
-        String current_user_id = mAuth.getCurrentUser().getUid();
+        String current_user_id = presenter.getMcurrent_user_id();
 
         ReceivedMessage message = mMessageList.get(position);
 
@@ -68,10 +72,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        mAuth = FirebaseAuth.getInstance();
-        String current_user_id = mAuth.getCurrentUser().getUid();
-
-        ReceivedMessage messages =  mMessageList.get(position);
+          ReceivedMessage messages =  mMessageList.get(position);
         switch (holder.getItemViewType()){
             case VIEW_TYPE_MESSAGE_SENT:
                 ((SentMessageHolder) holder).setMessage(messages);
@@ -86,8 +87,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
     private void getUserDetails(@NonNull final RecyclerView.ViewHolder holder, ReceivedMessage messages) {
         String from_user = messages.getFrom();
-        mUserDatabse = FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(from_user);
+        mUserDatabse = presenter.getmUserDatabase().child(from_user);
 
         mUserDatabse.addValueEventListener(new ValueEventListener() {
             @Override
@@ -116,8 +116,8 @@ public class MessageAdapter extends RecyclerView.Adapter{
         SentMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = (TextView) itemView.findViewById(R.id.text_message_body);
-            timeText = (TextView) itemView.findViewById(R.id.text_message_time);
+            messageText = itemView.findViewById(R.id.text_message_body);
+            timeText = itemView.findViewById(R.id.text_message_time);
         }
 
         public void setMessage(ReceivedMessage message) {
