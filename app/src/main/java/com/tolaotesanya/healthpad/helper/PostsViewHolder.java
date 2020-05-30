@@ -20,9 +20,9 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
         mView = itemView;
     }
 
-    public void setCaption(String caption) {
+    public void setCaption(String title) {
         TextView details = mView.findViewById(R.id.feed_caption);
-        details.setText(caption);
+        details.setText(title);
     }
 
     public void setTime(String time) {
@@ -30,15 +30,27 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
         timeView.setText(time);
     }
 
-    public void setPostImage(String postImage) {
+    public void setPostDisplayType(String postImage, String body, String profile_image) {
         ImageView postImageView = mView.findViewById(R.id.feed_image);
-        Picasso.get().load(postImage).placeholder(R.drawable.health_pad_logo).into(postImageView);
+        CircleImageView profileImageView = mView.findViewById(R.id.feed_profile_image);
+        CircleImageView profileImageView2 = mView.findViewById(R.id.feed_profile_image2);
+        TextView bodyView = mView.findViewById(R.id.post_feed_body);
+        if(postImage.equals("default")){
+            postImageView.setVisibility(View.GONE);
+            bodyView.setVisibility(View.VISIBLE);
+            bodyView.setText(body);
+            profileImageView2.setVisibility(View.VISIBLE);
+            Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView2);
+        } else {
+            Picasso.get().load(postImage).placeholder(R.drawable.health_pad_logo).into(postImageView);
+            Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView);
+        }
     }
 
-    public void setThumbImage(String profile_image) {
+    /*public void setThumbImage(String profile_image) {
         CircleImageView profileImageView = mView.findViewById(R.id.feed_profile_image);
         Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView);
-    }
+    }*/
 
     public void setLikeButton() {
         ImageView likeImageView = mView.findViewById(R.id.feed_like_icon);

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.posts.PostsActivity">
 
+    <include layout="@layout/app_bar_layout" android:id="@+id/post_act_toolbar"/>
 
     <Button
         android:id="@+id/post_upload_image_btn"

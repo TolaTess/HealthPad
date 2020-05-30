@@ -83,8 +83,6 @@ public class DialogFragmentHelper extends DialogFragment {
                     firebasePresenter.getIntentPresenter().presentIntent(ClassName.Profile, user_id, username);
                 }
                 break;
-
-
         }
         return builder.create();
     }

@@ -93,9 +93,9 @@ public class PostsFragment extends Fragment {
                 holder.setTime(timePosted);
                 final String caption = model.getTitle();
                 holder.setCaption(caption);
-                final String postImage = model.getPost_image();
-                holder.setPostImage(postImage);
                 final String body = model.getBody();
+                final String postImage = model.getPost_image();
+                //holder.setPostImage(postImage, body);
                 final String poster_id = model.getUser_id();
                 presenter.getmUserDatabase().child(poster_id).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -103,7 +103,7 @@ public class PostsFragment extends Fragment {
                             final String username = dataSnapshot.child("name").getValue().toString();
                             final String profile_image = dataSnapshot.child("thumb_image").getValue().toString();
                             Log.d(TAG, "onDataChange: pimage " + profile_image);
-                            holder.setThumbImage(profile_image);
+                            holder.setPostDisplayType(postImage, body, profile_image);
                             final String likes = model.getLikes();
                             holder.setLikes(likes);
 

@@ -116,7 +116,6 @@ public class RequestFragment extends Fragment {
                                                 public void onClick(View v) {
                                                     DialogFragmentHelper dialogFragmentHelper =
                                                             new DialogFragmentHelper(requestPresenter, null, list_user_id, userName, ClassName.Request, null);
-                                                    Log.d(TAG, "onClick dialog: " + requestPresenter.getMdoctor_id() + " list user id" + list_user_id);
                                                     dialogFragmentHelper.setCancelable(false);
                                                     dialogFragmentHelper.show(getFragmentManager(), "DIALOG_FRAGMENT");
 

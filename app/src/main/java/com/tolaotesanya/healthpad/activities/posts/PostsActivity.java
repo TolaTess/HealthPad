@@ -32,6 +32,7 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import id.zelory.compressor.Compressor;
 
 public class PostsActivity extends AppCompatActivity {
@@ -54,7 +55,15 @@ public class PostsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_posts);
         presenter = new FirebaseDatabaseLayer(mContext);
         mCurrentUserId = presenter.getMcurrent_user_id();
+        setupToolbar();
         attachUI();
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.post_act_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Add a posts");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void attachUI() {

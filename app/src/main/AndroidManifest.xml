@@ -15,7 +15,8 @@
         <activity
             android:name=".activities.chat.ChatActivity"
             android:parentActivityName=".activities.MainActivity" />
-        <activity android:name=".activities.posts.PostsActivity" />
+        <activity android:name=".activities.posts.PostsActivity"
+            android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.doctorsprofile.DoctorProfileActivity"
             android:parentActivityName=".activities.doctors.AllDoctorsActivity" />
