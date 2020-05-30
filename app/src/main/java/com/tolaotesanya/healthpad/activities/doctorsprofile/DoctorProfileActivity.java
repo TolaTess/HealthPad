@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.activities.profile;
+package com.tolaotesanya.healthpad.activities.doctorsprofile;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,26 +7,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 import com.tolaotesanya.healthpad.helper.State;
-import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
 public class DoctorProfileActivity extends AppCompatActivity {
 
@@ -69,9 +60,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
     }
 
     private void attachUI() {
-        mProfileDetails = findViewById(R.id.profile_details);
+        mProfileDetails = findViewById(R.id.post_profile_body);
         mProfileName = findViewById(R.id.profile_name);
-        mProfileDetails = findViewById(R.id.profile_details);
+        mProfileDetails = findViewById(R.id.post_profile_body);
         mReviews = findViewById(R.id.profile_reviews);
         mProfileImage = findViewById(R.id.profile_image);
         mBtnReqConsultation = findViewById(R.id.profile_send_reg_btn);

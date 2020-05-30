@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.activities.business;
+package com.tolaotesanya.healthpad.activities.doctors;
 
 import android.content.Context;
 import android.os.Bundle;

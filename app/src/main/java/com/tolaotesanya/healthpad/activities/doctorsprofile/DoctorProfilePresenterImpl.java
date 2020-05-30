@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.activities.profile;
+package com.tolaotesanya.healthpad.activities.doctorsprofile;
 
 import android.content.Context;
 import android.widget.Toast;

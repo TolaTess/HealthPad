@@ -1,4 +1,4 @@
-package com.tolaotesanya.healthpad.activities.posts;
+package com.tolaotesanya.healthpad.fragment.posts;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -17,14 +17,12 @@ import com.tolaotesanya.healthpad.helper.GetTimeAgo;
 import com.tolaotesanya.healthpad.helper.PostsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
-import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.Posts;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 public class PostsFragment extends Fragment {
@@ -93,16 +91,17 @@ public class PostsFragment extends Fragment {
                 GetTimeAgo getTimeAgo = new GetTimeAgo();
                 final String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
                 holder.setTime(timePosted);
-
-                holder.setCaption(model.getCaption());
-                holder.setPostImage(model.getPost_image());
+                final String caption = model.getTitle();
+                holder.setCaption(caption);
+                final String postImage = model.getPost_image();
+                holder.setPostImage(postImage);
+                final String body = model.getBody();
                 final String poster_id = model.getUser_id();
                 presenter.getmUserDatabase().child(poster_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String username = dataSnapshot.child("name").getValue().toString();
-                            String profile_image = dataSnapshot.child("thumb_image").getValue().toString();
-                            holder.setDisplayName(username);
+                            final String username = dataSnapshot.child("name").getValue().toString();
+                            final String profile_image = dataSnapshot.child("thumb_image").getValue().toString();
                             Log.d(TAG, "onDataChange: pimage " + profile_image);
                             holder.setThumbImage(profile_image);
                             final String likes = model.getLikes();
@@ -111,7 +110,7 @@ public class PostsFragment extends Fragment {
                             holder.itemView.findViewById(R.id.feed_image).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    presenter.getIntentPresenter().presentIntent(ClassName.Account, poster_id, timePosted);
+                                    presenter.getIntentPresenter().postProfileIntent(poster_id, username, timePosted, postImage, caption, body);
                                 }
                             });
                             holder.itemView.findViewById(R.id.feed_like_icon).setOnClickListener(new View.OnClickListener() {
