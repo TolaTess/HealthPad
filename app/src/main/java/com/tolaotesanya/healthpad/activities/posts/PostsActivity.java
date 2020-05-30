@@ -95,7 +95,6 @@ public class PostsActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
-                            //Picasso.get().load(thumb_download_uri).placeholder(R.drawable.ic_launcher_foreground).into(mImageView);
                             presenter.getIntentPresenter().presentIntent(ClassName.Main, null, null);
                         } else
                         {
@@ -187,7 +186,6 @@ public class PostsActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task task) {
                                                     if (task.isSuccessful()) {
-                                                        //Picasso.get().load(thumb_download_uri).placeholder(R.drawable.ic_launcher_foreground).into(mImageView);
                                                         mProgressbar.dismiss();
                                                         presenter.getIntentPresenter().presentIntent(ClassName.Main, null, null);
                                                         finish();

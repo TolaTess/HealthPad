@@ -150,7 +150,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
         public void setImage(String thumb_image) {
             Picasso.get().load(thumb_image)
-                    .placeholder(R.drawable.ic_launcher_foreground).into(profileImage);
+                    .placeholder(R.drawable.health_pad_logo).into(profileImage);
         }
 
         public void setDisplayName(String name) {

@@ -72,7 +72,7 @@ public class AccountActivity extends AppCompatActivity {
                 //Ensures default image stays on screen
                 if (!image.equals("default")) {
                     //Ensure placeholder stays on screen until image downloads from database
-                    Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(mDisplayImage);
+                    Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mDisplayImage);
                 }
                 mName.setText(name);
                 mStatus.setText(status);

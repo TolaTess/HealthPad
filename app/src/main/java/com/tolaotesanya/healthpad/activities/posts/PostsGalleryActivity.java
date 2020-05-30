@@ -54,7 +54,7 @@ public class PostsGalleryActivity extends AppCompatActivity {
         if(post_image.equals("default")){
             mPostImage.setVisibility(View.GONE);
         } else{
-            Picasso.get().load(post_image).placeholder(R.drawable.ic_launcher_foreground).into(mPostImage);
+            Picasso.get().load(post_image).placeholder(R.drawable.health_pad_logo).into(mPostImage);
         }
         mPostTitle.setText(caption);
         String newUsername = "by " + username;

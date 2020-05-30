@@ -170,7 +170,7 @@ public class RequestFragment extends Fragment {
 
         public void setImage(String thumb_image) {
             CircleImageView mThumbImage = mView.findViewById(R.id.req_users_image);
-            Picasso.get().load(thumb_image).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.ic_launcher_foreground).into(mThumbImage);
+            Picasso.get().load(thumb_image).placeholder(R.drawable.health_pad_logo).into(mThumbImage);
         }
 
         public void setUserOnline(String online_status) {

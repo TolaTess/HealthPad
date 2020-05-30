@@ -146,7 +146,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
                 Log.d(TAG, "onDataChange: datasnapshot " + dataSnapshot.getKey());
                 Log.d(TAG, "onDataChange: " + " image link " + image);
 
-                Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(mProfileImage);
+                Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
 
                 if (online.equals("true")) {
 

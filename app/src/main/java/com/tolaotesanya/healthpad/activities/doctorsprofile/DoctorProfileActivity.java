@@ -127,7 +127,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
                 mProfileName.setText(fullName);
                 mProfileDetails.setText(details);
 
-                Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(mProfileImage);
+                Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
 
                 //Request Consultation
                 presenter.getmReqConsulDatabase().child(mCurrent_user_id)

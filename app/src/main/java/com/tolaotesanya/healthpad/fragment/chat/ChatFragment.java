@@ -210,7 +210,7 @@ public class ChatFragment extends Fragment {
 
         public void setUserImage(String thumb){
             CircleImageView userImageView = mView.findViewById(R.id.chat_users_image);
-            Picasso.get().load(thumb).networkPolicy(NetworkPolicy.OFFLINE).placeholder(R.drawable.ic_launcher_foreground).into(userImageView);
+            Picasso.get().load(thumb).placeholder(R.drawable.health_pad_logo).into(userImageView);
         }
 
 
