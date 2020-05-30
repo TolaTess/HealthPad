@@ -1,22 +1,15 @@
 package com.tolaotesanya.healthpad.modellayer.model;
 
- /*postMap.put("date", currentDate);
-         postMap.put("name", "user's name");
-         postMap.put("user_type", "user");
-         postMap.put("image", "default");
-         postMap.put("caption", "I love this app");
-         postMap.put("likes", "3");
-         postMap.put("post_type", "tips");*/
-
 public class Posts {
 
     private String name;
     private long timestamp;
     private String post_id;
+    private String body;
     private String user_type;
     private String post_image;
     private String thumb_image;
-    private String caption;
+    private String title;
     private String user_id;
     private String likes;
     private String post_type;
@@ -25,15 +18,16 @@ public class Posts {
     }
 
     public Posts(String name, long date, String post_id,
-                 String user_type, String post_image, String thumb_image,
+                 String body, String user_type, String post_image, String thumb_image,
                  String caption, String user_id, String likes, String post_type) {
         this.name = name;
         this.timestamp = date;
         this.post_id = post_id;
+        this.body = body;
         this.user_type = user_type;
         this.post_image = post_image;
         this.thumb_image = thumb_image;
-        this.caption = caption;
+        this.title = caption;
         this.user_id = user_id;
         this.likes = likes;
         this.post_type = post_type;
@@ -61,6 +55,14 @@ public class Posts {
 
     public void setPost_id(String post_id) {
         this.post_id = post_id;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public void setThumb_image(String thumb_image) {
@@ -95,12 +97,12 @@ public class Posts {
         this.post_image = post_image;
     }
 
-    public String getCaption() {
-        return caption;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCaption(String caption) {
-        this.caption = caption;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getLikes() {
