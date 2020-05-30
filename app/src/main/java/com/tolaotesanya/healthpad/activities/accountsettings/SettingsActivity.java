@@ -1,5 +1,6 @@
 package com.tolaotesanya.healthpad.activities.accountsettings;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
+import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
@@ -51,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     //UI element
     private Button mChangeImage;
-    private Button mAddPayment;
+    private Button rewardClaim;
     private Button mSaveChanges;
     private Button mDoctorCheck;
     private TextInputLayout mStatus;
@@ -82,7 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
      private void attachUI() {
-        mAddPayment = findViewById(R.id.payment);
+        rewardClaim = findViewById(R.id.payment);
         mChangeImage = findViewById(R.id.setting_change_image);
         mSaveChanges = findViewById(R.id.save_settings);
         mDoctorCheck = findViewById(R.id.doctor_check_btn);
@@ -160,10 +162,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        mAddPayment.setOnClickListener(new View.OnClickListener() {
+        rewardClaim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Payment Intent
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                builder.setTitle("Rewards Coming Soon");
+                builder.setMessage("We are planning some cool rewards just for you. Please look forward to it!");
+                builder.create().show();
             }
         });
 
