@@ -20,7 +20,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp">
+            android:layout_margin="10dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -30,23 +30,20 @@
 
                 <ImageView
                     android:id="@+id/feed_image"
-                    android:layout_width="300dp"
-                    android:layout_height="180dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@id/feed_display_name"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="49dp"
-                    android:layout_marginTop="14dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="0dp"
                     android:src="@drawable/health_pad_logo" />
 
                 <ImageView
                     android:id="@+id/feed_like_icon"
                     android:layout_width="22dp"
                     android:layout_height="40dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="3dp"
+                    android:layout_below="@+id/feed_image"
+                    android:layout_marginTop="42dp"
                     android:layout_marginStart="12dp"
                     app:srcCompat="@drawable/heart" />
 
@@ -54,58 +51,45 @@
                     android:id="@+id/feed_likes_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/feed_caption"
+                    android:layout_below="@id/feed_image"
                     android:layout_marginStart="46dp"
-                    android:layout_marginTop="-32dp"
+                    android:layout_marginTop="50dp"
                     android:fontFamily="@font/allerta"
                     android:text="views" />
 
                 <TextView
-                    android:id="@+id/feed_display_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginStart="60dp"
-                    android:layout_marginTop="11dp"
-                    android:fontFamily="@font/allerta"
-                    android:text="Jo Doe"
-                    android:textSize="18sp"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
                     android:id="@+id/feed_caption"
-                    android:layout_width="298dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/feed_image"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="26dp"
-                    android:layout_marginStart="46dp"
-                    android:layout_marginTop="7dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
                     android:fontFamily="@font/allerta_stencil"
+                    android:maxWidth="250dp"
                     android:text="@string/sample_post_msg"
                     android:textAlignment="center"
                     android:textColor="@color/colorBlack" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/feed_profile_image"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="9dp"
                     app:srcCompat="@drawable/heart" />
 
                 <TextView
                     android:id="@+id/time_posted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/feed_image"
                     android:layout_marginBottom="13dp"
                     android:layout_marginEnd="38dp"
+                    android:layout_marginTop="50dp"
+                    android:fontFamily="@font/allerta"
                     android:text="hours"
                     android:textSize="12sp" />
             </RelativeLayout>

@@ -16,6 +16,10 @@
             android:id="@+id/nav_request"
             android:icon="@drawable/chat"
             android:title="Requests" />
+        <item
+            android:id="@+id/nav_posts"
+            android:icon="@drawable/circle_plus"
+            android:title="Post" />
     </group>
 
     <item android:title="Profile">
@@ -25,7 +29,7 @@
             <item
                 android:id="@+id/nav_chat"
                 android:icon="@drawable/chat"
-                android:title="Consultation" />
+                android:title="Consultations" />
             <item
                 android:id="@+id/nav_account"
                 android:icon="@drawable/user"
@@ -34,20 +38,6 @@
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/close"
                 android:title="Logout" />
-        </menu>
-
-    </item>
-
-    <item android:title="Communication">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_help"
-                android:icon="@drawable/circle_plus"
-                android:title="Help" />
         </menu>
     </item>
 </menu>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,78 +8,70 @@
 
 
     <Button
-        android:id="@+id/post_upload_image"
-        android:layout_width="180dp"
-        android:layout_height="44dp"
-        android:layout_marginBottom="230dp"
-        android:layout_marginTop="40dp"
+        android:id="@+id/post_upload_image_btn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_below="@id/post_direct_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="103dp"
+        android:layout_marginTop="501dp"
         android:background="@drawable/button_background"
-        android:fontFamily="@font/allerta"
-        android:text="Select image and Post"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_caption"
-        app:layout_constraintVertical_bias="0.0" />
+        android:fontFamily="@font/allerta_stencil"
+        android:text="Add Image and Post" />
+
+    <EditText
+        android:id="@+id/post_body"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/post_title_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Please enter your tips and messages here..."
+        android:inputType="textMultiLine" />
 
     <TextView
         android:id="@+id/post_page_title"
-        android:layout_width="99dp"
-        android:layout_height="37dp"
-        android:layout_marginEnd="223dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="30dp"
-        android:fontFamily="@font/allerta_stencil"
-        android:text="Posts"
-        android:textColor="@color/colorBlack"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/posts_image_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/posts_image_view"
-        android:layout_width="170dp"
-        android:layout_height="161dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/post_upload_image"
-        app:layout_constraintEnd_toStartOf="@+id/post_caption"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/post_page_title"
-        app:srcCompat="@drawable/health_pad_logo" />
-
-    <EditText
-        android:id="@+id/post_caption"
-        android:layout_width="200dp"
-        android:layout_height="133dp"
-        android:layout_marginStart="10dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/post_upload_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toEndOf="@+id/posts_image_view"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <TextView
-        android:id="@+id/textView6"
         android:layout_width="200dp"
         android:layout_height="33dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="170dp"
-        android:fontFamily="@font/allerta_stencil"
+        android:layout_marginTop="27dp"
+        android:fontFamily="@font/allerta"
         android:text="Give us your insight"
         android:textColor="@color/colorBlack"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/post_caption"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toEndOf="@+id/posts_image_view"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/post_direct_btn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/post_body"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="42dp"
+        android:background="@drawable/button_background_type3"
+        android:fontFamily="@font/allerta_stencil"
+        android:text="Post" />
+
+    <EditText
+        android:id="@+id/post_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/post_page_title"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="35dp"
+        android:hint="Please enter your title here..." />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -7,13 +7,13 @@
     android:background="@color/colorPrimaryDark"
     tools:context=".activities.posts.PostsActivity">
 
-              <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_feed_list"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_feed_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </androidx.recyclerview.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </RelativeLayout>
