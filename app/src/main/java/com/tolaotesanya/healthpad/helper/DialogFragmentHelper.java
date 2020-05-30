@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.tolaotesanya.healthpad.activities.profile.DoctorProfilePresenter;
-import com.tolaotesanya.healthpad.activities.profile.DoctorProfilePresenterImpl;
+import com.tolaotesanya.healthpad.activities.doctorsprofile.DoctorProfilePresenter;
+import com.tolaotesanya.healthpad.activities.doctorsprofile.DoctorProfilePresenterImpl;
 import com.tolaotesanya.healthpad.fragment.requests.RequestPresenter;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;

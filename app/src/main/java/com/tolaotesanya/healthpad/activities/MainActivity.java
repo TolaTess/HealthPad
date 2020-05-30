@@ -2,9 +2,11 @@ package com.tolaotesanya.healthpad.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +18,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.activities.posts.PostsFragment;
+import com.tolaotesanya.healthpad.fragment.posts.PostsFragment;
 import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
 import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
@@ -55,8 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         onlineCheck();
 
     }
+
     private void onlineCheck() {
-        if(presenter.getMcurrent_user_id() != null){
+        if (presenter.getMcurrent_user_id() != null) {
             presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                     .child("online").setValue("true");
         }
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Health Pad");
+        this.getSupportActionBar().setTitle("Health Pad");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -155,16 +158,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .child("online").setValue(ServerValue.TIMESTAMP);
                 sendToStart();
                 break;
+            case R.id.nav_posts:
+                presenter.getIntentPresenter().presentIntent(ClassName.Posts, null, null);
+                break;
             case R.id.nav_chat:
                 ChatFragment chatFragment = new ChatFragment();
                 setFragment(chatFragment);
-                /*Intent postIntent = new Intent(this, PostsActivity.class);
-                startActivity(postIntent);*/
                 break;
             case R.id.nav_request:
                 RequestFragment requestFragment = new RequestFragment();
                 setFragment(requestFragment);
-                //Fragment
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
