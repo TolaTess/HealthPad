@@ -4,6 +4,7 @@ public class Doctors {
     private String first_name;
     private String last_name;
     private String speciality;
+    private String clinic_name;
     private String location;
     private String status;
     private String image;
@@ -11,10 +12,11 @@ public class Doctors {
 
     public Doctors(){}
 
-    public Doctors(String first_name, String last_name, String speciality, String location, String status, String image, String thumb_image) {
+    public Doctors(String first_name, String last_name, String speciality, String clinic_name, String location, String status, String image, String thumb_image) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.speciality = speciality;
+        this.clinic_name = clinic_name;
         this.location = location;
         this.status = status;
         this.image = image;
@@ -35,6 +37,14 @@ public class Doctors {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getClinic_name() {
+        return clinic_name;
+    }
+
+    public void setClinic_name(String clinic_name) {
+        this.clinic_name = clinic_name;
     }
 
     public String getSpeciality() {

@@ -22,6 +22,7 @@ import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DoctorRegisterActivity extends AppCompatActivity {
@@ -104,7 +105,6 @@ public class DoctorRegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    //set user-type in user's table to doctor
                     userDatabase.child("user_type").setValue("doctor").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

@@ -64,18 +64,20 @@ public class AccountActivity extends AppCompatActivity {
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
-                String status = dataSnapshot.child("status").getValue().toString();
-                String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
+                if (dataSnapshot.hasChild("name")) {
+                    String name = dataSnapshot.child("name").getValue().toString();
+                    String image = dataSnapshot.child("image").getValue().toString();
+                    String status = dataSnapshot.child("status").getValue().toString();
+                    String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
-                //Ensures default image stays on screen
-                if (!image.equals("default")) {
-                    //Ensure placeholder stays on screen until image downloads from database
-                    Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mDisplayImage);
+                    //Ensures default image stays on screen
+                    if (!image.equals("default")) {
+                        //Ensure placeholder stays on screen until image downloads from database
+                        Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mDisplayImage);
+                    }
+                    mName.setText(name);
+                    mStatus.setText(status);
                 }
-                mName.setText(name);
-                mStatus.setText(status);
             }
 
             @Override
@@ -84,6 +86,7 @@ public class AccountActivity extends AppCompatActivity {
             }
         });
     }
+
     private void attachUI() {
         mDisplayImage = findViewById(R.id.img_setting);
         mName = findViewById(R.id.text_display_name);

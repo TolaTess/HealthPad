@@ -11,6 +11,7 @@ import com.tolaotesanya.healthpad.activities.doctorsprofile.DoctorProfilePresent
 import com.tolaotesanya.healthpad.fragment.requests.RequestPresenter;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,14 +24,20 @@ public class DialogFragmentHelper extends DialogFragment {
     private DoctorProfilePresenter profilePresenter;
     private String user_id;
     private String username;
+    private String doctorDetails;
+    private String doctorImage;
     private ClassName dialog;
     private String monline;
 
-    public DialogFragmentHelper(RequestPresenter presenter, FirebasePresenter firebasePresenter, String user_id, String username, ClassName dialog, String monline) {
+    public DialogFragmentHelper(RequestPresenter presenter, FirebasePresenter firebasePresenter,
+                                String user_id, String username, String doctorDetails,
+                                String doctorImage, ClassName dialog, String monline) {
         this.presenter = presenter;
         this.firebasePresenter = firebasePresenter;
         this.user_id = user_id;
         this.username = username;
+        this.doctorDetails = doctorDetails;
+        this.doctorImage = doctorImage;
         this.dialog = dialog;
         this.monline = monline;
         profilePresenter = new DoctorProfilePresenterImpl(getContext(), user_id);
@@ -66,7 +73,7 @@ public class DialogFragmentHelper extends DialogFragment {
             case AllDoctors:
                 if(!monline.equals("true")) {
                     builder.setTitle("Doctor Availability Check");
-                    builder.setMessage("Dr " + username + " is not Available at the moment.");
+                    builder.setMessage(username + " is not Available at the moment.");
                     builder.setPositiveButton("Request for Later", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -76,11 +83,11 @@ public class DialogFragmentHelper extends DialogFragment {
                     builder.setNeutralButton("view Profile", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            firebasePresenter.getIntentPresenter().presentIntent(ClassName.Profile, user_id, username);
+                            firebasePresenter.getIntentPresenter().doctorProfileIntent(user_id, username, doctorDetails, doctorImage);
                         }
                     });
                 } else {
-                    firebasePresenter.getIntentPresenter().presentIntent(ClassName.Profile, user_id, username);
+                    firebasePresenter.getIntentPresenter().doctorProfileIntent(user_id, username, doctorDetails, doctorImage);
                 }
                 break;
         }

@@ -172,61 +172,67 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+         userTypeCheck();
+     }
+
+    private void userTypeCheck() {
         final DatabaseReference updateUserType = presenter.getmUserDatabase()
                 .child(presenter.getMcurrent_user_id()).child("user_type");
 
         updateUserType.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                final String user_type = dataSnapshot.getValue().toString();
-                Log.d(TAG, "onDataChange: " );
-                if(user_type.equals("doctor")){
-                    mDoctorCheck.setText("Disable Doctor Account");
+                if (dataSnapshot.hasChild("user_type")) {
+                    final String user_type = dataSnapshot.getValue().toString();
+                    Log.d(TAG, "onDataChange: ");
+                    if (user_type.equals("doctor")) {
+                        mDoctorCheck.setText("Disable Doctor Account");
+                        mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                updateUserType.setValue("user");
+                                Toast.makeText(SettingsActivity.this,
+                                        "Doctor Account now Disabled", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else if (user_type.equals("user")) {
+                        DatabaseReference doctorCheckDB = FirebaseDatabase.getInstance().getReference()
+                                .child("Doctors");
+                        doctorCheckDB.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot doctors : dataSnapshot.getChildren()) {
+                                    final String doctor_id = doctors.getKey();
+                                    Log.d(TAG, "onDataChange: doctor keys" + doctor_id);
+                                    if (presenter.getMcurrent_user_id().equals(doctor_id)) {
+                                        mDoctorCheck.setText("Enable Doctor Account");
+                                        mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Log.d(TAG, "onDataChange: doctor key" + doctor_id);
+                                                updateUserType.setValue("doctor");
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+                } else {
                     mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            updateUserType.setValue("user");
-                            Toast.makeText(SettingsActivity.this,
-                                    "Doctor Account now Disabled", Toast.LENGTH_LONG).show();
+                            Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
+                            startActivity(doctorIntent);
+                            presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
                         }
                     });
-                } else if(user_type.equals("user")) {
-                    DatabaseReference doctorCheckDB = FirebaseDatabase.getInstance().getReference()
-                            .child("Doctors");
-                    doctorCheckDB.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for(DataSnapshot doctors: dataSnapshot.getChildren()){
-                                final String doctor_id = doctors.getKey();
-                                Log.d(TAG, "onDataChange: doctor keys" + doctor_id);
-                                if (presenter.getMcurrent_user_id().equals(doctor_id)) {
-                                    mDoctorCheck.setText("Enable Doctor Account");
-                                    mDoctorCheck.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Log.d(TAG, "onDataChange: doctor key" + doctor_id);
-                                            updateUserType.setValue("doctor");
-                                        }
-                                    });
-                                } else {
-                                    mDoctorCheck.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
-                                            startActivity(doctorIntent);
-                                            presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, doctor_id, null);
-                                        }
-                                    });
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
                 }
             }
 
@@ -312,16 +318,33 @@ public class SettingsActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()){
-                                                    presenter.getmRootRef().child("Doctors").child(presenter.getMcurrent_user_id())
-                                                            .updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                                    presenter.getmUserDatabase().child(presenter.getMcurrent_user_id()).child("user_type").addValueEventListener(new ValueEventListener() {
                                                         @Override
-                                                        public void onComplete(@NonNull Task task) {
-                                                            if(task.isSuccessful()){
-                                                                mProgressBar.dismiss();
-                                                            } else {
-                                                                Toast.makeText(SettingsActivity.this, "Error occured while uploading image", Toast.LENGTH_LONG).show();
-                                                                mProgressBar.dismiss();
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            if (dataSnapshot.hasChild("user_type")) {
+                                                                String userType = dataSnapshot.getValue().toString();
+                                                                if (userType.equals("doctor")) {
+                                                                    presenter.getmRootRef().child("Doctors").child(presenter.getMcurrent_user_id())
+                                                                            .updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                mProgressBar.dismiss();
+                                                                            } else {
+                                                                                Toast.makeText(SettingsActivity.this, "Error occured while uploading image", Toast.LENGTH_LONG).show();
+                                                                                mProgressBar.dismiss();
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                } else {
+                                                                    mRegProgress.dismiss();
+                                                                }
                                                             }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                                         }
                                                     });
                                                     mProgressBar.dismiss();

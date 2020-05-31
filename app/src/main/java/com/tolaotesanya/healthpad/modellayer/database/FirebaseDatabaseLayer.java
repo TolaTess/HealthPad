@@ -3,18 +3,21 @@ package com.tolaotesanya.healthpad.modellayer.database;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
-import com.tolaotesanya.healthpad.helper.State;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 public class FirebaseDatabaseLayer implements FirebasePresenter {
     private static final String TAG = "FirebaseDatabaseLayer";
@@ -24,6 +27,8 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
     private String mcurrent_user_id;
     private StorageReference mStorageRef;
     private IntentPresenter intentPresenter;
+    private String imageLink;
+    private String thumb_imageLink;
 
     public FirebaseDatabaseLayer(Context context) {
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -59,37 +64,37 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return mUserDatabase;
     }
 
-    public Map setupMessageChatDB(String doctor_id, String message, State mapType){
+    public Map setupMessageChatDB(String doctor_id, String message, State mapType) {
         Map setupMap = new HashMap();
         switch (mapType) {
             case messageDB:
-            //create Messages
-            String current_user_ref = "Messages/" + mcurrent_user_id + "/" + doctor_id;
-            String chat_user_ref = "Messages/" + doctor_id + "/" + mcurrent_user_id;
+                //create Messages
+                String current_user_ref = "Messages/" + mcurrent_user_id + "/" + doctor_id;
+                String chat_user_ref = "Messages/" + doctor_id + "/" + mcurrent_user_id;
 
-            DatabaseReference user_message_push = mRootRef.child("Messages")
-                    .child(mcurrent_user_id).child(doctor_id).push();
+                DatabaseReference user_message_push = mRootRef.child("Messages")
+                        .child(mcurrent_user_id).child(doctor_id).push();
 
-            String push_id = user_message_push.getKey();
+                String push_id = user_message_push.getKey();
 
-            Map messageMap = new HashMap();
-            messageMap.put("message", message);
-            messageMap.put("seen", false);
-            messageMap.put("type", "text");
-            messageMap.put("time", ServerValue.TIMESTAMP);
-            messageMap.put("from", mcurrent_user_id);
+                Map messageMap = new HashMap();
+                messageMap.put("message", message);
+                messageMap.put("seen", false);
+                messageMap.put("type", "text");
+                messageMap.put("time", ServerValue.TIMESTAMP);
+                messageMap.put("from", mcurrent_user_id);
 
                 setupMap.put(current_user_ref + "/" + push_id, messageMap);
                 setupMap.put(chat_user_ref + "/" + push_id, messageMap);
-            break;
+                break;
             case chat:
-            Map chatAddMap = new HashMap();
-            chatAddMap.put("seen", false);
-            chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+                Map chatAddMap = new HashMap();
+                chatAddMap.put("seen", false);
+                chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
 
                 setupMap.put("Chat/" + mcurrent_user_id + "/" + doctor_id, chatAddMap);
                 setupMap.put("Chat/" + doctor_id + "/" + mcurrent_user_id, chatAddMap);
-            break;
+                break;
         }
         return setupMap;
     }
@@ -151,21 +156,22 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
     }
 
     public Map registerDoctor(String firstName, String lastName,
-                              String speciality, String clinicName, String location){
+                              String speciality, String clinicName, String location) {
+
         //Information to pass to Doctors table
-        HashMap<String, String> doctorMap = new HashMap<>();
+        Map doctorMap = new HashMap();
         doctorMap.put("first_name", firstName);
         doctorMap.put("last_name", lastName);
         doctorMap.put("speciality", speciality);
         doctorMap.put("clinic_name", clinicName);
         doctorMap.put("location", location);
-        doctorMap.put("image", "default");
-        doctorMap.put("thumb_image", "default");
+        /*doctorMap.put("image", "default");
+        doctorMap.put("thumb_image", "default");*/
 
         return doctorMap;
     }
 
-    public Map setupUserMap(String displayName){
+    public Map setupUserMap(String displayName) {
         //Information to pass to Users table in database
         HashMap<String, String> userMap = new HashMap<>();
         userMap.put("name", displayName);
@@ -178,7 +184,7 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         return userMap;
     }
 
-    public Map setupPostMap(String title, String body, String download_uri, String thumb_download_uri){
+    public Map setupPostMap(String title, String body, String download_uri, String thumb_download_uri) {
         DatabaseReference user_post_push = mRootRef.child("Posts")
                 .push();
 
@@ -188,7 +194,7 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
         postMap.put("timestamp", ServerValue.TIMESTAMP);
         postMap.put("title", title);
         postMap.put("body", body);
-        postMap.put("likes", " ");
+        postMap.put("likes", "1");
         postMap.put("post_type", "tips");
         postMap.put("user_id", mcurrent_user_id);
         postMap.put("post_image", download_uri);
