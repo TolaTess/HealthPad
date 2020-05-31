@@ -12,12 +12,21 @@
         android:id="@+id/header_image"
         android:layout_width="82dp"
         android:layout_height="82dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="5dp"
         app:srcCompat="@drawable/ic_launcher_foreground">
 
     </de.hdodenhof.circleimageview.CircleImageView>
 
     <TextView
+        android:id="@+id/header_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
+        android:text="username" />
+
+    <TextView
+        android:id="@+id/app_header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/allerta_stencil"

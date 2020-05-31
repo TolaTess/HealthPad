@@ -14,11 +14,13 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="185dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/profile_name"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_toolbar"
+        app:layout_constraintTop_toBottomOf="@id/profile_toolbar"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <TextView
