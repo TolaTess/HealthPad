@@ -4,14 +4,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
@@ -23,14 +28,17 @@ import com.tolaotesanya.healthpad.modellayer.model.Doctors;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class AllDoctorsActivity extends AppCompatActivity {
     private static final String TAG = "AllDoctorsActivity";
-    
+
     private RecyclerView mDoctorList;
+    private EditText mSearchBox;
+    private Button mSearchBtn;
     private FirebasePresenter presenter;
     private FirebaseRecyclerAdapter adapter;
     private Context mContext = AllDoctorsActivity.this;
@@ -46,29 +54,19 @@ public class AllDoctorsActivity extends AppCompatActivity {
         setupToolbar();
 
         mDoctorList = findViewById(R.id.all_doctors_recycler);
-        mDoctorList.setLayoutManager(new LinearLayoutManager(this));
-        fetch();
-    }
-
-    private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.all_doctors_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("All Doctors");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    public void checkLastSeenOnline(String doctor_id) {
 
     }
+
 
     private void fetch() {
-        DatabaseReference databaseReference = presenter.getmRootRef()
+
+        DatabaseReference doctorQuery = presenter.getmRootRef()
                 .child("Doctors");
 
-        final FirebaseRecyclerOptions<Doctors> options =
-                new FirebaseRecyclerOptions.Builder<Doctors>()
-                        .setQuery(databaseReference, Doctors.class)
-                        .build();
+        FirebaseRecyclerOptions<Doctors> options = new FirebaseRecyclerOptions.Builder<Doctors>()
+                .setQuery(doctorQuery, Doctors.class)
+                .build();
+
         adapter = new FirebaseRecyclerAdapter<Doctors, DoctorsViewHolder>(
                 options) {
             @Override
@@ -78,50 +76,57 @@ public class AllDoctorsActivity extends AppCompatActivity {
                         .inflate(R.layout.layout_doctors_list, parent, false);
                 return new DoctorsViewHolder(view);
             }
+
             @Override
             protected void onBindViewHolder(final DoctorsViewHolder holder, final int position, final Doctors model) {
                 Log.d(TAG, "onBindViewHolder: ");
                 final String fullName = "Dr " + model.getFirst_name() + " " + model.getLast_name();
                 holder.setFullName(fullName);
-                holder.setDetails(model.getSpeciality(), model.getLocation());
-                holder.setImage(model.getThumb_image());
+                final String detailsString = model.getSpeciality() + " based in \n" + model.getLocation();
+                holder.setDetails(detailsString);
 
                 final String doctorid = getRef(position).getKey();
+
                 presenter.getmUserDatabase()
                         .child(doctorid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild("online")) {
                             userOnline = dataSnapshot.child("online").getValue().toString();
+                            String profileImage = dataSnapshot.child("thumb_image").getValue().toString();
+                            model.setImage(profileImage);
                             holder.setUserOnline(userOnline);
+                            holder.setImage(model.getImage());
+                            Log.d(TAG, "onBindViewHolder: " + "profile image " + profileImage);
                         }
 
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
-
+                //send
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //more options or add fragment dialog
                         DialogFragmentHelper dialogFragmentHelper =
-                                new DialogFragmentHelper(null, presenter, doctorid, model.getFirst_name(), ClassName.AllDoctors, userOnline);
-                        dialogFragmentHelper.setCancelable(false);
+                                new DialogFragmentHelper(null, presenter, doctorid, fullName, detailsString, model.getImage(), ClassName.AllDoctors, userOnline);
                         dialogFragmentHelper.show(getSupportFragmentManager(), "DIALOG_FRAGMENT");
                     }
                 });
             }
         };
+        mDoctorList.setLayoutManager(new LinearLayoutManager(this));
+        adapter.startListening();
         mDoctorList.setAdapter(adapter);
     }
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart: ");
         super.onStart();
-        adapter.startListening();
+        fetch();
     }
 
     @Override
@@ -131,4 +136,10 @@ public class AllDoctorsActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.all_doctors_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("All Doctors");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 }

@@ -41,6 +41,15 @@ public class IntentPresenter {
         mContext.startActivity(postIntent);
     }
 
+    public void doctorProfileIntent(String doctor_id, String fullname, String details, String image){
+        Intent doctorIntent = new Intent(mContext, DoctorProfileActivity.class);
+        doctorIntent.putExtra("doctor_id", doctor_id);
+        doctorIntent.putExtra("fullname", fullname);
+        doctorIntent.putExtra("details", details);
+        doctorIntent.putExtra("image", image);
+        mContext.startActivity(doctorIntent);
+    }
+
     public void presentIntent(ClassName activity, String userid, String extra) {
         switch (activity) {
             case Main:

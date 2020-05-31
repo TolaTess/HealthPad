@@ -17,7 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.helper.State;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 
 public class DoctorProfileActivity extends AppCompatActivity {
 
@@ -34,13 +34,25 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private String mCurrent_user_id;
     private String doctor_id;
     private String mlastName;
+    private String fullName;
+    private String details;
+    private String image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
 
+        //doctorIntent.putExtra("doctor_id", doctor_id);
+        //        doctorIntent.putExtra("fullname", fullname);
+        //        doctorIntent.putExtra("details", details);
+        //        doctorIntent.putExtra("image", image);
         doctor_id = getIntent().getStringExtra("doctor_id");
+        fullName = getIntent().getStringExtra("fullname");
+        details = getIntent().getStringExtra("details");
+        image = getIntent().getStringExtra("image");
+
+
         setupToolbar();
         attachUI();
 
@@ -111,6 +123,13 @@ public class DoctorProfileActivity extends AppCompatActivity {
     }
 
     public void reqConsultation() {
+
+        mProfileName.setText(fullName);
+        mProfileDetails.setText(details);
+        Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
+
+
+        /*
         presenter.getmDoctorDatabase().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -125,9 +144,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
                         "\n" + "based in " + location;
 
                 mProfileName.setText(fullName);
-                mProfileDetails.setText(details);
+                mProfileDetails.setText(details);*/
 
-                Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
+                //Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
 
                 //Request Consultation
                 presenter.getmReqConsulDatabase().child(mCurrent_user_id)
@@ -170,13 +189,13 @@ public class DoctorProfileActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                             }
                         });
-            }
+           /* }
 
-            @Override
+            *//*@Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
 
         mBtnReqConsultation.setOnClickListener(new View.OnClickListener() {
             @Override
