@@ -14,7 +14,7 @@
         android:fontFamily="@font/allerta_stencil"
         android:text="No consultation requests currently"
         android:textAlignment="center"
-        android:textSize="24sp"
+        android:textSize="18sp"
         android:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -12,8 +12,8 @@
         android:id="@+id/text_message_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginRight="56dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/sent_msg_background"
         android:maxWidth="240dp"
         android:padding="8dp"
@@ -24,12 +24,12 @@
 
     <TextView
         android:id="@+id/text_message_time"
-        android:text="11:40"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
-        app:layout_constraintLeft_toRightOf="@+id/text_message_body"
         android:layout_marginLeft="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_message_body" />
+        android:text="11:40"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_message_body"
+        app:layout_constraintLeft_toRightOf="@+id/text_message_body" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

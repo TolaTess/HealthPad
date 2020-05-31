@@ -14,8 +14,13 @@
             android:title="Doctors" />
         <item
             android:id="@+id/nav_request"
-            android:icon="@drawable/chat"
+            android:icon="@drawable/share"
             android:title="Requests" />
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/chat"
+            android:title="Consultations" />
+
         <item
             android:id="@+id/nav_posts"
             android:icon="@drawable/circle_plus"
@@ -30,10 +35,6 @@
                 android:id="@+id/nav_account"
                 android:icon="@drawable/user"
                 android:title="Account" />
-            <item
-                android:id="@+id/nav_chat"
-                android:icon="@drawable/chat"
-                android:title="Consultations" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/close"
