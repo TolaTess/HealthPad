@@ -9,9 +9,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
@@ -75,7 +73,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
           ReceivedMessage messages =  mMessageList.get(position);
         switch (holder.getItemViewType()){
             case VIEW_TYPE_MESSAGE_SENT:
-                ((SentMessageHolder) holder).setMessage(messages);
+                ((SentMessageHolder) holder).bind(messages);
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bind(messages);
@@ -120,12 +118,13 @@ public class MessageAdapter extends RecyclerView.Adapter{
             timeText = itemView.findViewById(R.id.text_message_time);
         }
 
-        public void setMessage(ReceivedMessage message) {
+        public void bind(ReceivedMessage message) {
             messageText.setText(message.getMessage());
-        }
+            GetTime getTime = new GetTime();
+            long timeNow = message.getTime();
 
-        public void setTime(String time) {
-            timeText.setText(time);
+            String lastSeenTime = getTime.getTime(timeNow, itemView.getContext());
+            timeText.setText(lastSeenTime);
         }
     }
 
@@ -146,6 +145,11 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
         public void bind(ReceivedMessage message) {
             messageText.setText(message.getMessage());
+            GetTime getTime = new GetTime();
+            long timeNow = message.getTime();
+
+            String lastSeenTime = getTime.getTime(timeNow, itemView.getContext());
+            timeText.setText(lastSeenTime);
         }
 
         public void setImage(String thumb_image) {
