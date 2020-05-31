@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
 
     //Firebase
-    private FirebaseAuthLayer mAuth;
+    private FirebaseAuth mAuth;
 
     //UI Element
     private Button mCreateButton;
@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = new FirebaseAuthLayer();
+        mAuth = FirebaseAuth.getInstance();
         mRegProgress = new ProgressDialog(this);
 
         setupToolbar();
@@ -79,25 +79,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login_user(String email, String password) {
-        mAuth.getmAuth().signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
                             mRegProgress.dismiss();
                             sendToStart();
 
                         } else {
                             // If sign in fails, display a message to the user.
                             mRegProgress.hide();
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed. Please try again",
                                     Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
     }

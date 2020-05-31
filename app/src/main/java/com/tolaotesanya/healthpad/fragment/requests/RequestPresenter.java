@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
-import com.tolaotesanya.healthpad.helper.State;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 
 public interface RequestPresenter {
 

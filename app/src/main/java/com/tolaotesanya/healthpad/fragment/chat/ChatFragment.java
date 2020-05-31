@@ -92,7 +92,6 @@ public class ChatFragment extends Fragment {
                     @Override
                     protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, final int position, @NonNull final ChatConversation model) {
                         Log.d(TAG, "onBindViewHolder: ");
-                        //holder.setDate(model.getDate_time());
                         final String list_user_id = getRef(position).getKey();
                         Query lastMessageQuery = chatPresenter.getmMessageDatabase().child(list_user_id).limitToLast(1);
 
@@ -102,11 +101,6 @@ public class ChatFragment extends Fragment {
                                 if(dataSnapshot.hasChild("message")) {
                                     String data = dataSnapshot.child("message").getValue().toString();
                                     holder.setMessage(data, model.isSeen());
-                                    /*long timeofPost = model.getTimestamp();
-                                    GetTimeAgo getTimeAgo = new GetTimeAgo();
-                                    String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
-                                    //holder.setTime(timePosted);*/
-
                                 }
                             }
 
@@ -193,10 +187,6 @@ public class ChatFragment extends Fragment {
                 userStatus.setTypeface(userStatus.getTypeface(), Typeface.NORMAL);
             }
         }
-        /*public void setTime(String time){
-            TextView timeView = mView.findViewById(R.id.time_posted);
-            timeView.setText(time);
-        }*/
 
         public void setUserOnline(String online_status) {
             ImageView userOnlineView = mView.findViewById(R.id.chat_online_icon);

@@ -78,7 +78,6 @@ public class PostsFragment extends Fragment {
                 options) {
             @Override
             public PostsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                Log.d(TAG, "onCreateViewHolder: ");
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.layout_feed_list, parent, false);
                 return new PostsViewHolder(view);
@@ -86,7 +85,6 @@ public class PostsFragment extends Fragment {
 
             @Override
             protected void onBindViewHolder(final PostsViewHolder holder, final int position, final Posts model) {
-                Log.d(TAG, "onBindViewHolder: ");
                 long timeofPost = model.getTimestamp();
                 GetTimeAgo getTimeAgo = new GetTimeAgo();
                 final String timePosted = getTimeAgo.getTimeAgo(timeofPost, getContext());
@@ -95,19 +93,17 @@ public class PostsFragment extends Fragment {
                 holder.setCaption(caption);
                 final String body = model.getBody();
                 final String postImage = model.getPost_image();
-                //holder.setPostImage(postImage, body);
                 final String poster_id = model.getUser_id();
                 presenter.getmUserDatabase().child(poster_id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             final String username = dataSnapshot.child("name").getValue().toString();
                             final String profile_image = dataSnapshot.child("thumb_image").getValue().toString();
-                            Log.d(TAG, "onDataChange: pimage " + profile_image);
                             holder.setPostDisplayType(postImage, body, profile_image);
                             final String likes = model.getLikes();
                             holder.setLikes(likes);
 
-                            holder.itemView.findViewById(R.id.feed_image).setOnClickListener(new View.OnClickListener() {
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     presenter.getIntentPresenter().postProfileIntent(poster_id, username, timePosted, postImage, caption, body);

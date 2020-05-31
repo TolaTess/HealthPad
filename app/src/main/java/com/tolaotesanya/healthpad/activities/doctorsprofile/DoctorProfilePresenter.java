@@ -3,7 +3,7 @@ package com.tolaotesanya.healthpad.activities.doctorsprofile;
 import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
-import com.tolaotesanya.healthpad.helper.State;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 
 public interface DoctorProfilePresenter {
 

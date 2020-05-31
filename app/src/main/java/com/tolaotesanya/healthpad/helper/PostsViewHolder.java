@@ -46,12 +46,6 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
             Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView);
         }
     }
-
-    /*public void setThumbImage(String profile_image) {
-        CircleImageView profileImageView = mView.findViewById(R.id.feed_profile_image);
-        Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView);
-    }*/
-
     public void setLikeButton() {
         ImageView likeImageView = mView.findViewById(R.id.feed_like_icon);
         Picasso.get().load(R.drawable.filled_heart).placeholder(R.drawable.heart).into(likeImageView);

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.activities.auth.AuthActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -50,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent splashIntent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent splashIntent = new Intent(SplashActivity.this, AuthActivity.class);
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair<View, String>(splashImage, "transition_image");
                 pairs[1] = new Pair<View, String>(title, "transition_name");

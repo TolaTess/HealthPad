@@ -21,15 +21,11 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.MainActivity;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseAuthLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -46,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Context mContext = RegisterActivity.this;
 
     //Firebase
-    private FirebaseAuthLayer mAuth;
+    private FirebaseAuth mAuth;
     private FirebasePresenter presenter;
 
     @Override
@@ -55,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mRegProgress = new ProgressDialog(this);
-        mAuth = new FirebaseAuthLayer();
+        mAuth = FirebaseAuth.getInstance();
         presenter = new FirebaseDatabaseLayer(mContext);
 
         setupToolbar();
@@ -92,35 +88,36 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d(TAG, "setupToolbar: ");
         Toolbar mToolbar = findViewById(R.id.register_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Create Account");
+        getSupportActionBar().setTitle("Create an account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.bringToFront();
     }
 
     private void register_user(final String display_name, String email, String password){
-        mAuth.getmAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-
-                    String currentUserid = mAuth.getMcurrent_user().getUid();
+                    FirebaseUser user = mAuth.getCurrentUser();
                     //Information to pass to Users table in database
-                    Map userMap = presenter.setupUserMap(display_name);
-
-                    //send hashmap to database
-                    presenter.getmUserDatabase().child(currentUserid).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                mRegProgress.dismiss();
-                                sendToStart();
-                            }
-                        }
-                    });
+                    updateDatabase(user, display_name);
 
                 } else{
                     mRegProgress.hide();
                     Toast.makeText(RegisterActivity.this, "An error occurred, please try again", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void updateDatabase(FirebaseUser user, String display_name) {
+        Map userMap = presenter.setupUserMap(display_name);
+        presenter.getmUserDatabase().child(user.getUid()).setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    mRegProgress.dismiss();
+                    sendToStart();
                 }
             }
         });

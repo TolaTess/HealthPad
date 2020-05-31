@@ -25,9 +25,8 @@ public class DoctorsViewHolder extends RecyclerView.ViewHolder {
         fullName.setText(fName);
     }
 
-    public void setDetails(String speciality, String location) {
+    public void setDetails(String detailsString) {
         TextView details = mView.findViewById(R.id.doctors_details);
-        String detailsString = speciality + " based in " + location;
         details.setText(detailsString);
     }
 

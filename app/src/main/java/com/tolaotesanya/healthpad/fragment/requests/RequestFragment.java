@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
@@ -44,7 +42,6 @@ public class RequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         mMainView = inflater.inflate(R.layout.fragment_request, container, false);
         requestPresenter = new RequestPresenterImpl(getContext());
 
@@ -80,7 +77,6 @@ public class RequestFragment extends Fragment {
                         options) {
                     @Override
                     public RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        Log.d(TAG, "onCreateViewHolder: ");
                         View view = LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.request_list_view, parent, false);
                         return new RequestsViewHolder(view);
@@ -88,8 +84,6 @@ public class RequestFragment extends Fragment {
 
                     @Override
                     protected void onBindViewHolder(@NonNull final RequestsViewHolder holder, final int position, @NonNull final Requests model) {
-                        Log.d(TAG, "onBindViewHolder: ");
-
                         final String list_user_id = getRef(position).getKey();
                         requestPresenter.getmConsultReqDatabase().child(list_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -115,7 +109,7 @@ public class RequestFragment extends Fragment {
                                                 @Override
                                                 public void onClick(View v) {
                                                     DialogFragmentHelper dialogFragmentHelper =
-                                                            new DialogFragmentHelper(requestPresenter, null, list_user_id, userName, ClassName.Request, null);
+                                                            new DialogFragmentHelper(requestPresenter, null, list_user_id, userName, null, null, ClassName.Request, null);
                                                     dialogFragmentHelper.setCancelable(false);
                                                     dialogFragmentHelper.show(getFragmentManager(), "DIALOG_FRAGMENT");
 

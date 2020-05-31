@@ -77,13 +77,6 @@ public class PostsActivity extends AppCompatActivity {
         mPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //option 1
-                // this will direct user to the Gallery chooser (the library to choose images)
-                mProgressbar = new ProgressDialog(PostsActivity.this);
-                mProgressbar.setTitle("Uploading Post");
-                mProgressbar.setMessage("Please wait...");
-                mProgressbar.setCanceledOnTouchOutside(false);
-                mProgressbar.show();
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -99,14 +92,21 @@ public class PostsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String title = mTitle.getText().toString();
                 String body = mBody.getText().toString();
+                mProgressbar = new ProgressDialog(PostsActivity.this);
+                mProgressbar.setTitle("Uploading Post");
+                mProgressbar.setMessage("Please wait...");
+                mProgressbar.setCanceledOnTouchOutside(false);
+                mProgressbar.show();
                 Map setupMap = presenter.setupPostMap(title, body, "default", "default");
                 presenter.getmRootRef().updateChildren(setupMap).addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
+                            mProgressbar.dismiss();
                             presenter.getIntentPresenter().presentIntent(ClassName.Main, null, null);
                         } else
                         {
+                            mProgressbar.hide();
                             Toast.makeText(PostsActivity.this, "An Error Occurred while Posting", Toast.LENGTH_LONG).show();
                         }
                     }
