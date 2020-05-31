@@ -1,9 +1,11 @@
 package com.tolaotesanya.healthpad.helper;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -93,7 +95,6 @@ public class MessageAdapter extends RecyclerView.Adapter{
                 String name = dataSnapshot.child("name").getValue().toString();
                 String userThumb = dataSnapshot.child("thumb_image").getValue().toString();
                 ((ReceivedMessageHolder) holder).setDisplayName(name);
-                ((ReceivedMessageHolder) holder).setImage(userThumb);
             }
 
             @Override
@@ -110,6 +111,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
     public static class SentMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText;
+        ImageView messageImage;
 
         SentMessageHolder(View itemView) {
             super(itemView);
@@ -119,7 +121,13 @@ public class MessageAdapter extends RecyclerView.Adapter{
         }
 
         public void bind(ReceivedMessage message) {
+            messageText.setVisibility(View.VISIBLE);
             messageText.setText(message.getMessage());
+            if(message.getType().equals("image")){
+                messageImage.setVisibility(View.VISIBLE);
+                messageText.setVisibility(View.GONE);
+                Picasso.get().load(message.getMessage()).placeholder(R.drawable.ic_launcher_foreground).into(messageImage);
+            }
             GetTime getTime = new GetTime();
             long timeNow = message.getTime();
 
@@ -132,6 +140,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
     public static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText;
         CircleImageView profileImage;
+        ImageView messageImage;
 
         ReceivedMessageHolder(View itemView) {
             super(itemView);
@@ -139,22 +148,22 @@ public class MessageAdapter extends RecyclerView.Adapter{
             messageText = itemView.findViewById(R.id.text_message_body);
             timeText =  itemView.findViewById(R.id.text_message_time);
             nameText =  itemView.findViewById(R.id.text_message_name);
-            profileImage = itemView.findViewById(R.id.image_message_profile);
 
         }
 
         public void bind(ReceivedMessage message) {
+            messageText.setVisibility(View.VISIBLE);
             messageText.setText(message.getMessage());
+            if(message.getType().equals("image")){
+                messageImage.setVisibility(View.VISIBLE);
+                messageText.setVisibility(View.GONE);
+                Picasso.get().load(message.getMessage()).placeholder(R.drawable.ic_launcher_foreground).into(messageImage);
+            }
             GetTime getTime = new GetTime();
             long timeNow = message.getTime();
 
             String lastSeenTime = getTime.getTime(timeNow, itemView.getContext());
             timeText.setText(lastSeenTime);
-        }
-
-        public void setImage(String thumb_image) {
-            Picasso.get().load(thumb_image)
-                    .placeholder(R.drawable.health_pad_logo).into(profileImage);
         }
 
         public void setDisplayName(String name) {
