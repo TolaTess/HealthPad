@@ -74,13 +74,13 @@ public class DialogFragmentHelper extends DialogFragment {
                 if(!monline.equals("true")) {
                     builder.setTitle("Doctor Availability Check");
                     builder.setMessage(username + " is not Available at the moment.");
-                    builder.setPositiveButton("Request for Later", new DialogInterface.OnClickListener() {
+                    builder.setPositiveButton("Request Chat Now", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             profilePresenter.loadDatabase(getContext(), State.not_consul);
                         }
                     });
-                    builder.setNeutralButton("view Profile", new DialogInterface.OnClickListener() {
+                    builder.setNeutralButton("View Profile", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             firebasePresenter.getIntentPresenter().doctorProfileIntent(user_id, username, doctorDetails, doctorImage);

@@ -37,6 +37,7 @@ public class ChatFragment extends Fragment {
     private View mMainView;
     private RecyclerView mConvList;
     private ChatPresenter chatPresenter;
+    private TextView noReqReceived;
 
     FirebaseRecyclerAdapter<ChatConversation, ChatsViewHolder> chatsAdapter;
 
@@ -55,6 +56,7 @@ public class ChatFragment extends Fragment {
         chatPresenter = new ChatPresenterImpl(getContext());
 
         mConvList = mMainView.findViewById(R.id.conv_list);
+        noReqReceived = mMainView.findViewById(R.id.received_chat_msg);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
@@ -99,6 +101,7 @@ public class ChatFragment extends Fragment {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 if(dataSnapshot.hasChild("message")) {
+                                    noReqReceived.setVisibility(View.INVISIBLE);
                                     String data = dataSnapshot.child("message").getValue().toString();
                                     holder.setMessage(data, model.isSeen());
                                 }

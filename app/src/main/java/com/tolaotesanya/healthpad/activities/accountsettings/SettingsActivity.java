@@ -164,7 +164,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
                 builder.setTitle("Rewards Coming Soon");
-                builder.setMessage("We are planning some cool rewards just for you. \n Please look forward to it!");
+                builder.setMessage("We are planning some cool rewards just for you. \nPlease look forward to it!");
                 builder.create().show();
             }
         });
@@ -210,6 +210,13 @@ public class SettingsActivity extends AppCompatActivity {
                                                 updateUserType.child("user_type").setValue("doctor");
                                             }
                                         });
+                                    } else{
+                                        mDoctorCheck.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -225,8 +232,6 @@ public class SettingsActivity extends AppCompatActivity {
                     mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent doctorIntent = new Intent(SettingsActivity.this, DoctorRegisterActivity.class);
-                            startActivity(doctorIntent);
                             presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
                         }
                     });

@@ -26,14 +26,11 @@ public class DoctorProfileActivity extends AppCompatActivity {
     private Button mBtnReqConsultation;
     private ProgressDialog progressDialog;
     private Context mContext = DoctorProfileActivity.this;
-
-    //private DoctorProfileActivity mView = DoctorProfileActivity.this;
     private DoctorProfilePresenter presenter;
 
     private State mCurrent_state;
     private String mCurrent_user_id;
     private String doctor_id;
-    private String mlastName;
     private String fullName;
     private String details;
     private String image;
@@ -43,10 +40,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
 
-        //doctorIntent.putExtra("doctor_id", doctor_id);
-        //        doctorIntent.putExtra("fullname", fullname);
-        //        doctorIntent.putExtra("details", details);
-        //        doctorIntent.putExtra("image", image);
         doctor_id = getIntent().getStringExtra("doctor_id");
         fullName = getIntent().getStringExtra("fullname");
         details = getIntent().getStringExtra("details");
@@ -159,7 +152,7 @@ public class DoctorProfileActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.hasChild(doctor_id)) {
                                     mCurrent_state = State.consul;
-                                    mBtnReqConsultation.setText("Unfollow Dr " + mlastName);
+                                    mBtnReqConsultation.setText("Unfollow Dr " + fullName);
                                     progressDialog.dismiss();
                                 }
                             }
@@ -169,13 +162,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                             }
                         });
-           /* }
-
-            *//*@Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
 
         mBtnReqConsultation.setOnClickListener(new View.OnClickListener() {
             @Override

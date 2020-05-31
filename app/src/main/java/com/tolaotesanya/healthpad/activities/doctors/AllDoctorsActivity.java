@@ -57,7 +57,6 @@ public class AllDoctorsActivity extends AppCompatActivity {
 
     }
 
-
     private void fetch() {
 
         DatabaseReference doctorQuery = presenter.getmRootRef()
@@ -122,6 +121,7 @@ public class AllDoctorsActivity extends AppCompatActivity {
         adapter.startListening();
         mDoctorList.setAdapter(adapter);
     }
+
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart: ");

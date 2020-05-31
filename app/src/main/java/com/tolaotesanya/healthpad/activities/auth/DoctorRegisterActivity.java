@@ -91,7 +91,7 @@ public class DoctorRegisterActivity extends AppCompatActivity {
         mToolbar.bringToFront();
     }
 
-    private void registerDoctor(String firstName, String lastName,
+    private void registerDoctor(String firstName, final String lastName,
                                 String speciality, String clinicName, String location){
         DatabaseReference doctorDatabase = presenter.getmRootRef().child("Doctors")
                 .child(presenter.getMcurrent_user_id());
@@ -105,7 +105,11 @@ public class DoctorRegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    userDatabase.child("user_type").setValue("doctor").addOnCompleteListener(new OnCompleteListener<Void>() {
+                    Map doctorUser = new HashMap();
+                    String doctorName = "Dr " + lastName;
+                    doctorUser.put("name", doctorName);
+                    doctorUser.put("user_type", "doctor");
+                    userDatabase.updateChildren(doctorUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
