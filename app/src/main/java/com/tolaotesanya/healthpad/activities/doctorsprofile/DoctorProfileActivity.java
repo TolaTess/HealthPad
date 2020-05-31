@@ -128,26 +128,6 @@ public class DoctorProfileActivity extends AppCompatActivity {
         mProfileDetails.setText(details);
         Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
 
-
-        /*
-        presenter.getmDoctorDatabase().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String firstName = dataSnapshot.child("first_name").getValue().toString();
-                mlastName = dataSnapshot.child("last_name").getValue().toString();
-                String speciality = dataSnapshot.child("speciality").getValue().toString();
-                String location = dataSnapshot.child("location").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
-
-                String fullName = "Dr " + firstName + " " + mlastName;
-                String details = "I am a " + speciality +
-                        "\n" + "based in " + location;
-
-                mProfileName.setText(fullName);
-                mProfileDetails.setText(details);*/
-
-                //Picasso.get().load(image).placeholder(R.drawable.health_pad_logo).into(mProfileImage);
-
                 //Request Consultation
                 presenter.getmReqConsulDatabase().child(mCurrent_user_id)
                         .addListenerForSingleValueEvent(new ValueEventListener() {

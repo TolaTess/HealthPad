@@ -51,10 +51,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressBar;
 
-    //UI element
-    private Button mChangeImage;
-    private Button rewardClaim;
-    private Button mSaveChanges;
     private Button mDoctorCheck;
     private TextInputLayout mStatus;
     private TextInputLayout mName;
@@ -84,9 +80,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
      private void attachUI() {
-        rewardClaim = findViewById(R.id.payment);
-        mChangeImage = findViewById(R.id.setting_change_image);
-        mSaveChanges = findViewById(R.id.save_settings);
+         Button rewardClaim = findViewById(R.id.payment);
+         //UI element
+         Button mChangeImage = findViewById(R.id.setting_change_image);
+         Button mSaveChanges = findViewById(R.id.save_settings);
         mDoctorCheck = findViewById(R.id.doctor_check_btn);
         mStatus = findViewById(R.id.settings_status_input);
         mName = findViewById(R.id.setting_display_name);
@@ -167,7 +164,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
                 builder.setTitle("Rewards Coming Soon");
-                builder.setMessage("We are planning some cool rewards just for you. Please look forward to it!");
+                builder.setMessage("We are planning some cool rewards just for you. \n Please look forward to it!");
                 builder.create().show();
             }
         });
@@ -177,20 +174,20 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void userTypeCheck() {
         final DatabaseReference updateUserType = presenter.getmUserDatabase()
-                .child(presenter.getMcurrent_user_id()).child("user_type");
+                .child(presenter.getMcurrent_user_id());
 
         updateUserType.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("user_type")) {
-                    final String user_type = dataSnapshot.getValue().toString();
+                    final String user_type = dataSnapshot.child("user_type").getValue().toString();
                     Log.d(TAG, "onDataChange: ");
                     if (user_type.equals("doctor")) {
-                        mDoctorCheck.setText("Disable Doctor Account");
+                        mDoctorCheck.setText(R.string.disable_account);
                         mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                updateUserType.setValue("user");
+                                updateUserType.child("user_type").setValue("user");
                                 Toast.makeText(SettingsActivity.this,
                                         "Doctor Account now Disabled", Toast.LENGTH_LONG).show();
                             }
@@ -205,12 +202,12 @@ public class SettingsActivity extends AppCompatActivity {
                                     final String doctor_id = doctors.getKey();
                                     Log.d(TAG, "onDataChange: doctor keys" + doctor_id);
                                     if (presenter.getMcurrent_user_id().equals(doctor_id)) {
-                                        mDoctorCheck.setText("Enable Doctor Account");
+                                        mDoctorCheck.setText(R.string.enable_account);
                                         mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Log.d(TAG, "onDataChange: doctor key" + doctor_id);
-                                                updateUserType.setValue("doctor");
+                                                updateUserType.child("user_type").setValue("doctor");
                                             }
                                         });
                                     }
