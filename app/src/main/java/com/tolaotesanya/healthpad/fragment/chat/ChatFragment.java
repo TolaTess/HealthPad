@@ -10,21 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.helper.GetTimeAgo;
-import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.ChatConversation;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,8 +28,6 @@ public class ChatFragment extends Fragment {
     private RecyclerView mConvList;
     private ChatPresenter chatPresenter;
     private TextView noReqReceived;
-
-    FirebaseRecyclerAdapter<ChatConversation, ChatsViewHolder> chatsAdapter;
 
 
     public ChatFragment() {
@@ -71,101 +59,13 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         Log.d(TAG, "onStart: ");
         super.onStart();
-
-        Query convQuery = chatPresenter.getmConsultDatabase().orderByChild("timestamp");
-
-        FirebaseRecyclerOptions<ChatConversation> options =
-                new FirebaseRecyclerOptions.Builder<ChatConversation>()
-                        .setQuery(convQuery, ChatConversation.class)
-                        .build();
-
-
-        chatsAdapter =
-                new FirebaseRecyclerAdapter<ChatConversation, ChatsViewHolder>(
-                        options) {
-                    @Override
-                    public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        Log.d(TAG, "onCreateViewHolder: ");
-                        View view = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.chat_list_view, parent, false);
-                        return new ChatsViewHolder(view);
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, final int position, @NonNull final ChatConversation model) {
-                        Log.d(TAG, "onBindViewHolder: ");
-                        final String list_user_id = getRef(position).getKey();
-                        Query lastMessageQuery = chatPresenter.getmMessageDatabase().child(list_user_id).limitToLast(1);
-
-                        lastMessageQuery.addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                if(dataSnapshot.hasChild("message")) {
-                                    noReqReceived.setVisibility(View.INVISIBLE);
-                                    String messageType = dataSnapshot.child("type").getValue().toString();
-                                    String data = dataSnapshot.child("message").getValue().toString();
-                                    holder.setMessage(data, messageType, model.isSeen());
-                                }
-                            }
-
-                            @Override
-                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            }
-
-                            @Override
-                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                            }
-
-                            @Override
-                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                        chatPresenter.getmUserChatDatabase().child(list_user_id).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                final String userName = dataSnapshot.child("name").getValue().toString();
-                                String userThumb = dataSnapshot.child("thumb_image").getValue().toString();
-                                if(dataSnapshot.hasChild("online")){
-                                    String userOnline = dataSnapshot.child("online").getValue().toString();
-                                    holder.setUserOnline(userOnline);
-                                }
-                                holder.setName(userName);
-                                holder.setUserImage(userThumb);
-
-                                holder.mView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        chatPresenter.getIntentPresenter().presentIntent(ClassName.Chats, list_user_id, userName);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                    }
-                };
-
-        chatsAdapter.startListening();
-        mConvList.setAdapter(chatsAdapter);
-
+        chatPresenter.fetchChat(mConvList, noReqReceived);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        chatsAdapter.stopListening();
+        chatPresenter.stopAdapter();
     }
 
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {

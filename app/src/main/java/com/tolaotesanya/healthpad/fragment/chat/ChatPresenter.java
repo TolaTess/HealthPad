@@ -1,12 +1,14 @@
 package com.tolaotesanya.healthpad.fragment.chat;
 
-import com.google.firebase.database.DatabaseReference;
+import android.widget.TextView;
+
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public interface ChatPresenter {
 
-    DatabaseReference getmConsultDatabase();
-    DatabaseReference getmUserChatDatabase();
-    DatabaseReference getmMessageDatabase();
     IntentPresenter getIntentPresenter();
+    void fetchChat(RecyclerView mConvList, final TextView noReqReceived);
+    void stopAdapter();
 }
