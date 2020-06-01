@@ -31,15 +31,16 @@
         android:layout_marginTop="13dp"
         android:text="11:40"
         android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintBottom_toTopOf="@+id/send_image_chat"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="231dp" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/send_image_chat"
         android:layout_width="320dp"
         android:layout_height="200dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/sent_msg_background"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.824"

@@ -95,6 +95,10 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
 
     }
 
+    public FirebasePresenter getPresenter() {
+        return presenter;
+    }
+
     public void attachUI() {
         mNameView = mView.findViewById(R.id.custom_bar_name);
         mChatSendBtn = mView.findViewById(R.id.chat_msg_send);

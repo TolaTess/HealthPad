@@ -118,6 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
             messageText = itemView.findViewById(R.id.text_message_body);
             timeText = itemView.findViewById(R.id.text_message_time);
+            messageImage = itemView.findViewById(R.id.send_image_chat);
         }
 
         public void bind(ReceivedMessage message) {
@@ -148,6 +149,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
             messageText = itemView.findViewById(R.id.text_message_body);
             timeText =  itemView.findViewById(R.id.text_message_time);
             nameText =  itemView.findViewById(R.id.text_message_name);
+            messageImage = itemView.findViewById(R.id.rec_image_view);
 
         }
 

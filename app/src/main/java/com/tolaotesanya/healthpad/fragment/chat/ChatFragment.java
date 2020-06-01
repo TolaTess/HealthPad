@@ -102,8 +102,9 @@ public class ChatFragment extends Fragment {
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 if(dataSnapshot.hasChild("message")) {
                                     noReqReceived.setVisibility(View.INVISIBLE);
+                                    String messageType = dataSnapshot.child("type").getValue().toString();
                                     String data = dataSnapshot.child("message").getValue().toString();
-                                    holder.setMessage(data, model.isSeen());
+                                    holder.setMessage(data, messageType, model.isSeen());
                                 }
                             }
 
@@ -181,13 +182,17 @@ public class ChatFragment extends Fragment {
             userName.setText(name);
         }
 
-        public void setMessage(String message, boolean isSeen) {
-            TextView userStatus = mView.findViewById(R.id.chat_conv);
-            userStatus.setText(message);
+        public void setMessage(String message, String image, boolean isSeen) {
+            TextView userMessage = mView.findViewById(R.id.chat_conv);
+            if(!image.equals("image")){
+                userMessage.setText(message);}
+            else{
+                userMessage.setText("an image");
+            }
             if (!isSeen) {
-                userStatus.setTypeface(userStatus.getTypeface(), Typeface.BOLD);
+                userMessage.setTypeface(userMessage.getTypeface(), Typeface.BOLD);
             } else{
-                userStatus.setTypeface(userStatus.getTypeface(), Typeface.NORMAL);
+                userMessage.setTypeface(userMessage.getTypeface(), Typeface.NORMAL);
             }
         }
 
