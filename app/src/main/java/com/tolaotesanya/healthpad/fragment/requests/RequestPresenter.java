@@ -1,16 +1,18 @@
 package com.tolaotesanya.healthpad.fragment.requests;
 
 import android.content.Context;
+import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.State;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public interface RequestPresenter {
 
-    DatabaseReference getmUserReqDatabase();
-    DatabaseReference getmConsultReqDatabase();
+    void stopAdapter();
+    void receivedAdapterSetup(RecyclerView mReceivedList, final TextView noReqReceived, final FragmentManager fragmentManager);
     IntentPresenter getIntentPresenter();
-    String getMdoctor_id();
     void loadDatabase(final Context context, String user_id, State mapType);
 }
