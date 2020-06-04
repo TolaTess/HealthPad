@@ -1,10 +1,5 @@
 package com.tolaotesanya.healthpad.activities.doctorsprofile;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -17,7 +12,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
 import com.tolaotesanya.healthpad.modellayer.enums.State;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DoctorProfileActivity extends AppCompatActivity {
 
@@ -40,21 +41,19 @@ public class DoctorProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctor_profile);
 
-        doctor_id = getIntent().getStringExtra("doctor_id");
-        fullName = getIntent().getStringExtra("fullname");
-        details = getIntent().getStringExtra("details");
-        image = getIntent().getStringExtra("image");
-
-
         setupToolbar();
         attachUI();
 
-        presenter = new DoctorProfilePresenterImpl(mContext, doctor_id);
-        mCurrent_user_id = presenter.getmCurrentuser_id();
-
+        Bundle bundle = getIntent().getExtras();
+        DependencyInjection.shared.inject(this, bundle);
         mCurrent_state = State.not_consul;
-        reqConsultation();
+    }
 
+    public void configureWith(DoctorProfilePresenter allDoctorPresenter) {
+        this.presenter = allDoctorPresenter;
+        mCurrent_user_id = presenter.getmCurrentuser_id();
+        doctor_id = presenter.getDoctor_id();
+        reqConsultation();
     }
 
     private void setupToolbar() {
@@ -171,4 +170,5 @@ public class DoctorProfileActivity extends AppCompatActivity {
             }
         });
     }
+
 }

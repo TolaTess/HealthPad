@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -13,13 +14,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.helper.DialogFragmentAllUserHelper;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
 import com.tolaotesanya.healthpad.helper.DoctorsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 import com.tolaotesanya.healthpad.modellayer.model.Doctors;
 
+import java.util.Map;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 public class AllDoctorPresenterImpl implements AllDoctorPresenter {
@@ -27,13 +34,16 @@ public class AllDoctorPresenterImpl implements AllDoctorPresenter {
 
     private FirebasePresenter presenter;
     private FragmentManager fragmentManager;
+    private IntentPresenter intentPresenter;
     private Context mContext;
+    private String doctorid;
     private String userOnline;
 
-    public AllDoctorPresenterImpl(Context context, FirebasePresenter firebasePresenter, FragmentManager fragmentManager) {
+    public AllDoctorPresenterImpl(Context context, FirebasePresenter firebasePresenter, FragmentManager fragmentManager, IntentPresenter intentPresenter) {
         this.mContext = context;
         this.presenter = firebasePresenter;
         this.fragmentManager = fragmentManager;
+        this.intentPresenter = intentPresenter;
     }
 
     public FirebaseRecyclerAdapter setupAdapter() {
@@ -63,7 +73,7 @@ public class AllDoctorPresenterImpl implements AllDoctorPresenter {
                 final String detailsString = model.getSpeciality() + " based in \n" + model.getLocation();
                 holder.setDetails(detailsString);
 
-                final String doctorid = getRef(position).getKey();
+                doctorid = getRef(position).getKey();
 
                 presenter.getmUserDatabase()
                         .child(doctorid).addValueEventListener(new ValueEventListener() {
@@ -89,9 +99,9 @@ public class AllDoctorPresenterImpl implements AllDoctorPresenter {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DialogFragmentHelper dialogFragmentHelper =
-                                new DialogFragmentHelper(mContext, presenter, doctorid, fullName, detailsString, model.getImage(), ClassName.AllDoctors, userOnline);
-                        dialogFragmentHelper.show(fragmentManager, "DIALOG_FRAGMENT");
+                        DialogFragmentAllUserHelper dialogFragmentAllUserHelper =
+                                new DialogFragmentAllUserHelper(intentPresenter, presenter, doctorid, fullName, detailsString, model.getImage(), userOnline);
+                        dialogFragmentAllUserHelper.show(fragmentManager, "DIALOG_FRAGMENT");
                     }
                 });
             }

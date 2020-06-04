@@ -5,9 +5,8 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.tolaotesanya.healthpad.modellayer.enums.State;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+import com.tolaotesanya.healthpad.modellayer.enums.State;
 
 import java.util.Map;
 
@@ -23,15 +22,15 @@ public class DoctorProfilePresenterImpl implements DoctorProfilePresenter{
     private FirebasePresenter presenter;
     private final String doctor_id;
 
-    public DoctorProfilePresenterImpl(Context context, String doctor_id) {
-        presenter = new FirebaseDatabaseLayer(context);
+    public DoctorProfilePresenterImpl(FirebasePresenter presenter, String doctor_id) {
+        this.presenter = presenter;
         this.doctor_id = doctor_id;
-        mCurrentuser_id = presenter.getMcurrent_user_id();
-        mDoctorDatabase = presenter.getmRootRef().child("Doctors").child(doctor_id);
+        mCurrentuser_id = this.presenter.getMcurrent_user_id();
+        mDoctorDatabase = this.presenter.getmRootRef().child("Doctors").child(doctor_id);
         mDoctorDatabase.keepSynced(true);
-        mReqConsulDatabase = presenter.getmRootRef().child("Consultation_Req");
+        mReqConsulDatabase = this.presenter.getmRootRef().child("Consultation_Req");
         mReqConsulDatabase.keepSynced(true);
-        mConsulationsDatabase = presenter.getmRootRef().child("Consultations");
+        mConsulationsDatabase = this.presenter.getmRootRef().child("Consultations");
         mConsulationsDatabase.keepSynced(true);
          }
 
@@ -49,6 +48,10 @@ public class DoctorProfilePresenterImpl implements DoctorProfilePresenter{
 
     public String getmCurrentuser_id() {
         return mCurrentuser_id;
+    }
+
+    public String getDoctor_id() {
+        return doctor_id;
     }
 
     public void loadDatabase(final Context context, State mapType){

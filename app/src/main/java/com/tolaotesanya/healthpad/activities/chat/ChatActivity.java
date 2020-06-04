@@ -7,8 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -31,6 +33,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 public class ChatActivity extends AppCompatActivity {
@@ -44,8 +50,16 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView mUploadImage;
 
     private String mChatReceiverUser;
-    private String userName;
     private String mCurrentUserId;
+
+    private RecyclerView mMessageRecyclerView;
+    private SwipeRefreshLayout mRefreshLayout;
+    private LinearLayoutManager mLinearLayout;
+    private EditText mChatMessageView;
+    private TextView mLastSeen;
+    private CircleImageView mProfileImage;
+    private TextView mNameView;
+    private ImageView mChatSendBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +67,41 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         setupToolbar();
-        mChatReceiverUser = getIntent().getStringExtra("doctor_id");
-        userName = getIntent().getStringExtra("username");
+        attachUI();
 
+        Bundle bundle = getIntent().getExtras();
+        DependencyInjection.shared.inject(this, bundle);
+
+    }
+
+    public void configureWith(ChatActivityPresenter chatActivityPresenter) {
+        this.chatPresenter = chatActivityPresenter;
+
+        chatPresenter.checkLastSeenOnline(mNameView, mLastSeen, mProfileImage);
+        setupUI();
+
+    }
+
+    private void attachUI() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar_view = inflater.inflate(R.layout.chat_custom_bar, null);
         this.getSupportActionBar().setCustomView(action_bar_view);
 
-        chatPresenter = new ChatPresenterActivityImpl
-                (mContext, mMainView, mChatReceiverUser, userName);
-        mCurrentUserId = chatPresenter.getPresenter().getMcurrent_user_id();
-
         mUploadImage = findViewById(R.id.upload_image_chat);
+        mNameView = findViewById(R.id.custom_bar_name);
+        mChatSendBtn = findViewById(R.id.chat_msg_send);
+        mChatMessageView = findViewById(R.id.chat_message_input);
+        mLastSeen = findViewById(R.id.last_seen);
+        mProfileImage = findViewById(R.id.custom_bar_image);
+        mMessageRecyclerView = findViewById(R.id.messages_list);
+        mLinearLayout = new LinearLayoutManager(this);
+        mMessageRecyclerView.setLayoutManager(mLinearLayout);
+        mRefreshLayout = findViewById(R.id.swipe_message_layout);
+    }
 
+    private void setupUI() {
+        chatPresenter.createChatDatabase();
+        chatPresenter.setupUI(mChatSendBtn, mChatMessageView, mMessageRecyclerView, mLinearLayout, mRefreshLayout);
         mUploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,8 +113,9 @@ public class ChatActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
             }
         });
-
     }
+
+
     private void setupToolbar() {
         Toolbar mToolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(mToolbar);
@@ -173,4 +210,5 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
 }

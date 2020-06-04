@@ -26,14 +26,13 @@ public class AuthActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
+        attachUI();
         DependencyRegistry.shared.inject(this);
     }
 
     public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
         this.presenter = presenter;
         this.intentPresenter = intentPresenter;
-
-        setupUI();
     }
 
     private void setupUI() {
@@ -63,7 +62,7 @@ public class AuthActivity extends AppCompatActivity {
         if(presenter.getmCurrentUser() != null){
             intentPresenter.presentIntent(AuthActivity.this, ClassName.Main, presenter.getMcurrent_user_id(), null);
         } else {
-            attachUI();
+          setupUI();
         }
     }
 

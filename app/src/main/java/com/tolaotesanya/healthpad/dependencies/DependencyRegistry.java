@@ -8,9 +8,12 @@ import com.tolaotesanya.healthpad.activities.auth.AuthActivity;
 import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
 import com.tolaotesanya.healthpad.activities.auth.LoginActivity;
 import com.tolaotesanya.healthpad.activities.auth.RegisterActivity;
+import com.tolaotesanya.healthpad.activities.posts.PostsActivity;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+
+import androidx.fragment.app.FragmentManager;
 
 public class DependencyRegistry {
 
@@ -50,6 +53,10 @@ public class DependencyRegistry {
     }
 
     public void inject(MainActivity activity){
+        activity.configureWith(presenter, intentPresenter);
+    }
+
+    public void inject(PostsActivity activity){
         activity.configureWith(presenter, intentPresenter);
     }
 

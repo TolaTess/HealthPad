@@ -20,6 +20,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
+import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
@@ -44,19 +47,27 @@ public class PostsActivity extends AppCompatActivity {
     private EditText mTitle;
     private EditText mBody;
     private ProgressDialog mProgressbar;
-    private String mCurrentUserId;
-    private Context mContext = PostsActivity.this;
 
+    //Injection
     private FirebasePresenter presenter;
+    private IntentPresenter intentPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
-        presenter = new FirebaseDatabaseLayer(mContext);
-        mCurrentUserId = presenter.getMcurrent_user_id();
+
         setupToolbar();
         attachUI();
+
+        DependencyRegistry.shared.inject(this);
+    }
+
+    public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
+        this.presenter = presenter;
+        this.intentPresenter = intentPresenter;
+
+        setupPostDirect();
     }
 
     private void setupToolbar() {
@@ -71,18 +82,6 @@ public class PostsActivity extends AppCompatActivity {
         mPostImage = findViewById(R.id.post_upload_image_btn);
         mPostDirect = findViewById(R.id.post_direct_btn);
         mTitle = findViewById(R.id.post_title_text);
-
-        setupPostDirect();
-
-        mPostImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
-            }
-        });
     }
 
     private void setupPostDirect() {
@@ -103,7 +102,7 @@ public class PostsActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             mProgressbar.dismiss();
-                            presenter.getIntentPresenter().presentIntent(ClassName.Main, null, null);
+                            intentPresenter.presentIntent(PostsActivity.this, ClassName.Main, null, null);
                         } else
                         {
                             mProgressbar.hide();
@@ -111,6 +110,16 @@ public class PostsActivity extends AppCompatActivity {
                         }
                     }
                 });
+            }
+        });
+
+        mPostImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "SELECT IMAGE"), GALLERY_PICK);
             }
         });
     }
@@ -150,7 +159,7 @@ public class PostsActivity extends AppCompatActivity {
                 byte[] thumb_byte = baos.toByteArray();
 
                 DatabaseReference user_post_push = presenter.getmRootRef().child("Posts")
-                        .child(mCurrentUserId).push();
+                        .child(presenter.getMcurrent_user_id()).push();
 
                 final String push_id = user_post_push.getKey();
 
@@ -196,7 +205,7 @@ public class PostsActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task task) {
                                                     if (task.isSuccessful()) {
                                                         mProgressbar.dismiss();
-                                                        presenter.getIntentPresenter().presentIntent(ClassName.Main, null, null);
+                                                        intentPresenter.presentIntent(PostsActivity.this, ClassName.Main, null, null);
                                                         finish();
                                                     }else
                                                     {
@@ -214,4 +223,5 @@ public class PostsActivity extends AppCompatActivity {
                 }
             });
         }
-    }
+
+}

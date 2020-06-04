@@ -1,7 +1,6 @@
 package com.tolaotesanya.healthpad.helper;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter{
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
@@ -30,12 +28,11 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
     private List<ReceivedMessage> mMessageList;
     private FirebasePresenter presenter;
-    private DatabaseReference mUserDatabse;
 
 
-    public MessageAdapter(List<ReceivedMessage> mMessageList, Context mContext) {
+    public MessageAdapter(FirebasePresenter presenter, List<ReceivedMessage> mMessageList) {
         this.mMessageList = mMessageList;
-        presenter = new FirebaseDatabaseLayer(mContext);
+        this.presenter = presenter;
     }
 
     @Override
@@ -87,13 +84,13 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
     private void getUserDetails(@NonNull final RecyclerView.ViewHolder holder, ReceivedMessage messages) {
         String from_user = messages.getFrom();
-        mUserDatabse = presenter.getmUserDatabase().child(from_user);
+        DatabaseReference mUserDatabse = presenter.getmUserDatabase().child(from_user);
 
         mUserDatabse.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue().toString();
-                String userThumb = dataSnapshot.child("thumb_image").getValue().toString();
+                //String userThumb = dataSnapshot.child("thumb_image").getValue().toString();
                 ((ReceivedMessageHolder) holder).setDisplayName(name);
             }
 
@@ -140,7 +137,6 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
     public static class ReceivedMessageHolder extends RecyclerView.ViewHolder {
         TextView messageText, timeText, nameText;
-        CircleImageView profileImage;
         ImageView messageImage;
 
         ReceivedMessageHolder(View itemView) {

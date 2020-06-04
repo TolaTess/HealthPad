@@ -1,11 +1,15 @@
 package com.tolaotesanya.healthpad.activities.chat;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -36,6 +40,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     private static final String TAG = "ChatPresentActImpl";
+    private static final int GALLERY_PICK = 1;
 
     private FirebasePresenter presenter;
     private DatabaseReference mMessageRef;
@@ -45,68 +50,28 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     private int itemPos = 0;
     private String mLastKey = "";
     private String mPreKey = "";
-    private RecyclerView mMessageRecyclerView;
-    private SwipeRefreshLayout mRefreshLayout;
-    private LinearLayoutManager mLinearLayout;
-    private EditText mChatMessageView;
-    private TextView mLastSeen;
-    private CircleImageView mProfileImage;
     private Context mContext;
     private String mChatReceiverUser;
+    private String mUsername;
     private final List<ReceivedMessage> messagesList = new ArrayList<>();
-    private ChatActivity mView;
-    private TextView mNameView;
-    private ImageView mChatSendBtn;
+    //private ChatActivity mView;
 
-    ChatPresenterActivityImpl(Context mContext, ChatActivity mView, String user_id, String userName) {
-        this.mContext = mContext;
+
+    public ChatPresenterActivityImpl(Context context, FirebasePresenter presenter, String user_id, String userName) {
+        this.mContext = context;
+        this.presenter = presenter;
         this.mChatReceiverUser = user_id;
-        this.mView = mView;
-        presenter = new FirebaseDatabaseLayer(mContext);
-        attachUI();
-        mNameView.setText(userName);
-        mAdapter = new MessageAdapter(messagesList, mContext);
-        mLinearLayout = new LinearLayoutManager(mContext);
-        mMessageRecyclerView.setLayoutManager(mLinearLayout);
-        mMessageRecyclerView.setAdapter(mAdapter);
+        this.mUsername = userName;
+
+        mAdapter = new MessageAdapter(presenter, messagesList);
+
         mMessageRef = presenter.getmRootRef().child("Messages")
-                .child(presenter.getMcurrent_user_id()).child(mChatReceiverUser);
+                .child(presenter.getMcurrent_user_id()).child(user_id);
         mMessageRef.keepSynced(true);
-
-        checkLastSeenOnline();
-
-        mChatSendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessages();
-            }
-        });
-
-        loadMessages();
-
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mCurrentPage++;
-                itemPos = 0;
-                loadMoreMessages();
-            }
-        });
-
     }
 
     public FirebasePresenter getPresenter() {
         return presenter;
-    }
-
-    public void attachUI() {
-        mNameView = mView.findViewById(R.id.custom_bar_name);
-        mChatSendBtn = mView.findViewById(R.id.chat_msg_send);
-        mChatMessageView = mView.findViewById(R.id.chat_message_input);
-        mLastSeen = mView.findViewById(R.id.last_seen);
-        mProfileImage = mView.findViewById(R.id.custom_bar_image);
-        mMessageRecyclerView = mView.findViewById(R.id.messages_list);
-        mRefreshLayout = mView.findViewById(R.id.swipe_message_layout);
     }
 
     @Override
@@ -139,7 +104,8 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     }
 
     @Override
-    public void checkLastSeenOnline() {
+    public void checkLastSeenOnline(TextView mName, final TextView mLastSeen, final CircleImageView mProfileImage) {
+        mName.setText(mUsername);
         presenter.getmUserDatabase()
                 .child(mChatReceiverUser).addValueEventListener(new ValueEventListener() {
             @Override
@@ -173,8 +139,8 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     }
 
     @Override
-    public void loadMessages() {
-        //limit to last
+    public void loadMessages(final RecyclerView mMessageRecyclerView, final SwipeRefreshLayout mRefreshLayout) {
+        mMessageRecyclerView.setAdapter(mAdapter);
         Query messageQuery = mMessageRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
@@ -223,7 +189,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     }
 
     @Override
-    public void sendMessages() {
+    public void sendMessages(TextView mChatMessageView) {
         String message = mChatMessageView.getText().toString();
         if (!TextUtils.isEmpty(message)) {
             Map messageMap = presenter.setupMessageChatDB(mChatReceiverUser, message, State.messageDB);
@@ -241,7 +207,7 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
     }
 
     @Override
-    public void loadMoreMessages() {
+    public void loadMoreMessages(final RecyclerView mMessageRecyclerView, final LinearLayoutManager mLinearLayout, final SwipeRefreshLayout mRefreshLayout) {
         Query messageQuery = mMessageRef.orderByKey().endAt(mLastKey).limitToLast(TOTAL_ITEM_TO_LOAD);
 
         messageQuery.addChildEventListener(new ChildEventListener() {
@@ -290,6 +256,27 @@ public class ChatPresenterActivityImpl implements ChatActivityPresenter {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+    }
+
+    public void setupUI(ImageView mChatSendBtn, final TextView mChatMessageView,
+                         final RecyclerView mMessageRecyclerView, final LinearLayoutManager mLinearLayout, final SwipeRefreshLayout mRefreshLayout) {
+
+        mChatSendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessages(mChatMessageView);
+            }
+        });
+        loadMessages(mMessageRecyclerView, mRefreshLayout);
+
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mCurrentPage++;
+                itemPos = 0;
+                loadMoreMessages(mMessageRecyclerView, mLinearLayout, mRefreshLayout);
             }
         });
     }
