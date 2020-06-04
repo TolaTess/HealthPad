@@ -57,6 +57,22 @@ public class IntentPresenter {
         activity.finish();
     }
 
+    public void sendtoSetting(Context context, String status, String username){
+        Intent settingsIntent = new Intent(context, SettingsActivity.class);
+        settingsIntent.putExtra("status_value", status);
+        settingsIntent.putExtra("display_name_value", username);
+        context.startActivity(settingsIntent);
+    }
+
+    public void sendToStart(Context context) {
+        Activity activity = (Activity) context;
+        Intent intent = new Intent(context, MainActivity.class);
+        //Ensure user can not go back to login screen once logged in
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+        activity.finish();
+    }
+
     public void presentIntent(Context context, ClassName activity, String userid, String extra) {
         switch (activity) {
             case Main:
@@ -106,6 +122,11 @@ public class IntentPresenter {
                 Intent loginIntent = new Intent(context, LoginActivity.class);
                 context.startActivity(loginIntent);
                 break;
+            case Auth:
+                Activity act = (Activity) context;
+                Intent authIntent = new Intent(context, LoginActivity.class);
+                context.startActivity(authIntent);
+                act.finish();
             case Posts:
                 Intent postIntent = new Intent(context, PostsActivity.class);
                 context.startActivity(postIntent);

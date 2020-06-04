@@ -1,6 +1,5 @@
 package com.tolaotesanya.healthpad.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,10 +17,11 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.fragment.posts.PostsFragment;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
+import com.tolaotesanya.healthpad.fragment.posts.PostsFragment;
 import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
@@ -40,21 +40,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private CircleImageView header_image;
+    private TextView userNameView;
+    private Menu menu;
 
     private PostsFragment homeFragment;
+
+    //Injection
     private FirebasePresenter presenter;
-    private Context mContext = MainActivity.this;
+    private IntentPresenter intentPresenter;
+
+    private ValueEventListener valueEventListener;
+    private DatabaseReference mUserDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        presenter = new FirebaseDatabaseLayer(mContext);
         homeFragment = new PostsFragment();
-        setFragment(homeFragment);
         attachDrawerNav();
+
+        DependencyRegistry.shared.inject(this);
+    }
+
+    public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
+    this.presenter = presenter;
+    this.intentPresenter = intentPresenter;
+
         onlineCheck();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setFragment(homeFragment);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.nav_home);
+        fetchData(header_image, userNameView, menu);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mUserDatabase.removeEventListener(valueEventListener);
 
     }
 
@@ -65,58 +95,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void userDisplay() {
-
-        final Menu menu = navigationView.getMenu();
-        DatabaseReference userCheck = presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
-                .child("user_type");
-        userCheck.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("user_type")) {
-                    String user_type = dataSnapshot.getValue().toString();
-                    Log.d(TAG, "onDataChange: user_type" + user_type);
-                    if (user_type.equals("doctor")) {
-                        menu.findItem(R.id.nav_request).setVisible(true);
-                        menu.findItem(R.id.nav_doctor).setVisible(false);
-                    } else {
-                        menu.findItem(R.id.nav_request).setVisible(false);
-                        menu.findItem(R.id.nav_doctor).setVisible(true);
-                    }
-                } else {
-                    menu.findItem(R.id.nav_request).setVisible(false);
-                    menu.findItem(R.id.nav_doctor).setVisible(true);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     public void attachDrawerNav() {
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
-        navigationView.bringToFront();
-
         Toolbar mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         this.getSupportActionBar().setTitle("Health Pad");
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.bringToFront();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         View navView = navigationView.getHeaderView(0);
-        final CircleImageView header_image = navView.findViewById(R.id.header_image);
-        final TextView userNameView = navView.findViewById(R.id.header_name);
+        header_image = navView.findViewById(R.id.header_image);
+        userNameView = navView.findViewById(R.id.header_name);
 
-        final String user_id = presenter.getHelper().getMcurrent_user().getUid();
+        menu = navigationView.getMenu();
+    }
+
+    private void fetchData(final CircleImageView header_image, final TextView userNameView, final Menu menu) {
+        final String user_id = presenter.getMcurrent_user_id();
         Log.d(TAG, "attachDrawerNav: " + user_id);
-        final Menu menu = navigationView.getMenu();
-        presenter.getmUserDatabase().child(user_id).addValueEventListener(new ValueEventListener() {
+
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("user_type")) {
@@ -141,16 +144,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(MainActivity.this, "Please load an image", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setCheckedItem(R.id.nav_home);
-
+        };
+        mUserDatabase = presenter.getmUserDatabase().child(user_id);
+        mUserDatabase.addValueEventListener(valueEventListener);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -168,19 +170,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 setFragment(homeFragment);
                 break;
             case R.id.nav_doctor:
-                presenter.getIntentPresenter().presentIntent(ClassName.AllDoctors, null, null);
+                intentPresenter.presentIntent(MainActivity.this, ClassName.AllDoctors, null, null);
                 break;
             case R.id.nav_account:
-                presenter.getIntentPresenter().presentIntent(ClassName.Account, null, null);
+                intentPresenter.presentIntent(MainActivity.this, ClassName.Account, null, null);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                         .child("online").setValue(ServerValue.TIMESTAMP);
-                sendToStart();
+                intentPresenter.presentIntent(MainActivity.this, ClassName.Auth, null, null);
                 break;
             case R.id.nav_posts:
-                presenter.getIntentPresenter().presentIntent(ClassName.Posts, null, null);
+                intentPresenter.presentIntent(MainActivity.this, ClassName.Posts, null, null);
                 break;
             case R.id.nav_chat:
                 ChatFragment chatFragment = new ChatFragment();
@@ -195,10 +197,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void sendToStart() {
-        presenter.getIntentPresenter().presentIntent(ClassName.Auth, null, null);
-        finish();
-    }
 
     public void setFragment(Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

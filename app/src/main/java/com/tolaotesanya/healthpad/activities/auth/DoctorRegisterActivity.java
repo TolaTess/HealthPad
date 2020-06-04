@@ -1,11 +1,6 @@
 package com.tolaotesanya.healthpad.activities.auth;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,12 +13,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class DoctorRegisterActivity extends AppCompatActivity {
     private static final String TAG = "DoctorsActivity";
@@ -35,31 +35,31 @@ public class DoctorRegisterActivity extends AppCompatActivity {
     private TextInputLayout mClinicName;
     private TextInputLayout mLocation;
     private Button mSaveButton;
-
-    private FirebasePresenter presenter;
-    private Context mContext = DoctorRegisterActivity.this;
-
     private ProgressDialog mRegProgress;
 
+    //Injection
+    private FirebasePresenter presenter;
+    private IntentPresenter intentPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doctors);
-        presenter = new FirebaseDatabaseLayer(mContext);
 
         setupToolbar();
         attachUI();
+
+        DependencyRegistry.shared.inject(this);
     }
 
-    private void attachUI() {
-        mFirstName = findViewById(R.id.doctor_fName);
-        mLastName = findViewById(R.id.doctor_lName);
-        mSpeciality = findViewById(R.id.doctor_specality);
-        mClinicName = findViewById(R.id.doctor_clinic_name);
-        mLocation = findViewById(R.id.doctor_location);
-        mSaveButton = findViewById(R.id.doctor_btn);
+    public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
+        this.presenter = presenter;
+        this.intentPresenter = intentPresenter;
 
+        setupUI();
+    }
+
+    private void setupUI() {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +80,16 @@ public class DoctorRegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void attachUI() {
+        mFirstName = findViewById(R.id.doctor_fName);
+        mLastName = findViewById(R.id.doctor_lName);
+        mSpeciality = findViewById(R.id.doctor_specality);
+        mClinicName = findViewById(R.id.doctor_clinic_name);
+        mLocation = findViewById(R.id.doctor_location);
+        mSaveButton = findViewById(R.id.doctor_btn);
+
     }
 
     private void setupToolbar() {
@@ -114,7 +124,7 @@ public class DoctorRegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 mRegProgress.dismiss();
-                                sendToStart();
+                                intentPresenter.presentIntent(DoctorRegisterActivity.this, ClassName.Account, presenter.getMcurrent_user_id(), null);
                             } else{
                                 Toast.makeText(DoctorRegisterActivity.this, "Doctor Setup failed",
                                         Toast.LENGTH_LONG).show();
@@ -125,10 +135,5 @@ public class DoctorRegisterActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void sendToStart() {
-        presenter.getIntentPresenter().presentIntent(ClassName.Account, presenter.getMcurrent_user_id(), null);
-    }
-
 
 }

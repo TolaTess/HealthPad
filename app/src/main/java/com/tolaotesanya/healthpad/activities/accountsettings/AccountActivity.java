@@ -1,30 +1,24 @@
 package com.tolaotesanya.healthpad.activities.accountsettings;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountActivity extends AppCompatActivity {
     private static final String TAG = "AccountActivity";
@@ -35,21 +29,32 @@ public class AccountActivity extends AppCompatActivity {
     private TextView mStatus;
     private Button mSettingsButton;
 
-    private Context mContext = AccountActivity.this;
-
-    //Firebase
+    //Injection
     private FirebasePresenter presenter;
-    private DatabaseReference mUserDatabase;
+    private IntentPresenter intentPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
-        presenter = new FirebaseDatabaseLayer(mContext);
+
         setupToolbar();
         attachUI();
+        //Bundle bundle = getIntent().getExtras();
+        DependencyRegistry.shared.inject(this);
 
+    }
+
+    public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
+    this.presenter = presenter;
+    this.intentPresenter = intentPresenter;
+
+        setupUI();
+    }
+
+    private void setupUI() {
         String poster_id = getIntent().getStringExtra("user_id");
+        DatabaseReference mUserDatabase;
         if(poster_id != null){
             mUserDatabase = presenter.getmUserDatabase().child(poster_id);
             mSettingsButton.setEnabled(false);
@@ -85,13 +90,6 @@ public class AccountActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void attachUI() {
-        mDisplayImage = findViewById(R.id.img_setting);
-        mName = findViewById(R.id.text_display_name);
-        mStatus = findViewById(R.id.text_status);
-        mSettingsButton = findViewById(R.id.change_settings);
 
         mSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,13 +97,16 @@ public class AccountActivity extends AppCompatActivity {
                 //persist data
                 String statusValue = mStatus.getText().toString();
                 String dNameValue = mName.getText().toString();
-                Intent settingsIntent = new Intent(AccountActivity.this, SettingsActivity.class);
-                settingsIntent.putExtra("status_value", statusValue);
-                settingsIntent.putExtra("display_name_value", dNameValue);
-                startActivity(settingsIntent);
+                intentPresenter.sendtoSetting(AccountActivity.this, statusValue, dNameValue);
             }
         });
+    }
 
+    private void attachUI() {
+        mDisplayImage = findViewById(R.id.img_setting);
+        mName = findViewById(R.id.text_display_name);
+        mStatus = findViewById(R.id.text_status);
+        mSettingsButton = findViewById(R.id.change_settings);
     }
 
     private void setupToolbar() {

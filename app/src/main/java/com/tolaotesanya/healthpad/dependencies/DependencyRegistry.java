@@ -1,15 +1,16 @@
 package com.tolaotesanya.healthpad.dependencies;
 
-import android.os.Bundle;
-
 import com.google.firebase.auth.FirebaseAuth;
+import com.tolaotesanya.healthpad.activities.MainActivity;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;
 import com.tolaotesanya.healthpad.activities.accountsettings.SettingsActivity;
+import com.tolaotesanya.healthpad.activities.auth.AuthActivity;
+import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
+import com.tolaotesanya.healthpad.activities.auth.LoginActivity;
+import com.tolaotesanya.healthpad.activities.auth.RegisterActivity;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
-
-import java.util.NoSuchElementException;
 
 public class DependencyRegistry {
 
@@ -28,17 +29,28 @@ public class DependencyRegistry {
         activity.configureWith(presenter, intentPresenter);
     }
 
-    public void inject(AccountActivity activity, Bundle bundle){
-        String user_id = idFromBundle(bundle);
+    public void inject(AccountActivity activity){
         activity.configureWith(presenter, intentPresenter);
     }
 
-    private String idFromBundle(Bundle bundle) {
-        if(bundle == null) throw new NoSuchElementException("Unable to get user_id from bundle");
+    public void inject(LoginActivity activity){
+        activity.configureWith(mAuth, intentPresenter);
+    }
 
-        String userid = bundle.getString("user_id");
-        if(userid == null) throw new NoSuchElementException("Unable to get user_id from bundle");
-        return userid;
+    public void inject(AuthActivity activity){
+        activity.configureWith(presenter, intentPresenter);
+    }
+
+    public void inject(DoctorRegisterActivity activity){
+        activity.configureWith(presenter, intentPresenter);
+    }
+
+    public void inject(RegisterActivity activity){
+        activity.configureWith(mAuth, presenter, intentPresenter);
+    }
+
+    public void inject(MainActivity activity){
+        activity.configureWith(presenter, intentPresenter);
     }
 
 

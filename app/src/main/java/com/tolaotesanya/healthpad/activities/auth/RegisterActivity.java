@@ -1,13 +1,6 @@
 package com.tolaotesanya.healthpad.activities.auth;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,11 +15,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.activities.MainActivity;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -39,32 +37,30 @@ public class RegisterActivity extends AppCompatActivity {
     private Button mCreateButton;
     private ProgressDialog mRegProgress;
 
-    private Context mContext = RegisterActivity.this;
-
-    //Firebase
+    //Injection
     private FirebaseAuth mAuth;
     private FirebasePresenter presenter;
+    private IntentPresenter intentPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mRegProgress = new ProgressDialog(this);
-        mAuth = FirebaseAuth.getInstance();
-        presenter = new FirebaseDatabaseLayer(mContext);
-
         setupToolbar();
         attachUI();
+
+        DependencyRegistry.shared.inject(this);
     }
 
-    private void attachUI() {
-        Log.d(TAG, "attachUI: ");
-        mDisplayName = findViewById(R.id.reg_display_name);
-        mEmail = findViewById(R.id.reg_email);
-        mPassword = findViewById(R.id.reg_password);
-        mCreateButton = findViewById(R.id.reg_create_button);
+    public void configureWith(FirebaseAuth mAuth, FirebasePresenter presenter, IntentPresenter intentPresenter) {
+    this.mAuth = mAuth;
+    this.presenter = presenter;
+    this.intentPresenter = intentPresenter;
+        setupUI();
+    }
 
+    private void setupUI() {
         mCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +78,15 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void attachUI() {
+        Log.d(TAG, "attachUI: ");
+        mDisplayName = findViewById(R.id.reg_display_name);
+        mEmail = findViewById(R.id.reg_email);
+        mPassword = findViewById(R.id.reg_password);
+        mCreateButton = findViewById(R.id.reg_create_button);
+        mRegProgress = new ProgressDialog(this);
     }
 
     private void setupToolbar() {
@@ -117,16 +122,10 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     mRegProgress.dismiss();
-                    sendToStart();
+                    intentPresenter.sendToStart(RegisterActivity.this);
                 }
             }
         });
     }
 
-    private void sendToStart() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
 }

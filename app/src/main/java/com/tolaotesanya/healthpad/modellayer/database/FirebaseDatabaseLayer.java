@@ -25,24 +25,23 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
     private static final String TAG = "FirebaseDatabaseLayer";
     private DatabaseReference mRootRef;
     private DatabaseReference mUserDatabase;
-    private FirebaseAuth mAuth;
+    private FirebaseUser mCurrentUser;
     private String mcurrent_user_id;
     private StorageReference mStorageRef;
     private String imageLink;
     private String thumb_imageLink;
 
     public FirebaseDatabaseLayer(FirebaseAuth mAuth) {
-        this.mAuth = mAuth;
         mRootRef = FirebaseDatabase.getInstance().getReference();
         //mRootRef.keepSynced(true);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         //mUserDatabase.keepSynced(true);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        mCurrentUser = mAuth.getCurrentUser();
 
-        if (currentUser != null) {
-            mcurrent_user_id = currentUser.getUid();
+        if (mCurrentUser != null) {
+            mcurrent_user_id = mCurrentUser.getUid();
         }
     }
 
@@ -60,6 +59,10 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
 
     public DatabaseReference getmUserDatabase() {
         return mUserDatabase;
+    }
+
+    public FirebaseUser getmCurrentUser() {
+        return mCurrentUser;
     }
 
     public Map setupMessageChatDB(String doctor_id, String message, State mapType) {

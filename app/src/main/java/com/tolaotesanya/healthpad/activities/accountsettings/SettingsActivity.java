@@ -2,7 +2,6 @@ package com.tolaotesanya.healthpad.activities.accountsettings;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,11 +25,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
-import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
@@ -229,7 +225,7 @@ public class SettingsActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(View v) {
                                                 //presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
-                                                intentPresenter.sendtoDoctorRegister(SettingsActivity.this);
+                                                intentPresenter.presentIntent(SettingsActivity.this, ClassName.DoctorRegister, null, null);
                                             }
                                         });
                                     }
@@ -247,7 +243,7 @@ public class SettingsActivity extends AppCompatActivity {
                     mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
+                            intentPresenter.presentIntent(SettingsActivity.this, ClassName.DoctorRegister, null, null);
                         }
                     });
                 }
