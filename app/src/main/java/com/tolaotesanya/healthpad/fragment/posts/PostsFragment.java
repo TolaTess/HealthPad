@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
 import com.tolaotesanya.healthpad.helper.PostsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.model.Posts;
 
@@ -23,7 +24,6 @@ public class PostsFragment extends Fragment {
 
     //Firebase
     private PostsPresenter presenter;
-    private FirebaseRecyclerAdapter<Posts, PostsViewHolder> mAdapter;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -36,16 +36,18 @@ public class PostsFragment extends Fragment {
         Log.d(TAG, "onCreateView: HomeFragment");
         View mMainView = inflater.inflate(R.layout.fragment_posts, container, false);
 
-        presenter = new PostsPresenterImpl(getContext());
-
         mPostRecycler = mMainView.findViewById(R.id.home_feed_list);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(mMainView.getContext());
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
         mPostRecycler.setLayoutManager(mLayoutManager);
 
-
+        DependencyInjection.shared.inject(this);
         return mMainView;
+    }
+
+    public void configureWith(PostsPresenter postsPresenter) {
+        this.presenter = postsPresenter;
     }
 
     @Override
@@ -59,4 +61,5 @@ public class PostsFragment extends Fragment {
         super.onStop();
         presenter.stopAdapter();
     }
+
 }

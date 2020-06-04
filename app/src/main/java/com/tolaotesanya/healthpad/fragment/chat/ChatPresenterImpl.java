@@ -16,7 +16,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.model.ChatConversation;
@@ -34,11 +33,12 @@ public class ChatPresenterImpl implements ChatPresenter {
     private ValueEventListener mValueEventListener;
     private ChildEventListener mcEventListener;
     private Query lastMessageQuery;
-    FirebaseRecyclerAdapter<ChatConversation, ChatFragment.ChatsViewHolder> chatsAdapter;
+    private Context mContext;
+    private FirebaseRecyclerAdapter<ChatConversation, ChatFragment.ChatsViewHolder> chatsAdapter;
 
-    public ChatPresenterImpl(Context context) {
-        FirebasePresenter presenter = new FirebaseDatabaseLayer(context);
-        intentPresenter = new IntentPresenter(context);
+    public ChatPresenterImpl(Context mContext, FirebasePresenter presenter, IntentPresenter intentPresenter) {
+        this.mContext = mContext;
+        this.intentPresenter = intentPresenter;
         mConsultDatabase = presenter.getmRootRef().child("Consultations")
                 .child(presenter.getMcurrent_user_id());
         mConsultDatabase.keepSynced(true);
@@ -47,11 +47,6 @@ public class ChatPresenterImpl implements ChatPresenter {
         mMessageDatabase.keepSynced(true);
         mUserDatabase = presenter.getmRootRef()
                 .child("Users");
-    }
-
-    @Override
-    public IntentPresenter getIntentPresenter() {
-        return intentPresenter;
     }
 
     public void fetchChat(RecyclerView mConvList, final TextView noReqReceived) {
@@ -126,7 +121,7 @@ public class ChatPresenterImpl implements ChatPresenter {
                                 holder.mView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        intentPresenter.presentIntent(ClassName.Chats, list_user_id, userName);
+                                        intentPresenter.presentIntent(mContext, ClassName.Chats, list_user_id, userName);
                                     }
                                 });
                             }
@@ -146,8 +141,10 @@ public class ChatPresenterImpl implements ChatPresenter {
 
     public void stopAdapter() {
         chatsAdapter.stopListening();
-        lastMessageQuery.removeEventListener(mcEventListener);
-        mUserDatabase.removeEventListener(mValueEventListener);
+        if(lastMessageQuery != null) {
+            lastMessageQuery.removeEventListener(mcEventListener);
+            mUserDatabase.removeEventListener(mValueEventListener);
+        }
     }
 
 }

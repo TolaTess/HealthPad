@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,12 +14,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
-import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
 import com.tolaotesanya.healthpad.helper.GetTimeAgo;
 import com.tolaotesanya.healthpad.helper.PostsViewHolder;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
-import com.tolaotesanya.healthpad.modellayer.model.ChatConversation;
 import com.tolaotesanya.healthpad.modellayer.model.Posts;
 
 import androidx.annotation.NonNull;
@@ -29,15 +25,16 @@ import androidx.recyclerview.widget.RecyclerView;
 public class PostsPresenterImpl implements PostsPresenter {
 
     private FirebasePresenter presenter;
+    private IntentPresenter intentPresenter;
     private FirebaseRecyclerAdapter<Posts, PostsViewHolder> mAdapter;
     private DatabaseReference mUserDatabase;
     private ValueEventListener mValueEventListener;
     private Context mContext;
-    FirebaseRecyclerAdapter<ChatConversation, ChatFragment.ChatsViewHolder> chatsAdapter;
 
-    public PostsPresenterImpl(Context context) {
+    public PostsPresenterImpl(Context context, FirebasePresenter presenter, IntentPresenter intentPresenter) {
         this.mContext = context;
-        presenter = new FirebaseDatabaseLayer(context);
+        this.presenter = presenter;
+        this.intentPresenter = intentPresenter;
         mUserDatabase = presenter.getmRootRef()
                 .child("Users");
     }
@@ -45,7 +42,7 @@ public class PostsPresenterImpl implements PostsPresenter {
     public void fetchRequest(RecyclerView mPostRecycler) {
 
         final Query postQuery = presenter.getmRootRef().child("Posts");
-        
+
         FirebaseRecyclerOptions<Posts> options =
                 new FirebaseRecyclerOptions.Builder<Posts>()
                         .setQuery(postQuery, Posts.class)
@@ -83,7 +80,7 @@ public class PostsPresenterImpl implements PostsPresenter {
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                presenter.getIntentPresenter().postProfileIntent(poster_id, username, timePosted, postImage, caption, body);
+                                intentPresenter.postProfileIntent(mContext, poster_id, username, timePosted, postImage, caption, body);
                             }
                         });
                         holder.itemView.findViewById(R.id.feed_like_icon).setOnClickListener(new View.OnClickListener() {

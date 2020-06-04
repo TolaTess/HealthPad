@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
-import com.tolaotesanya.healthpad.modellayer.model.ChatConversation;
+import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,11 +23,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatFragment extends Fragment {
     private static final String TAG = "ChatFragment";
 
-    private View mMainView;
     private RecyclerView mConvList;
     private ChatPresenter chatPresenter;
     private TextView noReqReceived;
-
 
     public ChatFragment() {
         // Required empty public constructor
@@ -39,9 +36,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
-        mMainView = inflater.inflate(R.layout.fragment_chat, container, false);
-
-        chatPresenter = new ChatPresenterImpl(getContext());
+        View mMainView = inflater.inflate(R.layout.fragment_chat, container, false);
 
         mConvList = mMainView.findViewById(R.id.conv_list);
         noReqReceived = mMainView.findViewById(R.id.received_chat_msg);
@@ -52,7 +47,13 @@ public class ChatFragment extends Fragment {
 
         mConvList.setLayoutManager(linearLayoutManager);
 
+        DependencyInjection.shared.inject(this);
+
         return mMainView;
+    }
+
+    public void configureWith(ChatPresenter chatPresenter) {
+        this.chatPresenter = chatPresenter;
     }
 
     @Override
@@ -67,6 +68,7 @@ public class ChatFragment extends Fragment {
         super.onStop();
         chatPresenter.stopAdapter();
     }
+
 
     public static class ChatsViewHolder extends RecyclerView.ViewHolder {
 

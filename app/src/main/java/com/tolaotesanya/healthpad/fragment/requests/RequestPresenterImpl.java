@@ -17,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 import com.tolaotesanya.healthpad.modellayer.enums.State;
@@ -36,14 +35,17 @@ public class RequestPresenterImpl implements RequestPresenter {
     private FirebasePresenter presenter;
     private DatabaseReference mUserDatabase;
     private IntentPresenter intentPresenter;
-    private String mdoctor_id;
-    FirebaseRecyclerAdapter<Requests, RequestFragment.RequestsViewHolder> reqAdapter;
+    private FragmentManager fragmentManager;
+    private ValueEventListener mValueEventListener;
+    private String type;
+    private FirebaseRecyclerAdapter<Requests, RequestFragment.RequestsViewHolder> reqAdapter;
 
 
-    public RequestPresenterImpl(Context context) {
-        presenter = new FirebaseDatabaseLayer(context);
-        intentPresenter = presenter.getIntentPresenter();
-        mdoctor_id = presenter.getMcurrent_user_id();
+    public RequestPresenterImpl(FirebasePresenter presenter,
+                                FragmentManager fragmentManager, IntentPresenter intentPresenter) {
+        this.presenter = presenter;
+        this.fragmentManager = fragmentManager;
+        this.intentPresenter = intentPresenter;
         mConsultReqDatabase = presenter.getmRootRef()
                 .child("Consultation_Req")
                 .child(presenter.getMcurrent_user_id());
@@ -53,24 +55,7 @@ public class RequestPresenterImpl implements RequestPresenter {
 
     }
 
-    public IntentPresenter getIntentPresenter() {
-        return intentPresenter;
-    }
-
-    public void loadDatabase(final Context context, String user_id, State mapType){
-        Map databaseMap = presenter.setupDatabaseMap(user_id, mapType);
-        presenter.getmRootRef().updateChildren(databaseMap, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                if (databaseError != null) {
-                    Toast.makeText(context, "There was an error",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    public void receivedAdapterSetup(RecyclerView mReceivedList, final TextView noReqReceived, final FragmentManager fragmentManager) {
+    public void receivedAdapterSetup(RecyclerView mReceivedList, final TextView noReqReceived) {
 
         Query friendsQuery = mConsultReqDatabase.orderByChild("request_type");
 
@@ -92,13 +77,15 @@ public class RequestPresenterImpl implements RequestPresenter {
                     @Override
                     protected void onBindViewHolder(@NonNull final RequestFragment.RequestsViewHolder holder, final int position, @NonNull final Requests model) {
                         final String list_user_id = getRef(position).getKey();
-                        mConsultReqDatabase.child(list_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        mValueEventListener = new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                final String type = dataSnapshot.child("request_type").getValue().toString();
                                 if(dataSnapshot.hasChild("request_type")){
+                                    type = dataSnapshot.child("request_type").getValue().toString();
                                     noReqReceived.setVisibility(View.INVISIBLE);
-                                    mUserDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
+
+                                    mValueEventListener = new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             final String userName = dataSnapshot.child("name").getValue().toString();
@@ -116,7 +103,7 @@ public class RequestPresenterImpl implements RequestPresenter {
                                                 @Override
                                                 public void onClick(View v) {
                                                     DialogFragmentHelper dialogFragmentHelper =
-                                                            new DialogFragmentHelper(null, list_user_id, userName, null, null, ClassName.Request, null);
+                                                            new DialogFragmentHelper(intentPresenter, presenter, list_user_id, userName);
                                                     dialogFragmentHelper.show(fragmentManager, "DIALOG_FRAGMENT");
                                                 }
                                             });
@@ -126,7 +113,9 @@ public class RequestPresenterImpl implements RequestPresenter {
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
                                         }
-                                    });
+                                    };
+
+                                    mUserDatabase.child(list_user_id).addValueEventListener(mValueEventListener);
                                 }
                             }
 
@@ -134,7 +123,8 @@ public class RequestPresenterImpl implements RequestPresenter {
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 
                             }
-                        });
+                        };
+                        mConsultReqDatabase.child(list_user_id).addValueEventListener(mValueEventListener);
 
                     }
                 };
@@ -144,5 +134,9 @@ public class RequestPresenterImpl implements RequestPresenter {
 
     public void stopAdapter(){
         reqAdapter.stopListening();
+        if(type != null) {
+            mConsultReqDatabase.removeEventListener(mValueEventListener);
+            mUserDatabase.removeEventListener(mValueEventListener);
+        }
     }
 }

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.tolaotesanya.healthpad.activities.chat.ChatActivity;
+import com.tolaotesanya.healthpad.activities.chat.ChatActivityPresenter;
+import com.tolaotesanya.healthpad.activities.chat.ChatPresenterActivityImpl;
 import com.tolaotesanya.healthpad.activities.doctors.AllDoctorPresenter;
 import com.tolaotesanya.healthpad.activities.doctors.AllDoctorPresenterImpl;
 import com.tolaotesanya.healthpad.activities.doctors.AllDoctorsActivity;
@@ -14,6 +17,12 @@ import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
 import com.tolaotesanya.healthpad.fragment.chat.ChatPresenter;
 import com.tolaotesanya.healthpad.fragment.chat.ChatPresenterImpl;
+import com.tolaotesanya.healthpad.fragment.posts.PostsFragment;
+import com.tolaotesanya.healthpad.fragment.posts.PostsPresenter;
+import com.tolaotesanya.healthpad.fragment.posts.PostsPresenterImpl;
+import com.tolaotesanya.healthpad.fragment.requests.RequestFragment;
+import com.tolaotesanya.healthpad.fragment.requests.RequestPresenter;
+import com.tolaotesanya.healthpad.fragment.requests.RequestPresenterImpl;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.Constants;
@@ -39,7 +48,7 @@ public class DependencyInjection {
 
     public void inject(AllDoctorsActivity activity) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
-        AllDoctorPresenter allDoctorPresenter = new AllDoctorPresenterImpl(activity, presenter, fragmentManager);
+        AllDoctorPresenter allDoctorPresenter = new AllDoctorPresenterImpl(activity, presenter, fragmentManager, intentPresenter);
         activity.configureWith(allDoctorPresenter);
     }
 
@@ -54,6 +63,26 @@ public class DependencyInjection {
         Context context = fragment.getContext();
         ChatPresenter chatPresenter = new ChatPresenterImpl(context, presenter, intentPresenter);
         fragment.configureWith(chatPresenter);
+    }
+
+    public void inject(RequestFragment fragment) {
+        FragmentManager fragmentManager = fragment.getFragmentManager();
+        RequestPresenter requestPresenter = new RequestPresenterImpl(presenter, fragmentManager, intentPresenter);
+        fragment.configureWith(requestPresenter);
+    }
+
+    public void inject(PostsFragment fragment) {
+        Context context = fragment.getContext();
+        PostsPresenter postsPresenter = new PostsPresenterImpl(context, presenter, intentPresenter);
+        fragment.configureWith(postsPresenter);
+    }
+
+    public void inject(ChatActivity activity, Bundle bundle) {
+        String doctorid = idFromBundleDoctor(bundle);
+        String username = bundle.getString(Constants.username);
+
+        ChatActivityPresenter chatActivityPresenter = new ChatPresenterActivityImpl(activity, presenter, doctorid, username);
+        activity.configureWith(chatActivityPresenter);
     }
 
 
