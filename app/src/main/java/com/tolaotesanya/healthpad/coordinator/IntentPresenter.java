@@ -50,6 +50,12 @@ public class IntentPresenter {
         mContext.startActivity(doctorIntent);
     }
 
+    public void sendtoDoctorRegister(Context context){
+        Intent settingIntent = new Intent(context, DoctorRegisterActivity.class);
+        //settingIntent.putExtra("user_id", userid);
+        context.startActivity(settingIntent);
+    }
+
     public void presentIntent(ClassName activity, String userid, String extra) {
         switch (activity) {
             case Main:

@@ -27,6 +27,8 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.activities.auth.DoctorRegisterActivity;
+import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
+import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
 import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
@@ -47,19 +49,23 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String TAG = "SettingsActivity";
 
     private static final int GALLERY_PICK = 1;
-    private static final int MAX_LENGTH = 30;
 
     private ProgressDialog mProgressBar;
 
     private Button mDoctorCheck;
+    private Button rewardClaim;
+    private Button mChangeImage;
+    private Button mSaveChanges;
     private TextInputLayout mStatus;
     private TextInputLayout mName;
     private ProgressDialog mRegProgress;
 
-    private Context mContext = SettingsActivity.this;
+    private String current_user_id;
+    private DatabaseReference mUserDatabase;
 
-    //Firebase
+    //Injection
     private FirebasePresenter presenter;
+    private IntentPresenter intentPresenter;
 
 
     @Override
@@ -67,28 +73,21 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        presenter = new FirebaseDatabaseLayer(mContext);
         setupToolbar();
         attachUI();
+        DependencyRegistry.shared.inject(this);
     }
 
-    private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.settings_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(" ");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
+        this.presenter = presenter;
+        this.intentPresenter = intentPresenter;
+        current_user_id = presenter.getMcurrent_user_id();
+        mUserDatabase = presenter.getmUserDatabase();
+
+        userTypeCheck();
     }
 
-     private void attachUI() {
-         Button rewardClaim = findViewById(R.id.payment);
-         //UI element
-         Button mChangeImage = findViewById(R.id.setting_change_image);
-         Button mSaveChanges = findViewById(R.id.save_settings);
-        mDoctorCheck = findViewById(R.id.doctor_check_btn);
-        mStatus = findViewById(R.id.settings_status_input);
-        mName = findViewById(R.id.setting_display_name);
-
-
+    private void setupUI() {
         //Persist from Account Activity
         String status_value = getIntent().getStringExtra("status_value");
         String display_name_value = getIntent().getStringExtra("display_name_value");
@@ -168,9 +167,24 @@ public class SettingsActivity extends AppCompatActivity {
                 builder.create().show();
             }
         });
+    }
 
-         userTypeCheck();
-     }
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.settings_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(" ");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void attachUI() {
+        rewardClaim = findViewById(R.id.payment);
+        mChangeImage = findViewById(R.id.setting_change_image);
+        mSaveChanges = findViewById(R.id.save_settings);
+        mDoctorCheck = findViewById(R.id.doctor_check_btn);
+        mStatus = findViewById(R.id.settings_status_input);
+        mName = findViewById(R.id.setting_display_name);
+
+    }
 
     private void userTypeCheck() {
         final DatabaseReference updateUserType = presenter.getmUserDatabase()
@@ -210,11 +224,12 @@ public class SettingsActivity extends AppCompatActivity {
                                                 updateUserType.child("user_type").setValue("doctor");
                                             }
                                         });
-                                    } else{
+                                    } else {
                                         mDoctorCheck.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
+                                                //presenter.getIntentPresenter().presentIntent(ClassName.DoctorRegister, null, null);
+                                                intentPresenter.sendtoDoctorRegister(SettingsActivity.this);
                                             }
                                         });
                                     }
@@ -243,6 +258,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+
+        setupUI();
     }
 
     @Override
@@ -279,7 +296,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte [] thumb_byte = baos.toByteArray();
+                byte[] thumb_byte = baos.toByteArray();
 
 
                 final StorageReference filepath = presenter.getmStorageRef().child("profile_images").child(userUid + ".jpg");
@@ -287,7 +304,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 uploadImage(resultUri, filepath, thumb_filepath, thumb_byte);
 
-            } else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
         }
@@ -315,18 +332,18 @@ public class SettingsActivity extends AppCompatActivity {
                                         update_hashMap.put("image", download_uri);
                                         update_hashMap.put("thumb_image", thumb_download_uri);
                                         //use updateChildren instead of setValue
-                                        presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
+                                        mUserDatabase.child(current_user_id)
                                                 .updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful()){
-                                                    presenter.getmUserDatabase().child(presenter.getMcurrent_user_id()).child("user_type").addValueEventListener(new ValueEventListener() {
+                                                if (task.isSuccessful()) {
+                                                    mUserDatabase.child(current_user_id).child("user_type").addValueEventListener(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                             if (dataSnapshot.hasChild("user_type")) {
                                                                 String userType = dataSnapshot.getValue().toString();
                                                                 if (userType.equals("doctor")) {
-                                                                    presenter.getmRootRef().child("Doctors").child(presenter.getMcurrent_user_id())
+                                                                    presenter.getmRootRef().child("Doctors").child(current_user_id)
                                                                             .updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task task) {
