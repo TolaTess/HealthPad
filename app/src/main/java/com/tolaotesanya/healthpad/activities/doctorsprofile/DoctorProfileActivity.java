@@ -53,6 +53,9 @@ public class DoctorProfileActivity extends AppCompatActivity {
         this.presenter = allDoctorPresenter;
         mCurrent_user_id = presenter.getmCurrentuser_id();
         doctor_id = presenter.getDoctor_id();
+        fullName = presenter.getFullname();
+        details = presenter.getDetails();
+        image = presenter.getImage();
         reqConsultation();
     }
 

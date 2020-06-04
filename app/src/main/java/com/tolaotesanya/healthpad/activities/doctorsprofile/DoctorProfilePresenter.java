@@ -13,5 +13,8 @@ public interface DoctorProfilePresenter {
     void loadDatabase(final Context context, State mapType);
     String getmCurrentuser_id();
     String getDoctor_id();
+    String getFullname();
+    String getImage();
+    String getDetails();
 
 }

@@ -21,10 +21,16 @@ public class DoctorProfilePresenterImpl implements DoctorProfilePresenter{
     private String mCurrentuser_id;
     private FirebasePresenter presenter;
     private final String doctor_id;
+    private String fullname;
+    private String image;
+    private String details;
 
-    public DoctorProfilePresenterImpl(FirebasePresenter presenter, String doctor_id) {
+    public DoctorProfilePresenterImpl(FirebasePresenter presenter, String doctor_id, String fullname, String image, String details) {
         this.presenter = presenter;
         this.doctor_id = doctor_id;
+        this.fullname = fullname;
+        this.image = image;
+        this.details = details;
         mCurrentuser_id = this.presenter.getMcurrent_user_id();
         mDoctorDatabase = this.presenter.getmRootRef().child("Doctors").child(doctor_id);
         mDoctorDatabase.keepSynced(true);
@@ -52,6 +58,18 @@ public class DoctorProfilePresenterImpl implements DoctorProfilePresenter{
 
     public String getDoctor_id() {
         return doctor_id;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public String getDetails() {
+        return details;
     }
 
     public void loadDatabase(final Context context, State mapType){

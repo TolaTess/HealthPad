@@ -54,8 +54,11 @@ public class DependencyInjection {
 
     public void inject(DoctorProfileActivity activity, Bundle bundle) {
         String doctorid = idFromBundleDoctor(bundle);
+        String name = bundle.getString(Constants.fullname);
+        String image = bundle.getString(Constants.image);
+        String details = bundle.getString(Constants.details);
 
-        DoctorProfilePresenter doctorProfilePresenter = new DoctorProfilePresenterImpl(presenter, doctorid);
+        DoctorProfilePresenter doctorProfilePresenter = new DoctorProfilePresenterImpl(presenter, doctorid, name, image, details);
         activity.configureWith(doctorProfilePresenter);
     }
 
