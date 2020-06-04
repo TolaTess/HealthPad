@@ -10,13 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseAuthLayer;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
-import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
-
-import java.lang.reflect.Field;
 
 import androidx.annotation.NonNull;
 

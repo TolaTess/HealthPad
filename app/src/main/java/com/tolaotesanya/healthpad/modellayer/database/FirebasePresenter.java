@@ -9,11 +9,9 @@ import java.util.Map;
 
 public interface FirebasePresenter {
 
-    FirebaseAuthLayer getHelper();
     String getMcurrent_user_id();
     DatabaseReference getmRootRef();
     DatabaseReference getmUserDatabase();
-    IntentPresenter getIntentPresenter();
     Map setupDatabaseMap(String muser_id, State mapType);
     StorageReference getmStorageRef();
     Map setupMessageChatDB(String doctor_id, String message, State mapType);

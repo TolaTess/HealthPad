@@ -3,6 +3,8 @@ package com.tolaotesanya.healthpad.modellayer.database;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,29 +25,25 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
     private static final String TAG = "FirebaseDatabaseLayer";
     private DatabaseReference mRootRef;
     private DatabaseReference mUserDatabase;
-    private FirebaseAuthLayer helper;
+    private FirebaseAuth mAuth;
     private String mcurrent_user_id;
     private StorageReference mStorageRef;
-    private IntentPresenter intentPresenter;
     private String imageLink;
     private String thumb_imageLink;
 
-    public FirebaseDatabaseLayer(Context context) {
+    public FirebaseDatabaseLayer(FirebaseAuth mAuth) {
+        this.mAuth = mAuth;
         mRootRef = FirebaseDatabase.getInstance().getReference();
         //mRootRef.keepSynced(true);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         //mUserDatabase.keepSynced(true);
         mStorageRef = FirebaseStorage.getInstance().getReference();
-        intentPresenter = new IntentPresenter(context);
 
-        helper = new FirebaseAuthLayer();
-        if (helper.getmAuth().getCurrentUser() != null) {
-            mcurrent_user_id = helper.getmAuth().getCurrentUser().getUid();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            mcurrent_user_id = currentUser.getUid();
         }
-    }
-
-    public FirebaseAuthLayer getHelper() {
-        return helper;
     }
 
     public StorageReference getmStorageRef() {
@@ -97,11 +95,6 @@ public class FirebaseDatabaseLayer implements FirebasePresenter {
                 break;
         }
         return setupMap;
-    }
-
-    @Override
-    public IntentPresenter getIntentPresenter() {
-        return intentPresenter;
     }
 
     public Map setupDatabaseMap(String doctor_id, State mapType) {
