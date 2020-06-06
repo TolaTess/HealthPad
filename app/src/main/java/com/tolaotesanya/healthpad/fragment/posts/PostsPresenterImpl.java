@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -67,6 +68,8 @@ public class PostsPresenterImpl implements PostsPresenter {
                 final String body = model.getBody();
                 final String postImage = model.getPost_image();
                 final String poster_id = model.getUser_id();
+                final String user_id = model.getUser_id();
+                final String post_key = getRef(position).getKey();
 
                 mValueEventListener = new ValueEventListener() {
                     @Override
@@ -87,7 +90,7 @@ public class PostsPresenterImpl implements PostsPresenter {
                             @Override
                             public void onClick(View v) {
                                 holder.setLikeButton();
-                                String post_key = getRef(position).getKey();
+
                                 int likesInt = Integer.parseInt(likes);
                                 likesInt = likesInt + 1;
                                 String newlikes = String.valueOf(likesInt);
@@ -96,6 +99,19 @@ public class PostsPresenterImpl implements PostsPresenter {
                                         .child(post_key).child("likes").setValue(newlikes);
                             }
                         });
+                        ImageView delete = holder.itemView.findViewById(R.id.delete_posts);
+                        if (user_id.equals(presenter.getMcurrent_user_id())) {
+                            delete.setVisibility(View.VISIBLE);
+                            delete.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                        presenter.getmRootRef().child("Posts")
+                                                .child(post_key).removeValue();
+                                }
+                            });
+                        } else {
+                            delete.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                     @Override
@@ -111,8 +127,9 @@ public class PostsPresenterImpl implements PostsPresenter {
     }
 
     public void stopAdapter() {
+       // mUserDatabase.removeEventListener(mValueEventListener);
         mAdapter.stopListening();
-        mUserDatabase.removeEventListener(mValueEventListener);
+
     }
 
 }

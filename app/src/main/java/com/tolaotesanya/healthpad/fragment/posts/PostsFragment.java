@@ -6,11 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
-import com.tolaotesanya.healthpad.helper.PostsViewHolder;
-import com.tolaotesanya.healthpad.modellayer.model.Posts;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
