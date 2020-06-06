@@ -23,54 +23,15 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            app:cardBackgroundColor="@color/colorAccent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/recycler_view_shape"
                 android:padding="10dp">
 
-
-                <TextView
-                    android:id="@+id/doctors_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignRight="@+id/doctors_image"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="20dp"
-                    android:fontFamily="@font/allerta"
-                    android:text="Dr Tola Smith"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/doctors_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/doctors_name"
-                    android:layout_marginBottom="-45dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginTop="19dp"
-                    android:fontFamily="@font/allerta"
-                    android:maxWidth="220dp"
-                    android:text="GP, based in Dundalk"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="14sp" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/doctors_image"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="5dp" />
 
                 <ImageView
                     android:id="@+id/all_user_online_icon"
@@ -85,6 +46,40 @@
                     app:srcCompat="@drawable/online_background" />
 
                 <TextView
+                    android:id="@+id/doctors_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/doctors_name"
+                    android:layout_marginBottom="-45dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="19dp"
+                    android:fontFamily="@font/allerta"
+                    android:maxWidth="230dp"
+                    android:text="GP, based in Dundalk"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/doctors_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignRight="@+id/doctors_image"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/allerta"
+                    android:maxWidth="200dp"
+                    android:text="Dr Tola Smith"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
+
+                <TextView
                     android:id="@+id/all_user_lastseen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -95,6 +90,14 @@
                     android:text="online"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/doctors_image"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp" />
 
             </RelativeLayout>
         </androidx.cardview.widget.CardView>

@@ -48,17 +48,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/feed_profile_image2"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="9dp"
-                            android:visibility="visible"
-                            app:srcCompat="@drawable/heart" />
-
                         <ImageView
                             android:id="@+id/feed_like_icon"
                             android:layout_width="22dp"
@@ -123,6 +112,17 @@
                             android:textColor="@color/colorBlack"
                             android:textSize="14sp"
                             android:visibility="gone" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/feed_profile_image2"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="9dp"
+                            android:visibility="visible"
+                            app:srcCompat="@drawable/heart" />
                     </RelativeLayout>
 
                 </androidx.cardview.widget.CardView>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="200dp"
@@ -8,40 +8,26 @@
     android:orientation="vertical"
     android:paddingLeft="10dp">
 
+    <TextView
+        android:id="@+id/header_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/header_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:text="username" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/header_image"
         android:layout_width="82dp"
         android:layout_height="82dp"
-        android:layout_marginBottom="5dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
         app:srcCompat="@drawable/ic_launcher_foreground">
 
     </de.hdodenhof.circleimageview.CircleImageView>
 
-    <TextView
-        android:id="@+id/header_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginStart="10dp"
-        android:text="username" />
 
-    <TextView
-        android:id="@+id/app_header_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/allerta_stencil"
-        android:text="@string/health_pad"
-        android:textColor="@color/colorBlack"
-        android:textSize="24sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/allerta"
-        android:text="Always there to help"
-        android:textColor="@color/colorBlack"
-        android:textSize="14sp" />
-
-
-</LinearLayout>
+</RelativeLayout>
