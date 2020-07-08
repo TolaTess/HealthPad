@@ -1,5 +1,6 @@
 package com.tolaotesanya.healthpad.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tolaotesanya.healthpad.R;
+import com.tolaotesanya.healthpad.activities.auth.LoginActivity;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
 import com.tolaotesanya.healthpad.fragment.chat.ChatFragment;
@@ -59,15 +61,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         homeFragment = new PostsFragment();
-        attachDrawerNav();
+
+        //attachDrawerNav();
 
         DependencyRegistry.shared.inject(this);
+        attachDrawerNav();
     }
 
     public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
     this.presenter = presenter;
     this.intentPresenter = intentPresenter;
-
+        final String user_id = presenter.getMcurrent_user_id();
         onlineCheck();
 
     }
@@ -179,7 +183,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 FirebaseAuth.getInstance().signOut();
                 presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                         .child("online").setValue(ServerValue.TIMESTAMP);
-                intentPresenter.presentIntent(MainActivity.this, ClassName.Auth, null, null);
+                Intent authIntent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(authIntent);
+                finish();
+                //intentPresenter.presentIntent(MainActivity.this, ClassName.Auth, null, null);
                 break;
             case R.id.nav_posts:
                 intentPresenter.presentIntent(MainActivity.this, ClassName.Posts, null, null);

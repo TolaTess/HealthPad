@@ -4,6 +4,7 @@ package com.tolaotesanya.healthpad.coordinator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.tolaotesanya.healthpad.activities.MainActivity;
 import com.tolaotesanya.healthpad.activities.accountsettings.AccountActivity;

@@ -104,6 +104,7 @@ public class PostsActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             mProgressbar.dismiss();
                             intentPresenter.presentIntent(PostsActivity.this, ClassName.Main, null, null);
+                            finish();
                         } else
                         {
                             mProgressbar.hide();
