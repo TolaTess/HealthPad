@@ -2,6 +2,7 @@ package com.tolaotesanya.healthpad.helper;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -31,19 +32,17 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setPostDisplayType(String postImage, String body, String profile_image) {
+        RelativeLayout imageLayout = mView.findViewById(R.id.relativeLayout_image);
         ImageView postImageView = mView.findViewById(R.id.feed_image);
         CircleImageView profileImageView = mView.findViewById(R.id.feed_profile_image);
-        CircleImageView profileImageView2 = mView.findViewById(R.id.feed_profile_image2);
         TextView bodyView = mView.findViewById(R.id.post_feed_body);
+        bodyView.setText(body);
+        Picasso.get().load(profile_image).placeholder(R.drawable.ic_launcher_foreground).into(profileImageView);
         if(postImage.equals("default")){
-            postImageView.setVisibility(View.GONE);
-            bodyView.setVisibility(View.VISIBLE);
-            bodyView.setText(body);
-            profileImageView2.setVisibility(View.VISIBLE);
-            Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView2);
+            imageLayout.setVisibility(View.GONE);
         } else {
-            Picasso.get().load(postImage).placeholder(R.drawable.health_pad_logo).into(postImageView);
-            Picasso.get().load(profile_image).placeholder(R.drawable.health_pad_logo).into(profileImageView);
+            imageLayout.setVisibility(View.VISIBLE);
+            Picasso.get().load(postImage).placeholder(R.drawable.ic_launcher_foreground).into(postImageView);
         }
     }
     public void setLikeButton() {
@@ -52,7 +51,7 @@ public class PostsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setLikes(String likes) {
-        TextView likesView = mView.findViewById(R.id.feed_likes_text);
+        TextView likesView = mView.findViewById(R.id.likes_count);
         String newLikes = likes + " likes";
         likesView.setText(newLikes);
     }
