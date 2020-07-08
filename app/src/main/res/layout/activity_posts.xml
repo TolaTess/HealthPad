@@ -4,75 +4,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.posts.PostsActivity">
+    tools:context=".activities.posts.PostsActivity"
+    xmlns:card_view="http://schemas.android.com/tools">
 
     <include layout="@layout/app_bar_layout" android:id="@+id/post_act_toolbar"/>
 
-    <Button
-        android:id="@+id/post_upload_image_btn"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_below="@id/post_direct_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="103dp"
-        android:layout_marginTop="501dp"
-        android:background="@drawable/button_background"
-        android:fontFamily="@font/allerta_stencil"
-        android:text="Add Image and Post" />
 
-    <EditText
-        android:id="@+id/post_body"
+    <ImageView
+        android:id="@+id/post_direct_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/allerta"
+        android:src="@drawable/ic_send_black_24dp" />
+
+
+    <RelativeLayout
+        android:id="@+id/rel1"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/post_title_text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="28dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Please enter your tips and messages here..."
-        android:inputType="textMultiLine" />
-
-    <TextView
-        android:id="@+id/post_page_title"
-        android:layout_width="200dp"
-        android:layout_height="33dp"
-        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="27dp"
-        android:fontFamily="@font/allerta"
-        android:text="Give us your insight"
-        android:textColor="@color/colorBlack"
-        android:textSize="16sp" />
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp">
 
-    <Button
-        android:id="@+id/post_direct_btn"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/post_body"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="42dp"
-        android:background="@drawable/button_background_type3"
-        android:fontFamily="@font/allerta_stencil"
-        android:text="Post" />
+        <EditText
+            android:id="@+id/post_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_title_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="Enter post here..."
+            android:inputType="textMultiLine"
+            android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/post_title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/post_page_title"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="35dp"
-        android:hint="Please enter your title here..." />
+        <EditText
+            android:id="@+id/post_title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="100dp"
+            android:background="@android:color/transparent"
+            android:hint="Enter title here..."
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/post_upload_image_btn"
+            android:layout_width="46dp"
+            android:layout_height="38dp"
+            android:layout_below="@id/post_body"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/allerta"
+            android:textColor="@color/colorWhite"
+            app:srcCompat="@drawable/ic_camera_alt_black_24dp" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_body"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardv1"
+                android:layout_width="300dp"
+                android:layout_height="150dp"
+                android:layout_margin="15dp"
+                card_view:cardBackgroundColor="@color/colorAccent"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="1dp"
+                card_view:contentPadding="1dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/feed_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="0dp"
+                        android:src="@drawable/ic_launcher_foreground" />
+
+                </RelativeLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/add_image_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_upload_image_btn"
+            android:layout_marginStart="20dp"
+            android:text="Add Image"
+            android:textSize="10sp" />
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

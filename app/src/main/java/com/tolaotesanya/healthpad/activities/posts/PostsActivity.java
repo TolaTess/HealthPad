@@ -1,15 +1,14 @@
 package com.tolaotesanya.healthpad.activities.posts;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,12 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
-import com.tolaotesanya.healthpad.dependencies.DependencyInjection;
 import com.tolaotesanya.healthpad.dependencies.DependencyRegistry;
-import com.tolaotesanya.healthpad.modellayer.database.FirebaseDatabaseLayer;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
 import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
 
@@ -42,8 +40,9 @@ public class PostsActivity extends AppCompatActivity {
     private static final String TAG = "PostsActivity";
     private static final int GALLERY_PICK = 1;
 
-    private Button mPostImage;
-    private Button mPostDirect;
+    private RelativeLayout mImageLayout;
+    private ImageView mPostImage, mFeedImage;
+    private ImageView mPostDirect;
     private EditText mTitle;
     private EditText mBody;
     private ProgressDialog mProgressbar;
@@ -82,6 +81,8 @@ public class PostsActivity extends AppCompatActivity {
         mPostImage = findViewById(R.id.post_upload_image_btn);
         mPostDirect = findViewById(R.id.post_direct_btn);
         mTitle = findViewById(R.id.post_title_text);
+        mFeedImage =findViewById(R.id.feed_image);
+        mImageLayout = findViewById(R.id.relativeLayout_image);
     }
 
     private void setupPostDirect() {
@@ -176,13 +177,11 @@ public class PostsActivity extends AppCompatActivity {
         }
     }
 
-    //save image in database
     private void uploadImage(Uri resultUri, final StorageReference filepath, final StorageReference thumbpath,
                              final byte[] thumb_byte) {
         filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                //Toast.makeText(SettingsActivity.this, "Working", Toast.LENGTH_LONG).show();
                 filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -195,26 +194,16 @@ public class PostsActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         final String thumb_download_uri = uri.toString();
-                                        /*if (!TextUtils.isEmpty(title)) {*/
-                                        String title = mTitle.getText().toString();
-                                        String body = mBody.getText().toString();
-                                            Map setupMap = presenter.setupPostMap(title, body, download_uri, thumb_download_uri);
-                                            mTitle.setText("");
-                                            presenter.getmRootRef().updateChildren(setupMap).addOnCompleteListener(new OnCompleteListener() {
-                                                @Override
-                                                public void onComplete(@NonNull Task task) {
-                                                    if (task.isSuccessful()) {
-                                                        mProgressbar.dismiss();
-                                                        intentPresenter.presentIntent(PostsActivity.this, ClassName.Main, null, null);
-                                                        finish();
-                                                    }else
-                                                    {
-                                                        Toast.makeText(PostsActivity.this, "An Error Occurred while Posting", Toast.LENGTH_LONG).show();
-                                                        mProgressbar.dismiss();
-                                                    }
-                                                }
-                                            });
+
+                                        if (thumb_download_uri != null) {
+                                            mProgressbar.dismiss();
+                                            Picasso.get().load(thumb_download_uri).placeholder(R.drawable.health_pad_logo).into(mFeedImage);
+                                            mImageLayout.setVisibility(View.VISIBLE);
+                                            String title = mTitle.getText().toString();
+                                            String body = mBody.getText().toString();
+                                            savePostInDB(download_uri, thumb_download_uri, body, title);
                                         }
+                                    }
                                     });
                                 }
                             });
@@ -223,5 +212,29 @@ public class PostsActivity extends AppCompatActivity {
                 }
             });
         }
+
+    private void savePostInDB(final String download_uri, final String thumb_download_uri, final String body, final String
+                              title) {
+        mPostDirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map setupMap = presenter.setupPostMap(title, body, download_uri, thumb_download_uri);
+                presenter.getmRootRef().updateChildren(setupMap).addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if (task.isSuccessful()) {
+                            mProgressbar.dismiss();
+                            intentPresenter.presentIntent(PostsActivity.this, ClassName.Main, null, null);
+                            finish();
+                        }else
+                        {
+                            Toast.makeText(PostsActivity.this, "An Error Occurred while Posting", Toast.LENGTH_LONG).show();
+                            mProgressbar.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
 }
