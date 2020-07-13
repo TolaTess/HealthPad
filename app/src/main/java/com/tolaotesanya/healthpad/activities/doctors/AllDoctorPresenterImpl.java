@@ -5,28 +5,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.tolaotesanya.healthpad.R;
 import com.tolaotesanya.healthpad.coordinator.IntentPresenter;
 import com.tolaotesanya.healthpad.helper.DialogFragmentAllUserHelper;
-import com.tolaotesanya.healthpad.helper.DialogFragmentHelper;
 import com.tolaotesanya.healthpad.helper.DoctorsViewHolder;
 import com.tolaotesanya.healthpad.modellayer.database.FirebasePresenter;
-import com.tolaotesanya.healthpad.modellayer.enums.ClassName;
-import com.tolaotesanya.healthpad.modellayer.enums.State;
 import com.tolaotesanya.healthpad.modellayer.model.Doctors;
 
-import java.util.Map;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 public class AllDoctorPresenterImpl implements AllDoctorPresenter {
@@ -46,13 +40,14 @@ public class AllDoctorPresenterImpl implements AllDoctorPresenter {
         this.intentPresenter = intentPresenter;
     }
 
-    public FirebaseRecyclerAdapter setupAdapter() {
+    public FirebaseRecyclerAdapter setupAdapter(String data) {
 
         DatabaseReference doctorQuery = presenter.getmRootRef()
                 .child("Doctors");
+        Query query = doctorQuery.orderByChild("last_name").startAt(data).endAt(data+"\uf8ff");
 
         FirebaseRecyclerOptions<Doctors> options = new FirebaseRecyclerOptions.Builder<Doctors>()
-                .setQuery(doctorQuery, Doctors.class)
+                .setQuery(query, Doctors.class)
                 .build();
 
         FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<Doctors, DoctorsViewHolder>(
@@ -95,7 +90,6 @@ public class AllDoctorPresenterImpl implements AllDoctorPresenter {
 
                     }
                 });
-                //send
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

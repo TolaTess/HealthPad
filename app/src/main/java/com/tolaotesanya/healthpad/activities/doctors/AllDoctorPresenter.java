@@ -4,6 +4,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 
 public interface AllDoctorPresenter {
 
-    FirebaseRecyclerAdapter setupAdapter();
+    FirebaseRecyclerAdapter setupAdapter(String data);
 
 }

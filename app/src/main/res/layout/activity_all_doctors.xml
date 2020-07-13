@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,14 +9,21 @@
     <include layout="@layout/app_bar_layout" android:id="@+id/all_doctors_toolbar"/>
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:padding="10dp"
-        android:id="@+id/all_doctors_recycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/all_doctors_toolbar" />
+    <EditText
+        android:id="@+id/search_box"
+        android:layout_below="@id/all_doctors_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/ic_search_black_24dp"
+        android:hint="Search..."
+        android:layout_margin="5dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/all_doctors_recycler"
+        android:layout_below="@+id/search_box"
+        android:layout_width="408dp"
+        android:layout_height="617dp"
+        android:layout_marginTop="20dp"
+        android:padding="10dp" />
+
+</RelativeLayout>
