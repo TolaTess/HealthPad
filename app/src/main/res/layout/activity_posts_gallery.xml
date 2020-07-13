@@ -104,11 +104,11 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:fontFamily="@font/allerta"
+            android:fontFamily="@font/alice"
             android:text="@string/doctor_details"
             android:textAlignment="textStart"
             android:textColor="@color/colorBlack"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
     </androidx.cardview.widget.CardView>
 

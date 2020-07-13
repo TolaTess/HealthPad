@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CircleImageView header_image;
     private TextView userNameView;
     private Menu menu;
+    private String user_id;
 
     private PostsFragment homeFragment;
 
@@ -52,54 +53,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FirebasePresenter presenter;
     private IntentPresenter intentPresenter;
 
-    private ValueEventListener valueEventListener;
-    private DatabaseReference mUserDatabase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         homeFragment = new PostsFragment();
+        FirebaseAuth mCurrentUser = FirebaseAuth.getInstance();
+        user_id = mCurrentUser.getCurrentUser().getUid();
 
-        //attachDrawerNav();
+        attachDrawerNav();
 
         DependencyRegistry.shared.inject(this);
-        attachDrawerNav();
     }
 
     public void configureWith(FirebasePresenter presenter, IntentPresenter intentPresenter) {
     this.presenter = presenter;
     this.intentPresenter = intentPresenter;
-        final String user_id = presenter.getMcurrent_user_id();
-        onlineCheck(user_id);
-
+    onlineCheck();
     }
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "onStart: ");
         super.onStart();
         setFragment(homeFragment);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
-        fetchData(header_image, userNameView, menu);
+        fetchData(header_image, userNameView, menu, user_id);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mUserDatabase.removeEventListener(valueEventListener);
-
-    }
-
-    private void onlineCheck(String user_id) {
-        if (user_id != null) {
+    private void onlineCheck() {
+        if (presenter.getMcurrent_user_id() != null) {
             presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                     .child("online").setValue("true");
         }
     }
 
     public void attachDrawerNav() {
+        Log.d(TAG, "attachDrawerNav: ");
         Toolbar mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
         this.getSupportActionBar().setTitle("Health Pad");
@@ -119,43 +111,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menu = navigationView.getMenu();
     }
 
-    private void fetchData(final CircleImageView header_image, final TextView userNameView, final Menu menu) {
-        final String user_id = presenter.getMcurrent_user_id();
+    private void fetchData(final CircleImageView header_image, final TextView userNameView, final Menu menu, String user_id) {
+        Log.d(TAG, "fetchData: ");
         Log.d(TAG, "attachDrawerNav: " + user_id);
 
-        valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("user_type")) {
-                    String userType = dataSnapshot.child("user_type").getValue().toString();
-                    if (userType.equals("doctor")) {
-                        menu.findItem(R.id.nav_request).setVisible(true);
-                        menu.findItem(R.id.nav_doctor).setVisible(false);
-                    } else {
-                        menu.findItem(R.id.nav_request).setVisible(false);
-                        menu.findItem(R.id.nav_doctor).setVisible(true);
-                    }
-                } else {
-                    menu.findItem(R.id.nav_request).setVisible(false);
-                    menu.findItem(R.id.nav_doctor).setVisible(true);
-                }
-                if (dataSnapshot.hasChild("thumb_image")) {
-                    String username = dataSnapshot.child("name").getValue().toString();
-                    String image = dataSnapshot.child("thumb_image").getValue().toString();
-                    userNameView.setText(username);
-                    Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(header_image);
-                } else {
-                    Toast.makeText(MainActivity.this, "Please load an image", Toast.LENGTH_SHORT).show();
-                }
-            }
+       presenter.getmUserDatabase().child(user_id).addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               if(dataSnapshot != null) {
+                   if (dataSnapshot.hasChild("user_type")) {
+                       String userType = dataSnapshot.child("user_type").getValue().toString();
+                       if (userType.equals("doctor")) {
+                           menu.findItem(R.id.nav_request).setVisible(true);
+                           menu.findItem(R.id.nav_doctor).setVisible(false);
+                       } else {
+                           menu.findItem(R.id.nav_request).setVisible(false);
+                           menu.findItem(R.id.nav_doctor).setVisible(true);
+                       }
+                   } else {
+                       menu.findItem(R.id.nav_request).setVisible(false);
+                       menu.findItem(R.id.nav_doctor).setVisible(true);
+                   }
+                   if (dataSnapshot.hasChild("thumb_image")) {
+                       String username = dataSnapshot.child("name").getValue().toString();
+                       String image = dataSnapshot.child("thumb_image").getValue().toString();
+                       userNameView.setText(username);
+                       Picasso.get().load(image).placeholder(R.drawable.ic_launcher_foreground).into(header_image);
+                   } else {
+                       Toast.makeText(MainActivity.this, "Please load an image", Toast.LENGTH_SHORT).show();
+                   }
+               } else
+               {
+                   Toast.makeText(MainActivity.this, "Error Test", Toast.LENGTH_SHORT).show();
+               }
+           }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        };
-        mUserDatabase = presenter.getmUserDatabase().child(user_id);
-        mUserDatabase.addValueEventListener(valueEventListener);
+           }
+       });
     }
 
     @Override

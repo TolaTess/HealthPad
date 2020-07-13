@@ -24,7 +24,6 @@ public class RequestFragment extends Fragment {
     private RecyclerView mReceivedList;
     private RequestPresenter requestPresenter;
     private TextView noReqReceived;
-    private RequestFragment requestFragment = new RequestFragment();
 
 
     public RequestFragment() {
