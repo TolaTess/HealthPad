@@ -76,7 +76,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
                 break;
             case VIEW_TYPE_MESSAGE_RECEIVED:
                 ((ReceivedMessageHolder) holder).bind(messages);
-                getUserDetails(holder, messages);
+                //getUserDetails(holder, messages);
                 break;
         }
 
@@ -86,7 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
         String from_user = messages.getFrom();
         DatabaseReference mUserDatabse = presenter.getmUserDatabase().child(from_user);
 
-        mUserDatabse.addValueEventListener(new ValueEventListener() {
+        /*mUserDatabse.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String name = dataSnapshot.child("name").getValue().toString();
@@ -98,7 +98,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -113,9 +113,9 @@ public class MessageAdapter extends RecyclerView.Adapter{
         SentMessageHolder(View itemView) {
             super(itemView);
 
-            messageText = itemView.findViewById(R.id.text_message_body);
+            messageText = itemView.findViewById(R.id.texts_message_body);
             timeText = itemView.findViewById(R.id.text_message_time);
-            messageImage = itemView.findViewById(R.id.send_image_chat);
+            messageImage = itemView.findViewById(R.id.sent_image_chat);
         }
 
         public void bind(ReceivedMessage message) {
@@ -144,7 +144,7 @@ public class MessageAdapter extends RecyclerView.Adapter{
 
             messageText = itemView.findViewById(R.id.text_message_body);
             timeText =  itemView.findViewById(R.id.text_message_time);
-            nameText =  itemView.findViewById(R.id.text_message_name);
+            //nameText =  itemView.findViewById(R.id.text_message_name);
             messageImage = itemView.findViewById(R.id.rec_image_view);
 
         }

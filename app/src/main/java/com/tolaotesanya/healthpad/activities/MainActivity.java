@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     this.presenter = presenter;
     this.intentPresenter = intentPresenter;
         final String user_id = presenter.getMcurrent_user_id();
-        onlineCheck();
+        onlineCheck(user_id);
 
     }
 
@@ -92,8 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void onlineCheck() {
-        if (presenter.getMcurrent_user_id() != null) {
+    private void onlineCheck(String user_id) {
+        if (user_id != null) {
             presenter.getmUserDatabase().child(presenter.getMcurrent_user_id())
                     .child("online").setValue("true");
         }
