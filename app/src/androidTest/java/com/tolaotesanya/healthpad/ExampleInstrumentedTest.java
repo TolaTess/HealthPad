@@ -24,4 +24,5 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.tolaotesanya.healthpad", appContext.getPackageName());
     }
+
 }
