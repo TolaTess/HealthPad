@@ -18,14 +18,14 @@ Profile setting | Search for a Doctor | Consultation via chat
 The architecture used for this application is the MVP(Model, View and Presenter). Using MVP ensures that the code is simple, easy to understand, and able to be changed quickly, making the application efficient.
 
 #### Model Layer:
-![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/modellayer.png “Model Layer directory”)
-![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/helper.png “Helper directory”)
+![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/modellayer.png "Model directory")
+![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/helper.png "Helper directory")
 
 The Model layer is responsible for handling data within the application. It houses all the principal reusable codes to fetch data from the database (Firebase realtime database) and serves it to the Presenter when needed. (Some future refinement is needed with decouple these dependencies further).
 
 #### View Layer:
-![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/activity.png “Activity directory”)
-![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/fragment.png “Fragment directory”)
+![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/activity.png "Activity directory")
+![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/fragment.png "Fragment directory")
 
 The View layer primary responsibility is to render the UI components as directed by the user. This layer includes Activity and Fragment and their respective Presenters. 
 
@@ -37,7 +37,7 @@ The Presenter classes house the java functionality for the application. It recei
 #### Login and Signup for users with Firebase
 AuthActivity class instantiates FirebasePresenter and IntentPresenter (Injected by the dependencyRegistry and Dependencyinjection classes).  AuthActivity will redirect the User to MainActivity class if logged in but if not the AuthActivity will render the UI component for user to log in or register.
 
-![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/dependecies.png “Dependency directory”)
+![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/dependencies.png "Dependency directory")
 
 LoginActivity renders UI component for the user to enter email and password for authentication with Firebase. Successful authentication will direct the user to the MainActivity class, and failure will present a Toast message to the user to “try again”.
 
@@ -57,7 +57,7 @@ ChatFragment class instantiates ChatPresenter and renders each consultation chat
 
 ChatAcitivity class will instantiate ChatActivityPresenter class when a chat is opened and renders users messages using a custom Adapter (MessageAdapter) to generate different ViewHolder depending on the message type. 
 
-![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/messageadapter.png “Message Adapter Code Snippet”)
+![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/messageadapter.png "Message Adapter Code Snippet")
 
 ### Firebase
 I used Firebase for this project because it is an application development platform that provides tools to build, improve and grow an efficient application. I used their email and password authentication, realtime database and file storage for images. Firebase also offers push messaging which I will implement as I develop this application further. 
