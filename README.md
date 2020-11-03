@@ -1,5 +1,5 @@
 # HealthPad
-Heathpad provides seamless consultation service with health professionals via chat messenger.
+HealthPad is an Andriod messaging application that connects users with health professionals in realtime. This app was built using Java Programming language, Firebase authentication, realtime database, file storage and Picasso image library. The MVP architecture model was used to keep the code simple, easy to understand and maintain.
 
 * Create a health messenger mobile app
 * Login and Signup for users with Firebase
