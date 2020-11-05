@@ -59,8 +59,11 @@ ChatAcitivity class will instantiate ChatActivityPresenter class when a chat is 
 
 ![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/messageadapter.png "Message Adapter Code Snippet")
 
-#### Navigation
-Drawer Navigation is used for quick navigation between all UI pages.
+#### Libraries and Technologies:
+Picasso image loader
+EdMondo image cropper
+CircleImageView for circler image view
+BottomNavigationViewEX for bottom navigation
 
 ### Firebase
 I used Firebase for this project because it is an application development platform that provides tools to build, improve and grow an efficient application. I used their email and password authentication, realtime database and file storage for images. Firebase also offers push messaging which I will implement as I develop this application further. 
