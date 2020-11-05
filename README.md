@@ -21,7 +21,7 @@ The architecture used for this application is the MVP(Model, View and Presenter)
 ![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/modellayer.png "Model directory")
 ![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/helper.png "Helper directory")
 
-The Model layer is responsible for handling data within the application. It houses all the principal reusable codes to fetch data from the database (Firebase realtime database) and serves it to the Presenter when needed. (Some future refinement is needed with decouple these dependencies further).
+The Model layer is responsible for handling data within the application. It houses all the principal reusable codes to fetch data from the database (Firebase realtime database) and serves it to the Presenter when needed.
 
 #### View Layer:
 ![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/activity.png "Activity directory")
@@ -58,6 +58,9 @@ ChatFragment class instantiates ChatPresenter and renders each consultation chat
 ChatAcitivity class will instantiate ChatActivityPresenter class when a chat is opened and renders users messages using a custom Adapter (MessageAdapter) to generate different ViewHolder depending on the message type. 
 
 ![alt text](https://github.com/TolaTess/HealthPad/blob/master/assets/messageadapter.png "Message Adapter Code Snippet")
+
+#### Navigation
+Drawer Navigation is used for quick navigation between all UI pages.
 
 ### Firebase
 I used Firebase for this project because it is an application development platform that provides tools to build, improve and grow an efficient application. I used their email and password authentication, realtime database and file storage for images. Firebase also offers push messaging which I will implement as I develop this application further. 
